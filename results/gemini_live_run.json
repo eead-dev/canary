@@ -1,0 +1,455 @@
+{
+  "status": "complete",
+  "conclusion": {
+    "reference_name": "speed_kph",
+    "selected_candidate": {
+      "start_bit": 16,
+      "width_bits": 16,
+      "endian": "little",
+      "byte_offset": 2,
+      "can_id": 420,
+      "signed": false
+    },
+    "correlation": 0.999999995674304,
+    "scale": 0.00999998890240283,
+    "offset": -6.20039300969211e-06,
+    "rmse": 0.00273819396171824,
+    "mae": 0.0022491824837408,
+    "r_squared": 0.999999991348608,
+    "confidence": "high",
+    "rationale": "CAN ID 420 at byte offset 2 (16-bit unsigned little-endian, start_bit 16) matches speed_kph across all 6000 aligned samples with near-perfect correlation (>0.99999999) and R\u00b2 (>0.99999999). The linear fit yields a canonical scale of ~0.01 (0.01 km/h per count) and an offset of essentially 0 (MAE 0.0022 kph, RMSE 0.0027 kph). Alternative signals like CAN ID 790 exhibit lower correlation (0.9825) and non-zero offset."
+  },
+  "trace": [
+    {
+      "id": "1",
+      "name": "summarize_capture",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "total_frames": 36000,
+          "unique_can_id_count": 6,
+          "first_timestamp": 0.0,
+          "last_timestamp": 59.99,
+          "duration_seconds": 59.99
+        }
+      }
+    },
+    {
+      "id": "2",
+      "name": "list_can_ids",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "can_ids": [
+            {
+              "can_id": 131,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 420,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 581,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 790,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 1063,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 1714,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "3",
+      "name": "search_candidates",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "candidates_searched": 90,
+          "candidates_ranked": 90,
+          "results": [
+            {
+              "can_id": 420,
+              "byte_offset": 2,
+              "width_bits": 16,
+              "correlation": 0.9999999956743041,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 3,
+              "width_bits": 8,
+              "correlation": 0.9996498572844006,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 790,
+              "byte_offset": 0,
+              "width_bits": 16,
+              "correlation": 0.9825380129704693,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 790,
+              "byte_offset": 1,
+              "width_bits": 8,
+              "correlation": 0.981026696242807,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 131,
+              "byte_offset": 0,
+              "width_bits": 16,
+              "correlation": 0.3514894772886517,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 131,
+              "byte_offset": 1,
+              "width_bits": 8,
+              "correlation": 0.3499151084005798,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 1,
+              "width_bits": 16,
+              "correlation": 0.2664011717362413,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 2,
+              "width_bits": 8,
+              "correlation": 0.266366216982637,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 790,
+              "byte_offset": 0,
+              "width_bits": 8,
+              "correlation": 0.18013572749960288,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 131,
+              "byte_offset": 0,
+              "width_bits": 8,
+              "correlation": 0.03326786486707488,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "name": "analyze_candidate",
+      "arguments": {
+        "can_id": 420,
+        "width_bits": 16,
+        "include_fit": true,
+        "byte_offset": 2
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "byte_offset": 2,
+          "start_bit": 16,
+          "width_bits": 16,
+          "endian": "little",
+          "signed": false,
+          "correlation": 0.9999999956743041,
+          "aligned_samples": 6000,
+          "raw_min": 0,
+          "raw_max": 9001,
+          "fit": {
+            "scale": 0.00999998890240283,
+            "offset": -6.200393009692107e-06,
+            "rmse": 0.0027381939617182444,
+            "mae": 0.0022491824837408,
+            "r_squared": 0.999999991348608
+          }
+        }
+      }
+    },
+    {
+      "id": "5",
+      "name": "inspect_can_id",
+      "arguments": {
+        "can_id": 420
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "frame_count": 6000,
+          "update_frequency_hz": 100.0,
+          "changing_byte_positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "byte_ranges": [
+            {
+              "byte_offset": 0,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 1,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 2,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 3,
+              "raw_min": 0,
+              "raw_max": 35
+            },
+            {
+              "byte_offset": 4,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 5,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 6,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 7,
+              "raw_min": 0,
+              "raw_max": 255
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6",
+      "name": "list_candidate_fields",
+      "arguments": {
+        "can_id": 420
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "candidates": [
+            {
+              "can_id": 420,
+              "byte_offset": 0,
+              "start_bit": 0,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 1,
+              "start_bit": 8,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 2,
+              "start_bit": 16,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 3,
+              "start_bit": 24,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 4,
+              "start_bit": 32,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 5,
+              "start_bit": 40,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 6,
+              "start_bit": 48,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 7,
+              "start_bit": 56,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 0,
+              "start_bit": 0,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 1,
+              "start_bit": 8,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 2,
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 3,
+              "start_bit": 24,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 4,
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 5,
+              "start_bit": 40,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "byte_offset": 6,
+              "start_bit": 48,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7",
+      "name": "analyze_candidate",
+      "arguments": {
+        "can_id": 790,
+        "include_fit": true,
+        "width_bits": 16,
+        "byte_offset": 0
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 790,
+          "byte_offset": 0,
+          "start_bit": 0,
+          "width_bits": 16,
+          "endian": "little",
+          "signed": false,
+          "correlation": 0.9825380129704693,
+          "aligned_samples": 6000,
+          "raw_min": 800,
+          "raw_max": 4522,
+          "fit": {
+            "scale": 0.02722425182206318,
+            "offset": -26.854418430510066,
+            "rmse": 5.477454837668151,
+            "mae": 5.013990825148351,
+            "r_squared": 0.9653809469319579
+          }
+        }
+      }
+    }
+  ],
+  "turns": 5,
+  "error": null,
+  "retry_count": 0,
+  "provider_attempts": 5
+}

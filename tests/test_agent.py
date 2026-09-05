@@ -210,6 +210,63 @@ class AgentTests(unittest.TestCase):
             main()
         self.assertEqual(json.loads(output.getvalue())["status"], "complete")
 
+    def test_transient_retry_preserves_agent_state(self):
+        class TransientError(Exception):
+            code = 503
+        fake = FakeProvider()
+        snapshots = []
+        def respond(system, messages, declarations, schema):
+            snapshots.append([asdict(m) for m in messages])
+            if len(snapshots) == 2:
+                raise TransientError("503 UNAVAILABLE")
+            return fake.respond(system, messages, declarations, schema)
+        provider = MagicMock()
+        provider.respond.side_effect = respond
+        sleep = MagicMock()
+        result = self.run_provider(provider, retry_sleep=sleep, retry_jitter=lambda lo, hi: hi)
+        self.assertEqual(result.status, "complete")
+        self.assertEqual((result.turns, result.retry_count, result.provider_attempts), (3, 1, 4))
+        self.assertEqual(snapshots[1], snapshots[2])
+        self.assertEqual([e["name"] for e in result.trace],
+                         ["summarize_capture", "search_candidates", "inspect_can_id", "analyze_candidate"])
+        sleep.assert_called_once_with(1.0)
+
+    def test_retry_exhaustion_is_sanitized(self):
+        class TransientError(Exception):
+            code = 503
+        provider = MagicMock()
+        provider.respond.side_effect = TransientError("503 UNAVAILABLE\nAuthorization: Bearer hidden-key")
+        sleep = MagicMock()
+        result = self.run_provider(provider, retry_sleep=sleep)
+        self.assertEqual(result.status, "provider_error")
+        self.assertEqual((result.retry_count, result.provider_attempts, result.turns), (3, 4, 1))
+        self.assertEqual(sleep.call_count, 3)
+        self.assertNotIn("hidden-key", json.dumps(asdict(result)))
+
+    def test_gemini_retries_same_pending_tool_results(self):
+        from canary.llm.gemini import GeminiProvider
+        from canary.llm.retry import RetryingProvider
+        class TransientError(Exception):
+            code = 503
+        provider = GeminiProvider.__new__(GeminiProvider)
+        provider.types = SimpleNamespace(Part=lambda **kw: SimpleNamespace(**kw), FunctionResponse=SimpleNamespace)
+        provider.cursor = 1
+        provider.sequence = 0
+        provider.call_ids = {"1": "original-id"}
+        provider.pending_conclusion = True
+        provider.conclusion_id = "conclusion-id"
+        provider.chat = MagicMock()
+        provider.chat.send_message.side_effect = [TransientError("503"), SimpleNamespace(
+            candidates=[SimpleNamespace(content=SimpleNamespace(parts=[]))])]
+        messages = [Message("user", {}), Message("tool", {"id": "1", "name": "summarize_capture", "output": {"ok": True}}),
+                    Message("user", {"error": {"message": "correct conclusion"}})]
+        retry = RetryingProvider(provider, sleep=MagicMock())
+        retry.respond("system", messages, [], CONCLUSION_SCHEMA)
+        calls = provider.chat.send_message.call_args_list
+        self.assertEqual(calls[0].args, calls[1].args)
+        self.assertEqual(provider.cursor, len(messages))
+        self.assertFalse(provider.pending_conclusion)
+
 
 if __name__ == "__main__":
     unittest.main()

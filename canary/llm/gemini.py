@@ -24,7 +24,8 @@ class GeminiProvider:
             raise ValueError("Install the optional Gemini extra: python -m pip install -e .[gemini]") from None
         self.types = types
         try:
-            self.client = genai.Client(api_key=key, vertexai=False, http_options=types.HttpOptions(timeout=60000))
+            self.client = genai.Client(api_key=key, vertexai=False, http_options=types.HttpOptions(
+                timeout=60000, retry_options={"attempts": 1}))
         except Exception:
             raise ValueError("Gemini client initialization failed; check SDK and environment configuration") from None
         self.model, self.chat, self.cursor, self.sequence = model, None, 0, 0
@@ -43,6 +44,7 @@ class GeminiProvider:
                 system_instruction=system, tools=[types.Tool(function_declarations=declarations)],
                 automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))
         parts = []
+        answered_conclusion = False
         for message in messages[self.cursor:]:
             if message.role == "user":
                 if self.pending_conclusion and "error" in message.content:
@@ -50,7 +52,7 @@ class GeminiProvider:
                     if self.conclusion_id:
                         fields["id"] = self.conclusion_id
                     parts.append(types.Part(function_response=types.FunctionResponse(**fields)))
-                    self.pending_conclusion = False
+                    answered_conclusion = True
                 else:
                     parts.append(types.Part.from_text(text=json.dumps(message.content, allow_nan=False)))
             elif message.role == "tool":
@@ -59,8 +61,10 @@ class GeminiProvider:
                 if self.call_ids.get(event["id"]):
                     fields["id"] = self.call_ids[event["id"]]
                 parts.append(types.Part(function_response=types.FunctionResponse(**fields)))
-        self.cursor = len(messages)
         response = self.chat.send_message(parts)
+        self.cursor = len(messages)
+        if answered_conclusion:
+            self.pending_conclusion = False
         calls, texts, conclusion = [], [], None
         for part in response.candidates[0].content.parts:
             if part.function_call:

@@ -18,6 +18,9 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="use offline fake provider, regardless of provider setting")
     parser.add_argument("--max-turns", type=int, default=12)
     parser.add_argument("--max-tool-calls", type=int, default=30)
+    parser.add_argument("--max-retries", type=int, default=3)
+    parser.add_argument("--base-delay-seconds", type=float, default=1.0)
+    parser.add_argument("--max-delay-seconds", type=float, default=8.0)
     args = parser.parse_args()
     provider = None
     try:
@@ -27,7 +30,9 @@ def main() -> None:
             from .llm.gemini import GeminiProvider
             provider = GeminiProvider(args.model)
         result = run_agent(args.can_log, args.reference, args.value_column, provider,
-                           max_turns=args.max_turns, max_tool_calls=args.max_tool_calls)
+                           max_turns=args.max_turns, max_tool_calls=args.max_tool_calls,
+                           max_retries=args.max_retries, base_delay_seconds=args.base_delay_seconds,
+                           max_delay_seconds=args.max_delay_seconds)
         print(json.dumps(asdict(result), indent=2, allow_nan=False))
         if result.status != "complete":
             raise SystemExit(1)

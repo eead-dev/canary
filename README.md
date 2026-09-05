@@ -297,3 +297,23 @@ bounded correction opportunities. Provider failures are sanitized to avoid
 printing credential-bearing exceptions. The fake provider's fixed sequence is
 summary/search, inspection/analysis, conclusion; it does not represent live model
 quality. All agent and adapter tests are offline, including SDK-shaped stubs.
+
+### Transient provider retries
+
+Provider calls retry only structured HTTP 429, 500, 502, 503, and 504 errors
+(or `RESOURCE_EXHAUSTED` / `UNAVAILABLE` status names when no HTTP code exists).
+Authentication, request/model errors, validation failures, and other statuses
+are not retried; arbitrary exception messages are not used for classification.
+Retries repeat the same model turn and its pending tool results, preserving the
+analysis trace. Gemini's internal retries are disabled to avoid nested attempts.
+
+Defaults are three retries per model turn, a one-second initial backoff cap, and
+an eight-second maximum cap. The cap doubles after each failure; each delay is
+uniformly jittered between half and all of the cap. Override with
+`--max-retries`, `--base-delay-seconds`, and `--max-delay-seconds`, or the matching
+`run_agent` keyword arguments. Zero retries disables retries. Tests inject
+`retry_sleep` / `retry_jitter` and never wait in real time.
+
+Agent JSON includes cumulative `retry_count` and `provider_attempts` for the run.
+Retries do not consume model-turn or tool-call budgets. On exhaustion, status
+remains `provider_error` with sanitized diagnostics and the existing tool trace.

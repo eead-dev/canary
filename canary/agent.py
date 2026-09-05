@@ -7,6 +7,7 @@ import math
 from . import tools
 from .llm.base import Message, ModelProvider, ModelResponse, ToolCall
 from .llm.errors import provider_error
+from .llm.retry import RetryingProvider
 from .observation import Candidate, read_csv
 from .reference import read_reference
 
@@ -97,6 +98,8 @@ class AgentRun:
     trace: list[dict]
     turns: int
     error: dict | None = None
+    retry_count: int = 0
+    provider_attempts: int = 0
 
 
 class ToolDispatcher:
@@ -145,9 +148,18 @@ def checked_conclusion(data: dict, name: str, trace: list[dict]) -> AgentConclus
 
 
 def run_agent(can_log, reference_path, value_column: str, provider: ModelProvider, *,
-              max_turns: int = 12, max_tool_calls: int = 30) -> AgentRun:
+              max_turns: int = 12, max_tool_calls: int = 30, max_retries: int = 3,
+              base_delay_seconds: float = 1.0, max_delay_seconds: float = 8.0,
+              retry_sleep=None, retry_jitter=None) -> AgentRun:
     if any(type(v) is not int or v < 1 for v in (max_turns, max_tool_calls)):
         raise ValueError("agent limits must be positive integers")
+    provider = RetryingProvider(provider, max_retries=max_retries,
+                                base_delay_seconds=base_delay_seconds, max_delay_seconds=max_delay_seconds,
+                                sleep=retry_sleep, jitter=retry_jitter)
+
+    def outcome(status, conclusion, trace, turns, error=None):
+        return AgentRun(status, conclusion, trace, turns, error,
+                        provider.retry_count, provider.provider_attempts)
     validate(value_column, CONCLUSION_SCHEMA["properties"]["reference_name"], "reference_name")
     dispatcher = ToolDispatcher(read_csv(can_log), read_reference(reference_path, value_column))
     declarations = [{"name": name, "description": getattr(tools, name).__doc__ or name,
@@ -158,7 +170,7 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
         try:
             response = provider.respond(SYSTEM, messages, declarations, CONCLUSION_SCHEMA)
         except Exception as exc:
-            return AgentRun("provider_error", None, trace, turn, provider_error(exc))
+            return outcome("provider_error", None, trace, turn, provider_error(exc))
         try:
             if not isinstance(response, ModelResponse) or type(response.text) is not str or type(response.tool_calls) is not list:
                 raise ValueError("invalid provider response")
@@ -166,14 +178,14 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                 if response.tool_calls:
                     raise ValueError("conclusion cannot accompany tool calls")
                 conclusion = checked_conclusion(response.conclusion, value_column, trace)
-                return AgentRun("complete", conclusion, trace, turn)
+                return outcome("complete", conclusion, trace, turn)
             if not response.tool_calls:
                 raise ValueError("response needs tool calls or a structured conclusion")
             for call in response.tool_calls:
                 if not isinstance(call, ToolCall) or type(call.id) is not str or not call.id or type(call.name) is not str:
                     raise ValueError("invalid tool request envelope")
             if len(trace) + len(response.tool_calls) > max_tool_calls:
-                return AgentRun("max_tool_calls", None, trace, turn)
+                return outcome("max_tool_calls", None, trace, turn)
             messages.append(Message("assistant", asdict(response)))
             for call in response.tool_calls:
                 if call.id in seen:
@@ -186,4 +198,4 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                 messages.append(Message("tool", event))
         except (ValueError, TypeError, KeyError, OverflowError) as exc:
             messages.append(Message("user", {"error": {"code": "malformed_response", "message": str(exc)}}))
-    return AgentRun("max_turns", None, trace, max_turns)
+    return outcome("max_turns", None, trace, max_turns)
