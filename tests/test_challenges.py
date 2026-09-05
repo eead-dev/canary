@@ -131,11 +131,15 @@ class ChallengeTests(unittest.TestCase):
         required = {"scenario", "expected_support", "seed", "candidates_searched", "candidates_ranked",
                     "top_can_id", "byte_offset", "start_bit", "width_bits", "endian", "signed", "correlation", "r_squared",
                     "aligned_samples", "recovered", "true_field_rank", "reason", "distractor_rank", "top_fitted",
-                    "alignment_tolerance", "alignment_mode", "alignment_diagnostics", "encoding_comparison"}
+                    "alignment_tolerance", "alignment_mode", "alignment_diagnostics", "encoding_comparison",
+                    "signal_value_recovered", "exact_layout_recovered", "layout_ambiguous", "performance"}
         self.assertEqual(len(self.results), 9)
         for result in self.results.values():
             self.assertEqual(set(result), required)
             self.assertEqual(result["candidates_searched"], 1860)
+            self.assertTrue(result["signal_value_recovered"])
+            self.assertEqual(result["exact_layout_recovered"], result["recovered"] and not result["layout_ambiguous"])
+            self.assertEqual(result["layout_ambiguous"], result["top_fitted"][0]["equivalence"]["equivalence_count"] > 1)
             self.assertEqual(result["alignment_tolerance"], 0.004 if result["scenario"] == "timestamp_jitter" else 0)
             self.assertIn(result["expected_support"], ("supported", "partially_supported", "unsupported"))
             json.dumps(result, allow_nan=False)

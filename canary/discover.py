@@ -4,10 +4,11 @@ import argparse
 from pathlib import Path
 
 from .discovery import discover_signal
+from .analysis import AnalysisRun
 from .fitting import fit_ranked, write_reconstruction
 from .observation import candidate_fields, read_csv, unique_ids
 from .reference import read_reference
-from .reporting import candidate_details, equation, write_report
+from .reporting import candidate_details, equation, write_report, layout_text
 
 
 def main() -> None:
@@ -39,19 +40,20 @@ def main() -> None:
     try:
         frames = read_csv(args.can_log)
         reference = read_reference(args.reference, args.value_column)
-        results = discover_signal(frames, reference, tolerance=args.tolerance, min_samples=args.min_samples, alignment=args.alignment)
+        run = AnalysisRun(frames, reference, tolerance=args.tolerance, alignment=args.alignment)
+        results = discover_signal(frames, reference, tolerance=args.tolerance, min_samples=args.min_samples, alignment=args.alignment, run=run)
         displayed = results[:args.top]
         if args.fit:
             displayed = fit_ranked(frames, reference, displayed, tolerance=args.tolerance,
-                                   min_samples=args.min_samples, alignment=args.alignment)
+                                   min_samples=args.min_samples, alignment=args.alignment, run=run)
         if args.output_reconstruction:
             if not displayed:
                 raise ValueError("no fitted candidate available for reconstruction")
             write_reconstruction(args.output_reconstruction, frames, reference, displayed[0],
-                                 tolerance=args.tolerance, alignment=args.alignment)
+                                 tolerance=args.tolerance, alignment=args.alignment, run=run)
         if args.report:
             write_report(args.report, frames, reference, displayed, args.value_column,
-                         tolerance=args.tolerance, alignment=args.alignment)
+                         tolerance=args.tolerance, alignment=args.alignment, run=run)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     searched = len(unique_ids(frames)) * len(candidate_fields())
@@ -61,6 +63,9 @@ def main() -> None:
     print(f"Candidates searched: {searched}")
     print(f"Candidates per CAN ID: {len(candidate_fields())}")
     print(f"Candidates ranked: {len(results)}")
+    print("Search performance:")
+    for key, value in run.statistics().items():
+        print(f"  {key}: {value}")
     print(f"Skipped (constant or insufficient aligned samples): {searched - len(results)}")
     if displayed and displayed[0].alignment_diagnostics:
         diagnostic = displayed[0].alignment_diagnostics
@@ -82,6 +87,12 @@ def main() -> None:
         print(f"Start bit:    {result.start_bit}\nLength:       {result.width_bits} bits")
         print(f"Endian:       {result.endian}\nSigned:       {'yes' if result.signed else 'no'}")
         print(f"Correlation:  {result.correlation:.12f}\nSamples:      {result.aligned_samples}")
+        if result.equivalence:
+            group = result.equivalence
+            print(f"Equivalent layouts: {group.equivalence_count}; {group.evidence}")
+            print("Representative: " + layout_text(group.representative))
+            for candidate in group.equivalent_candidates:
+                print("  Equivalent: " + layout_text(candidate))
         if args.fit:
             print(f"Scale:        {result.scale:.12g}\nOffset:       {result.offset:.12g}")
             print(f"RMSE:         {result.rmse:.12g}\nMAE:          {result.mae:.12g}")

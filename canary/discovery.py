@@ -6,6 +6,7 @@ import math
 from .observation import Frame, candidate_fields, decode_words, frames_for_id, unique_ids
 from .reference import Series, validate_reference
 from .alignment import AlignmentDiagnostics, align_series, configuration
+from .analysis import analysis_run, EquivalenceClass
 
 
 def align_samples(candidate: Series, reference: Series, *, tolerance: float = 0.0, alignment: str | None = None
@@ -36,15 +37,19 @@ def pearson(xs: list[float], ys: list[float], *, min_samples: int = 3) -> float 
         raise ValueError("Pearson inputs must be finite")
     if len(xs) < min_samples:
         return None
-    centered = []
-    for values in (xs, ys):
-        # Positive normalization avoids overflow for large finite inputs.
-        magnitude = max(abs(v) for v in values)
-        normalized = [v / magnitude for v in values] if magnitude else [0.0] * len(values)
-        mean = math.fsum(normalized) / len(values)
-        centered.append([v - mean for v in normalized])
-    dx, dy = centered
-    xx, yy = math.fsum(v * v for v in dx), math.fsum(v * v for v in dy)
+    return _correlate(*_prepare(xs), *_prepare(ys))
+
+
+def _prepare(values):
+    """Original Pearson normalization, reusable for an unchanged reference."""
+    magnitude = max(abs(v) for v in values)
+    normalized = [v / magnitude for v in values] if magnitude else [0.0] * len(values)
+    mean = math.fsum(normalized) / len(values)
+    centered = [v - mean for v in normalized]
+    return centered, math.fsum(v * v for v in centered)
+
+
+def _correlate(dx, xx, dy, yy):
     if xx == 0 or yy == 0:
         return None
     r = math.fsum(x * y for x, y in zip(dx, dy)) / math.sqrt(xx) / math.sqrt(yy)
@@ -62,6 +67,7 @@ class DiscoveryResult:
     signed: bool = False
     alignment_diagnostics: AlignmentDiagnostics | None = None
     start_bit: int | None = None
+    equivalence: EquivalenceClass | None = None
 
     def __post_init__(self):
         if self.start_bit is None:
@@ -69,29 +75,23 @@ class DiscoveryResult:
 
 
 def discover_signal(can_log: list[Frame], reference_series: Series, *,
-                    tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> list[DiscoveryResult]:
-    """Search every supported field; omit candidates with undefined correlation.
-
-    Rank by descending absolute r, then CAN ID, position, and field width.
-    No physical interpretation or scale/offset estimation is performed.
-    """
-    validate_reference(reference_series)
-    config = configuration(alignment, tolerance)
+                    tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
+                    run=None) -> list[DiscoveryResult]:
+    """Keep every rankable layout in the original order; expose exact equivalence."""
     pearson([], [], min_samples=min_samples)
+    run = analysis_run(can_log, reference_series, tolerance, alignment, run)
+    if min_samples in run._ranked:
+        return list(run._ranked[min_samples])
+    run.enumerate()
     results = []
-    for can_id in unique_ids(can_log):
-        frames = frames_for_id(can_log, can_id)
-        # Timestamps are identical for every field on this ID. Match indices once
-        # using the unchanged aligner, then decode only matched payloads.
-        aligned = align_series([(f.timestamp, i) for i, f in enumerate(frames)], reference_series, config)
-        matched_frames = [frames[i] for _, i, _ in aligned.rows]
-        ys = [y for _, _, y in aligned.rows]
-        words = {endian: [int.from_bytes(f.data, endian) for f in matched_frames] for endian in ("little", "big")}
+    for can_id in sorted(run.by_id):
         for candidate in candidate_fields(can_id):
-            xs = decode_words(words[candidate.endian], candidate)
-            r = pearson(xs, ys, min_samples=min_samples)
+            r = run.correlation(candidate, min_samples)
             if r is not None:
                 results.append(DiscoveryResult(can_id, candidate.byte_offset,
-                                               candidate.width_bits, r, len(xs), candidate.endian, candidate.signed,
-                                               alignment_diagnostics=aligned.diagnostics, start_bit=candidate.start_bit))
-    return sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.start_bit, r.width_bits))
+                    candidate.width_bits, r, len(run.aligned(candidate).values), candidate.endian, candidate.signed,
+                    alignment_diagnostics=run.axis(can_id)[3], start_bit=candidate.start_bit,
+                    equivalence=run.equivalence(candidate)))
+    ranked = sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.start_bit, r.width_bits))
+    run._ranked[min_samples] = tuple(ranked)
+    return ranked

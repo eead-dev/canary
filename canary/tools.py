@@ -13,6 +13,7 @@ from .observation import (
     frames_for_id, timestamp_bounds, unique_ids, update_frequencies,
 )
 from .reference import Series
+from .analysis import analysis_run
 from .alignment import align_series, configuration
 
 
@@ -64,13 +65,16 @@ def list_can_ids(frames: list[Frame]) -> dict:
                         for can_id, count in frame_counts(frames).items()]}
 
 
-def inspect_can_id(frames: list[Frame], can_id: int) -> dict:
+def inspect_can_id(frames: list[Frame], can_id: int, *, run=None) -> dict:
     """Return byte ranges over all selected frames, without interpreting them."""
     selected = _selected(frames, can_id)
+    if run is not None and tuple(frames) != run.frames:
+        raise ValueError("analysis run does not match capture")
     ranges = []
     for candidate in byte_aligned_candidates():
         if candidate.width_bits == 8 and not candidate.signed:
-            values = [v for _, v in extract_candidate(selected, can_id, candidate)]
+            values = (run.decoded(Candidate(candidate.byte_offset, 8, can_id=can_id)).values if run is not None
+                      else [v for _, v in extract_candidate(selected, can_id, candidate)])
             ranges.append({"byte_offset": candidate.byte_offset, "raw_min": min(values), "raw_max": max(values)})
     return {"can_id": can_id, "frame_count": len(selected),
             "update_frequency_hz": update_frequencies(selected)[can_id],
@@ -83,55 +87,53 @@ def list_candidate_fields(frames: list[Frame], can_id: int) -> dict:
     return {"can_id": can_id, "candidates": [_encoding(can_id, c) for c in candidate_fields(can_id)]}
 
 
-def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit):
+def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit, run):
     selected = _selected(frames, can_id)
     candidate = Candidate(byte_offset, width_bits, endian, signed, can_id, start_bit=start_bit)
     _reference(reference)
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
-    series = extract_candidate(selected, can_id, candidate)
-    aligned = align_series(series, reference, configuration(alignment, tolerance))
-    xs, ys = [x for _, x, _ in aligned.rows], [y for _, _, y in aligned.rows]
-    return candidate, xs, ys, asdict(aligned.diagnostics)
-
+    run = analysis_run(frames, reference, tolerance, alignment, run)
+    return candidate, run.aligned(candidate).values, run.axis(can_id)[2], asdict(run.axis(can_id)[3]), run
 
 def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = None, width_bits: int | None = None,
                       reference: Series | None = None, *, include_fit: bool = False,
                       tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
-                      endian: str = "little", signed: bool = False, start_bit: int | None = None) -> dict:
+                      endian: str = "little", signed: bool = False, start_bit: int | None = None, run=None) -> dict:
     """Raw ranges cover aligned samples only; fit is included only on request."""
     if type(include_fit) is not bool:
         raise ValueError("include_fit must be boolean")
-    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit)
-    result = {**_encoding(can_id, candidate), "correlation": pearson(xs, ys, min_samples=min_samples),
+    candidate, xs, ys, diagnostics, run = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit, run)
+    result = {**_encoding(can_id, candidate), "correlation": run.correlation(candidate, min_samples),
               "aligned_samples": len(xs), "raw_min": min(xs) if xs else None,
-              "raw_max": max(xs) if xs else None, "alignment_diagnostics": diagnostics}
+              "raw_max": max(xs) if xs else None, "alignment_diagnostics": diagnostics, "equivalence": asdict(run.equivalence(candidate))}
     if include_fit:
-        fit = fit_linear(xs, ys, min_samples=min_samples)
+        fit = run.fit(candidate, min_samples)
         result["fit"] = asdict(fit) if fit is not None else None
     return result
 
 
 def search_candidates(frames: list[Frame], reference: Series, *, top_n: int = 10,
-                      tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> dict:
+                      tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None, run=None) -> dict:
     _frames(frames)
     _reference(reference)
     if type(top_n) is not int or top_n < 1:
         raise ValueError("top_n must be a positive integer")
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
-    ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples, alignment=alignment)
+    run = analysis_run(frames, reference, tolerance, alignment, run)
+    ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples, alignment=alignment, run=run)
     return {"candidates_searched": len(unique_ids(frames)) * len(candidate_fields()),
-            "candidates_ranked": len(ranked),
+            "candidates_ranked": len(ranked), "performance": run.statistics(),
             "results": [{k: v for k, v in asdict(r).items() if k != "byte_offset" or v is not None}
                         for r in ranked[:top_n]]}
 
 
 def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = None, width_bits: int | None = None,
                   reference: Series | None = None, *, tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
-                  endian: str = "little", signed: bool = False, start_bit: int | None = None) -> dict:
+                  endian: str = "little", signed: bool = False, start_bit: int | None = None, run=None) -> dict:
     """Fit one explicit field; null fit means insufficient or constant raw data."""
-    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit)
-    fit = fit_linear(xs, ys, min_samples=min_samples)
+    candidate, xs, ys, diagnostics, run = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit, run)
+    fit = run.fit(candidate, min_samples)
     return {**_encoding(can_id, candidate), "aligned_samples": len(xs),
-            "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics}
+            "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics, "equivalence": asdict(run.equivalence(candidate))}

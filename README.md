@@ -467,3 +467,76 @@ With the default fixtures, the bit-offset target now ranks first. The
 series for the target's low 12 bits and its full 16 bits. The existing width
 tie-break ranks 12 bits first and the true 16-bit layout second; strict layout
 recovery remains false for those cases despite identical reconstructed values.
+
+## Run-scoped cache and observational equivalence
+
+`canary.analysis.AnalysisRun` snapshots one capture, reference, and alignment
+configuration. Pass it through the optional `run=` argument to reuse decoding,
+correlation, and fits across calls. Mismatching or mutated inputs are rejected.
+The CLI, `discover_and_fit`, tool demo, and tool dispatcher already share a run
+internally. The dispatcher keeps separate caches for requested tolerances; no
+model schemas, prompts, or reasoning change. There is no global mutable cache.
+
+```python
+from canary.analysis import AnalysisRun
+from canary.discovery import discover_signal
+from canary.fitting import fit_ranked
+
+run = AnalysisRun(frames, reference)
+ranked = discover_signal(frames, reference, run=run)
+fitted = fit_ranked(frames, reference, ranked[:5], run=run)
+print(run.statistics())
+```
+
+The cache stores compact immutable integer series, with full-capture values for
+inspection and aligned values for analysis. Unsigned extraction is reused for
+signed interpretation. Identical series share storage, scores, and fits; reference
+normalization is computed once per aligned reference axis. Pearson arithmetic and
+OLS formulas are unchanged. Cache memory grows with distinct series and capture
+length; discard the run when finished. It is a local synchronous analysis object,
+not a persistent or shared service.
+
+Each discovery/fitted result carries an `equivalence` object:
+
+- `representative`: a complete CandidateSpec.
+- `equivalent_candidates`: all other layouts with exactly the same aligned series.
+- `equivalence_count`: total layouts, including the representative.
+- `evidence`: identical decoded time series on this aligned capture.
+
+Equality includes ordered timestamps and every raw integer; alignment/reference
+axes must also agree. Complete byte-key equality verifies matches, so hash
+collisions cannot merge different series. Equal correlation or affine-related
+raw values alone never establishes equivalence. Equivalence is capture-specific;
+unmatched samples may differ. All 620 layouts per ID remain enumerated, and every
+rankable layout remains in the original ranked list, including equivalent members
+outside the requested top N. Representatives use CAN ID, start bit, width, then
+little-before-big and unsigned-before-signed, consistent with the existing stable
+tie order. Representatives are display choices, not claims of unique layouts.
+
+Safe pruning skips Pearson work for constant series and reuses scores for exact
+equivalents. Constants and insufficient samples remain unrankable as before.
+The CLI and self-contained HTML report show equivalent layouts explicitly; tools
+expose the same structured evidence. An explicit candidate analysis enumerates
+layouts to establish its complete equivalence class, reusing a supplied run.
+
+Performance fields are `candidates_enumerated`, `unique_decoded_series`,
+`equivalence_classes`, `equivalent_candidates_grouped`,
+`constant_candidates_skipped`, `decoding_seconds`, `correlation_seconds`, and
+`total_seconds`. Counts include all aligned series, including constant/empty
+classes; grouping saves work without removing layouts. Unique-series and class
+counts are equal. Timings are wall-clock measurements, not deterministic results.
+Run total time includes its lifetime up to the snapshot; evaluator totals also
+include parsing and fitting. Decoding time includes packing/aligned selection;
+other overhead is included in total time.
+
+Challenge evaluation now distinguishes:
+
+- `signal_value_recovered`: the true field is in the winning equivalence class.
+- `exact_layout_recovered`: the winner matches the true field and has no equivalent
+  alternative in the supported space.
+- `layout_ambiguous`: the winning class contains multiple layouts.
+
+The legacy `recovered` field remains a first-layout match for compatibility; use
+the new fields to interpret outcomes. The two 12/16-bit ties are successful value
+recoveries with ambiguous layouts. Positive 16-bit signed/unsigned ties are also
+reported honestly. No fixture metadata is passed into production analysis.

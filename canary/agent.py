@@ -9,6 +9,7 @@ from .llm.base import Message, ModelProvider, ModelResponse, ToolCall
 from .llm.errors import provider_error
 from .llm.retry import RetryingProvider
 from .observation import Candidate, CandidateSpec, read_csv
+from .analysis import AnalysisRun
 from .reference import read_reference
 
 
@@ -105,6 +106,7 @@ class AgentRun:
 class ToolDispatcher:
     def __init__(self, frames, reference):
         self.frames, self.reference = frames, reference
+        self.runs = {}
         self.functions = {name: getattr(tools, name) for name in TOOL_SCHEMAS}
 
     def dispatch(self, call: ToolCall) -> dict:
@@ -119,6 +121,11 @@ class ToolDispatcher:
             kwargs = dict(call.arguments)
             if call.name in ("search_candidates", "analyze_candidate", "fit_candidate"):
                 kwargs["reference"] = self.reference
+            if call.name in ("search_candidates", "analyze_candidate", "fit_candidate", "inspect_can_id"):
+                tolerance = kwargs.get("tolerance", 0.0)
+                if tolerance not in self.runs:
+                    self.runs[tolerance] = AnalysisRun(self.frames, self.reference, tolerance=tolerance)
+                kwargs["run"] = self.runs[tolerance]
             result = self.functions[call.name](self.frames, **kwargs)
             json.dumps(result, allow_nan=False)
             return {"ok": True, "result": result}

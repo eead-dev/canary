@@ -8,6 +8,7 @@ from pathlib import Path
 from .discovery import DiscoveryResult, align_observations, discover_signal
 from .observation import CandidateSpec, Frame, extract_candidate
 from .reference import Series
+from .analysis import analysis_run, EquivalenceClass
 from .alignment import AlignmentDiagnostics, align_series, configuration
 
 
@@ -102,6 +103,7 @@ class FittedResult:
     aligned_samples: int
     alignment_diagnostics: AlignmentDiagnostics | None = None
     start_bit: int | None = None
+    equivalence: EquivalenceClass | None = None
 
     def __post_init__(self):
         if self.start_bit is None:
@@ -110,34 +112,36 @@ class FittedResult:
 
 def fit_ranked(can_log: list[Frame], reference_series: Series,
                ranked: list[DiscoveryResult], *, tolerance: float = 0.0,
-               min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
+               min_samples: int = 3, alignment: str | None = None, run=None) -> list[FittedResult]:
+    run = analysis_run(can_log, reference_series, tolerance, alignment, run)
     results = []
     for result in ranked:
-        raw = extract_candidate(can_log, result.can_id, CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed))
-        aligned = align_series(raw, reference_series, configuration(alignment, tolerance))
-        rows = aligned.rows
-        fit = fit_linear([x for _, x, _ in rows], [y for _, _, y in rows], min_samples=min_samples)
+        candidate = CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed, result.can_id)
+        rows = run.rows(candidate)
+        diagnostics = run.axis(result.can_id)[3]
+        fit = run.fit(candidate, min_samples)
         if fit is not None:
             results.append(FittedResult(result.can_id, result.byte_offset, result.width_bits,
                                         result.endian, result.signed, result.correlation,
-                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows), aligned.diagnostics, result.start_bit))
+                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows), diagnostics, result.start_bit, result.equivalence))
     return results
 
 
 def discover_and_fit(can_log: list[Frame], reference_series: Series, top_n: int = 10, *,
-                     tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
+                     tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None, run=None) -> list[FittedResult]:
     if type(top_n) is not int or top_n < 1:
         raise ValueError("top_n must be a positive integer")
-    ranked = discover_signal(can_log, reference_series, tolerance=tolerance, min_samples=min_samples, alignment=alignment)
+    run = analysis_run(can_log, reference_series, tolerance, alignment, run)
+    ranked = discover_signal(can_log, reference_series, tolerance=tolerance, min_samples=min_samples, alignment=alignment, run=run)
     return fit_ranked(can_log, reference_series, ranked[:top_n],
-                      tolerance=tolerance, min_samples=min_samples, alignment=alignment)
+                      tolerance=tolerance, min_samples=min_samples, alignment=alignment, run=run)
 
 
 def write_reconstruction(path: str | Path, can_log: list[Frame], reference_series: Series,
-                         result: FittedResult, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
+                         result: FittedResult, *, tolerance: float = 0.0, alignment: str | None = None, run=None) -> None:
     """Write matched samples with candidate timestamps; overwrite the output."""
-    raw = extract_candidate(can_log, result.can_id, CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed))
-    rows = align_observations(raw, reference_series, tolerance=tolerance, alignment=alignment)
+    run = analysis_run(can_log, reference_series, tolerance, alignment, run)
+    rows = run.rows(CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed, result.can_id))
     predictions = reconstruct([x for _, x, _ in rows], result.scale, result.offset)
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

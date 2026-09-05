@@ -7,6 +7,7 @@ from .discovery import align_observations
 from .fitting import FittedResult, reconstruct
 from .observation import CandidateSpec, Frame, candidate_fields, extract_candidate, timestamp_bounds, unique_ids
 from .reference import Series
+from .analysis import analysis_run
 
 
 def number(value: float | None) -> str:
@@ -15,6 +16,26 @@ def number(value: float | None) -> str:
 
 def equation(result: FittedResult) -> str:
     return f"physical = raw * {number(result.scale)} + ({number(result.offset)})"
+
+
+def layout_text(candidate):
+    return (f"0x{candidate.can_id:03X}, start bit {candidate.start_bit}, {candidate.width_bits} bits, "
+            f"{candidate.endian}, {'signed' if candidate.signed else 'unsigned'}")
+
+
+def equivalence_html(results):
+    seen, sections = set(), []
+    for result in results:
+        group = result.equivalence
+        if group is None or group.representative in seen:
+            continue
+        seen.add(group.representative)
+        items = ''.join(f'<li>{escape(layout_text(c))}</li>' for c in group.equivalent_candidates)
+        sections.append(f'<h3>Representative: {escape(layout_text(group.representative))}</h3>'
+                        f'<p>Equivalence count: {group.equivalence_count}. {escape(group.evidence)}.</p>'
+                        + (f'<ul>{items}</ul><p>Layout is ambiguous on this capture.</p>' if items
+                           else '<p>No equivalent alternative found in the supported candidate space.</p>'))
+    return ''.join(sections)
 
 
 def candidate_details(result: FittedResult) -> list[tuple[str, str]]:
@@ -64,13 +85,13 @@ def _chart(rows: list[tuple[float, float, float]], predictions: list[float], nam
 
 
 def write_report(path: str | Path, frames: list[Frame], reference: Series,
-                 results: list[FittedResult], reference_name: str, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
+                 results: list[FittedResult], reference_name: str, *, tolerance: float = 0.0, alignment: str | None = None, run=None) -> None:
     """Write static HTML for fitted results in their existing ranked order."""
     if not results:
         raise ValueError("no fitted candidate available for report")
     best = results[0]
-    series = extract_candidate(frames, best.can_id, CandidateSpec(best.start_bit, best.width_bits, best.endian, best.signed))
-    rows = align_observations(series, reference, tolerance=tolerance, alignment=alignment)
+    run = analysis_run(frames, reference, tolerance, alignment, run)
+    rows = run.rows(CandidateSpec(best.start_bit, best.width_bits, best.endian, best.signed, best.can_id))
     predictions = reconstruct([x for _, x, _ in rows], best.scale, best.offset)
     bounds = timestamp_bounds(frames)
     duration = number(bounds[1] - bounds[0]) if bounds else "N/A"
@@ -83,10 +104,12 @@ def write_report(path: str | Path, frames: list[Frame], reference: Series,
                   str(result.start_bit), str(result.width_bits), result.endian,
                   "yes" if result.signed else "no", number(result.correlation),
                   number(result.scale), number(result.offset), number(result.rmse),
-                  number(result.mae), number(result.r_squared), str(result.aligned_samples)]
+                  number(result.mae), number(result.r_squared), str(result.aligned_samples),
+                  str(result.equivalence.equivalence_count) if result.equivalence else "N/A"]
         table.append('<tr>' + ''.join(f'<td>{escape(v)}</td>' for v in values) + '</tr>')
     headers = ("Rank", "CAN ID", "Byte", "Start bit", "Bits", "Endian", "Signed", "Pearson r",
-               "Scale", "Offset", "RMSE", "MAE", "R-squared", "Samples")
+               "Scale", "Offset", "RMSE", "MAE", "R-squared", "Samples", "Equivalent layouts")
+    performance = ''.join(f'<li>{escape(k)}: {escape(str(v))}</li>' for k, v in run.statistics().items())
     document = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CANary Signal Discovery Report</title>
@@ -118,6 +141,8 @@ Byte offset is shown only for byte-aligned starts. Endianness is immaterial only
 Metrics describe the same samples used for fitting; correlation does not establish signal identity.</p></section>
 <section><h2>Top candidates</h2><div class="table-wrap"><table><thead><tr>
 {''.join(f'<th scope="col">{h}</th>' for h in headers)}</tr></thead><tbody>{''.join(table)}</tbody></table></div></section>
+<section><h2>Equivalent layouts</h2>{equivalence_html(results)}</section>
+<section><h2>Search performance</h2><ul>{performance}</ul></section>
 </main></body></html>'''
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

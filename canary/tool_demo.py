@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from .observation import read_csv
+from .analysis import AnalysisRun
 from .reference import read_reference
 from .tools import (analyze_candidate, fit_candidate, inspect_can_id, list_can_ids,
                     list_candidate_fields, search_candidates, summarize_capture)
@@ -19,15 +20,16 @@ def main() -> None:
     try:
         frames = read_csv(args.can_log)
         reference = read_reference(args.reference, args.value_column)
-        search = search_candidates(frames, reference, top_n=3)
+        run = AnalysisRun(frames, reference)
+        search = search_candidates(frames, reference, top_n=3, run=run)
         output = {"summarize_capture": summarize_capture(frames), "list_can_ids": list_can_ids(frames),
                   "search_candidates": search}
         if search["results"]:
             best = search["results"][0]
             can_id = best["can_id"]
             selection = {"frames": frames, "can_id": can_id, "start_bit": best["start_bit"],
-                         "width_bits": best["width_bits"], "reference": reference}
-            output.update({"inspect_can_id": inspect_can_id(frames, can_id),
+                         "width_bits": best["width_bits"], "reference": reference, "run": run}
+            output.update({"inspect_can_id": inspect_can_id(frames, can_id, run=run),
                            "list_candidate_fields": list_candidate_fields(frames, can_id),
                            "analyze_candidate": analyze_candidate(**selection, include_fit=True, endian=best["endian"], signed=best["signed"]),
                            "fit_candidate": fit_candidate(**selection, endian=best["endian"], signed=best["signed"])})
