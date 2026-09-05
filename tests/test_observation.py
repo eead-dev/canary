@@ -135,7 +135,7 @@ class ObservationTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, 2)
             self.assertIn("line 2: timestamp", errors.getvalue())
 
-    def test_analysis_has_no_simulator_or_reference_dependency(self):
+    def test_analysis_has_no_simulator_dependency(self):
         for path in (ROOT / "canary").glob("*.py"):
             source = path.read_text(encoding="utf-8")
             with self.subTest(path=path.name):

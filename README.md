@@ -1,7 +1,7 @@
 # CANary
 
 CANary contains a synthetic automotive CAN data generator and a generic CAN
-observation/parsing layer.
+observation/parsing layer with deterministic reference-based candidate ranking.
 Requires Python 3.12 or newer; no third-party dependencies are needed.
 
 Run from the repository root:
@@ -54,8 +54,8 @@ The field codec also supports nonzero offsets, covered by tests.
 
 Accelerator is byte 5 of `0x245` at 0.5 percent per unit; brake is bit 2 of
 byte 1 on that ID. RPM occupies bytes 0–1 of `0x316` at 1 RPM per unit.
-All multibyte fields are little-endian. No signal identification, correlation,
-DBC, AI, or graphical user interface is implemented.
+All multibyte fields are little-endian. No DBC, AI, or graphical user interface
+is implemented.
 
 ## CAN observations
 
@@ -85,6 +85,52 @@ series = extract_candidate(frames, frames[0].can_id, Candidate(0, 16))
 # series contains (timestamp, raw_unsigned_value) pairs; no physical interpretation.
 ```
 
-The production `canary` package has no simulator or reference-data dependency.
-It neither reads ground-truth layouts nor fits scale/offset or ranks candidates.
+The production `canary` package has no simulator dependency. It does not read
+ground-truth layouts or fit scale/offset.
 Tests for observations live in `tests/test_observation.py`.
+
+## Reference-based discovery
+
+Run from the repository root. Windows CMD multiline invocation (the caret must
+be the last character on each continued line):
+
+```bat
+python -m canary.discover ^
+  datasets/synthetic/can_log.csv ^
+  datasets/synthetic/speed_reference.csv ^
+  --value-column speed_kph ^
+  --top 10
+```
+
+For PowerShell or other shells, use one line:
+
+```sh
+python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 10
+```
+
+`canary/reference.py` parses the named numeric column and finite timestamps.
+Timestamps must strictly increase; duplicates, malformed rows, and missing or
+duplicate headers raise clear errors. Extra named columns are ignored.
+
+`canary/discovery.py` exposes `discover_signal(frames, reference_series)` returning
+ranked raw candidates. Reference series are lists of `(timestamp, value)` pairs.
+All 15 supported configurations are searched for each observed ID. Candidate
+samples are sorted by timestamp and matched exactly by default. `--tolerance`
+sets an inclusive distance in seconds for greedy nearest matching, with earlier
+reference timestamps winning ties. Matches are monotonic and one-to-one; no
+interpolation or delay search occurs. Duplicate candidate times retain input
+order, and a reference observation cannot be reused.
+
+Pearson correlation uses normalized, centered sums from the standard library.
+`--min-samples` defaults to 3 and cannot be lower. Constant series and candidates
+with insufficient matches are omitted from ranking and counted as skipped.
+Empty inputs yield no ranked candidates. Scores sort by descending absolute
+correlation, preserving the sign; exact ties sort by ID, byte offset, then width.
+Results include encoding and aligned sample count. For 8-bit fields the reported
+little endianness is immaterial. Correlation measures tracking, not semantic
+identity or statistical significance; overlapping fields can score similarly.
+
+`canary/discover.py` provides the CLI; `tests/test_discovery.py` validates it and
+the engine. Production code uses only observation APIs and supplied reference
+data; only tests consult the generator layout. This stage does not name signals
+beyond the user-supplied reference column, fit physical units, or detect counters.
