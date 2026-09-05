@@ -1,0 +1,29 @@
+{
+  "scenario": "unsupported_signed",
+  "seed": 42,
+  "expected_support": "unsupported",
+  "duration_seconds": 60,
+  "sample_rate_hz": 100,
+  "sample_count": 6000,
+  "reference_column": "value",
+  "target": {
+    "can_id": 420,
+    "start_bit": 16,
+    "width_bits": 16,
+    "endian": "little",
+    "signed": true,
+    "scale": 0.01,
+    "offset": 0.0
+  },
+  "bit_numbering": "LSB0 for little-endian; big-endian start_bit identifies first storage byte",
+  "reference_noise": null,
+  "timestamp_jitter_seconds": 0.0,
+  "distractor": null,
+  "distractor_formula": null,
+  "rng_stream_seeds": {
+    "payload": 42,
+    "noise": 43,
+    "can_time": 44,
+    "reference_time": 45
+  }
+}

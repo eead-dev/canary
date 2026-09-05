@@ -13,6 +13,7 @@ from .observation import (
     frames_for_id, timestamp_bounds, unique_ids, update_frequencies,
 )
 from .reference import Series
+from .alignment import align_series, configuration
 
 
 def _frames(frames: list[Frame]) -> None:
@@ -80,27 +81,28 @@ def list_candidate_fields(frames: list[Frame], can_id: int) -> dict:
     return {"can_id": can_id, "candidates": [_encoding(can_id, c) for c in byte_aligned_candidates()]}
 
 
-def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance):
+def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment):
     selected = _selected(frames, can_id)
     candidate = Candidate(byte_offset, width_bits)
     _reference(reference)
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
     series = extract_candidate(selected, can_id, candidate)
-    xs, ys = align_samples(series, reference, tolerance=tolerance)
-    return candidate, xs, ys
+    aligned = align_series(series, reference, configuration(alignment, tolerance))
+    xs, ys = [x for _, x, _ in aligned.rows], [y for _, _, y in aligned.rows]
+    return candidate, xs, ys, asdict(aligned.diagnostics)
 
 
 def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int, width_bits: int,
                       reference: Series, *, include_fit: bool = False,
-                      tolerance: float = 0.0, min_samples: int = 3) -> dict:
+                      tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> dict:
     """Raw ranges cover aligned samples only; fit is included only on request."""
     if type(include_fit) is not bool:
         raise ValueError("include_fit must be boolean")
-    candidate, xs, ys = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance)
+    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment)
     result = {**_encoding(can_id, candidate), "correlation": pearson(xs, ys, min_samples=min_samples),
               "aligned_samples": len(xs), "raw_min": min(xs) if xs else None,
-              "raw_max": max(xs) if xs else None}
+              "raw_max": max(xs) if xs else None, "alignment_diagnostics": diagnostics}
     if include_fit:
         fit = fit_linear(xs, ys, min_samples=min_samples)
         result["fit"] = asdict(fit) if fit is not None else None
@@ -108,22 +110,22 @@ def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int, width_
 
 
 def search_candidates(frames: list[Frame], reference: Series, *, top_n: int = 10,
-                      tolerance: float = 0.0, min_samples: int = 3) -> dict:
+                      tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> dict:
     _frames(frames)
     _reference(reference)
     if type(top_n) is not int or top_n < 1:
         raise ValueError("top_n must be a positive integer")
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
-    ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples)
+    ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples, alignment=alignment)
     return {"candidates_searched": len(unique_ids(frames)) * len(byte_aligned_candidates()),
             "candidates_ranked": len(ranked), "results": [asdict(r) for r in ranked[:top_n]]}
 
 
 def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int, width_bits: int,
-                  reference: Series, *, tolerance: float = 0.0, min_samples: int = 3) -> dict:
+                  reference: Series, *, tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> dict:
     """Fit one explicit field; null fit means insufficient or constant raw data."""
-    candidate, xs, ys = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance)
+    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment)
     fit = fit_linear(xs, ys, min_samples=min_samples)
     return {**_encoding(can_id, candidate), "aligned_samples": len(xs),
-            "fit": asdict(fit) if fit is not None else None}
+            "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics}

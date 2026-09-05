@@ -317,3 +317,93 @@ uniformly jittered between half and all of the cap. Override with
 Agent JSON includes cumulative `retry_count` and `provider_attempts` for the run.
 Retries do not consume model-turn or tool-call budgets. On exhaustion, status
 remains `provider_error` with sanitized diagnostics and the existing tool trace.
+
+## Controlled synthetic challenges
+
+Run the current deterministic engine against nine controlled fixtures:
+
+```sh
+python -m simulator.evaluate_challenges
+```
+
+The command creates the suite if all fixtures are absent, otherwise evaluates
+existing files. It prints a full summary and writes `datasets/challenges/evaluation.json`
+with top-five fit details, true-field rank, and distractor rank. Partial suites
+raise an error. Explicitly regenerate with:
+
+```sh
+python -m simulator.challenges --seed 42
+python -m simulator.evaluate_challenges --regenerate --seed 42
+```
+
+Both commands accept a dataset directory (`--output-dir` for generation,
+`--dataset-dir` for evaluation). Generation overwrites fixture files in that
+directory. Each scenario contains `can_log.csv`, `reference.csv` (column `value`),
+and separate `ground_truth.json` with seed, encoding, and perturbation settings.
+Each has 6,000 samples over 60 seconds at 100 Hz, three standard CAN IDs and
+18,000 eight-byte frames. The original synthetic dataset is unchanged.
+
+| Scenario | Controlled difference | Expected support |
+| --- | --- | --- |
+| baseline_easy | Unsigned 16-bit LE target at bytes 2–3, scale 0.01, offset 0 | supported |
+| noisy_reference | Gaussian reference noise, standard deviation 0.5, clipped to ±1.5 | supported |
+| timestamp_jitter | Independent CAN/reference timestamp jitter, uniform ±2 ms | partially_supported |
+| correlated_distractor | Second encoded field: `max(0, 1.02*target + 0.8*sin(t/3) + 0.3)` | supported |
+| unusual_scale_offset | Scale 0.037, offset −12.5 | supported |
+| long_constant_regions | 50 seconds of plateaus, 10 seconds of linear changes | supported |
+| unsupported_big_endian | Target bytes stored big-endian | unsupported |
+| unsupported_signed | Target shifted by −45, crossing zero; signed 16-bit representation | unsupported |
+| unsupported_bit_offset | Unsigned 12-bit field at LSB0 bit 19, scale 0.025 | unsupported |
+
+Payload and perturbation RNG streams are separate and seeded; the baseline and
+reference-only noise variant have identical CAN logs. Noise can make a near-zero
+reference slightly negative. Jitter preserves per-ID/reference ordering but may
+give a slightly negative first timestamp. Other payload bits/IDs are random.
+The fixture-only encoder lives in `simulator`, not production decoding.
+
+Evaluation uses exact alignment except for timestamp_jitter, which uses nearest
+alignment with a 4 ms tolerance derived from the two ±2 ms fixture clocks.
+The minimum remains three matches. Metadata is read after engine execution and is never
+provided to discovery. Recovery means the top candidate matches the entire
+hidden field's ID, start bit, width, endianness, and signedness. A highly
+correlated partial field or unsigned interpretation does not count as recovery.
+Scale/offset metrics and alternative fits remain available in the JSON output.
+Expected support describes capability, not a forced result. These challenges
+measure current limitations without adding decoding or ranking improvements.
+
+## Timestamp alignment modes
+
+`canary/alignment.py` provides `AlignmentConfig(mode="exact", tolerance=0.0)`
+and `align_series(candidate, reference, config)`. The result contains aligned
+`(candidate_timestamp, raw, reference_value)` rows and structured diagnostics.
+Both timestamps and reference values remain numeric; reference timestamps must
+strictly increase. Candidate samples are stably sorted by time.
+
+Exact mode matches only equal timestamps, regardless of tolerance. Nearest mode
+chooses the closest unused reference within the inclusive tolerance; equal-distance
+ties choose the earlier reference. Accepted matches advance a reference cursor:
+no reference is reused and matching never moves backward. Duplicate candidates
+retain input order and may match distinct available references within tolerance.
+This greedy rule is deterministic, not a globally optimal assignment. Candidates
+outside the reference's first/last timestamps are rejected even within tolerance;
+there is no endpoint extrapolation or interpolation. Complexity is
+O(C log C + C log R + R), including sorting and reference validation.
+
+```sh
+python -m canary.discover datasets/challenges/timestamp_jitter/can_log.csv datasets/challenges/timestamp_jitter/reference.csv --value-column value --alignment nearest --timestamp-tolerance 0.004 --fit --top 5
+```
+
+The default remains exact. For backward compatibility, omitting the mode with a
+nonzero `tolerance` selects nearest; `--tolerance` remains a CLI alias for
+`--timestamp-tolerance`. Explicit `--alignment exact` always requires equality.
+Discovery, fitting, reconstruction, reports, and structured tools accept the
+`alignment` keyword and use the same matcher. Agent schemas/reasoning are unchanged.
+
+Discovery/fitted results and candidate analysis/fit tools expose
+`alignment_diagnostics`: candidate, matched, and unmatched sample counts;
+match ratio; mean and maximum absolute timestamp error in seconds. No matches
+means null error statistics; an empty candidate series has ratio zero. Search
+still omits unrankable candidates, so use candidate analysis to inspect alignment
+failures. The CLI prints diagnostics for its top candidate. The challenge JSON
+records the mode, tolerance, and diagnostics. Matching may discard endpoint
+samples, which is expected under the no-extrapolation rule.

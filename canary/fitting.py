@@ -8,6 +8,7 @@ from pathlib import Path
 from .discovery import DiscoveryResult, align_observations, discover_signal
 from .observation import Candidate, Frame, extract_candidate
 from .reference import Series
+from .alignment import AlignmentDiagnostics, align_series, configuration
 
 
 def _validate_pairs(xs: list[float], ys: list[float]) -> None:
@@ -99,37 +100,39 @@ class FittedResult:
     mae: float
     r_squared: float | None
     aligned_samples: int
+    alignment_diagnostics: AlignmentDiagnostics | None = None
 
 
 def fit_ranked(can_log: list[Frame], reference_series: Series,
                ranked: list[DiscoveryResult], *, tolerance: float = 0.0,
-               min_samples: int = 3) -> list[FittedResult]:
+               min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
     results = []
     for result in ranked:
         raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits))
-        rows = align_observations(raw, reference_series, tolerance=tolerance)
+        aligned = align_series(raw, reference_series, configuration(alignment, tolerance))
+        rows = aligned.rows
         fit = fit_linear([x for _, x, _ in rows], [y for _, _, y in rows], min_samples=min_samples)
         if fit is not None:
             results.append(FittedResult(result.can_id, result.byte_offset, result.width_bits,
                                         result.endian, result.signed, result.correlation,
-                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows)))
+                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows), aligned.diagnostics))
     return results
 
 
 def discover_and_fit(can_log: list[Frame], reference_series: Series, top_n: int = 10, *,
-                     tolerance: float = 0.0, min_samples: int = 3) -> list[FittedResult]:
+                     tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
     if type(top_n) is not int or top_n < 1:
         raise ValueError("top_n must be a positive integer")
-    ranked = discover_signal(can_log, reference_series, tolerance=tolerance, min_samples=min_samples)
+    ranked = discover_signal(can_log, reference_series, tolerance=tolerance, min_samples=min_samples, alignment=alignment)
     return fit_ranked(can_log, reference_series, ranked[:top_n],
-                      tolerance=tolerance, min_samples=min_samples)
+                      tolerance=tolerance, min_samples=min_samples, alignment=alignment)
 
 
 def write_reconstruction(path: str | Path, can_log: list[Frame], reference_series: Series,
-                         result: FittedResult, *, tolerance: float = 0.0) -> None:
+                         result: FittedResult, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
     """Write matched samples with candidate timestamps; overwrite the output."""
     raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits))
-    rows = align_observations(raw, reference_series, tolerance=tolerance)
+    rows = align_observations(raw, reference_series, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], result.scale, result.offset)
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -16,7 +16,8 @@ def main() -> None:
     parser.add_argument("reference", type=Path)
     parser.add_argument("--value-column", required=True)
     parser.add_argument("--top", type=int, default=10)
-    parser.add_argument("--tolerance", type=float, default=0.0, help="timestamp tolerance in seconds")
+    parser.add_argument("--timestamp-tolerance", "--tolerance", dest="tolerance", type=float, default=0.0, help="timestamp tolerance in seconds")
+    parser.add_argument("--alignment", choices=("exact", "nearest"), help="default exact; legacy nonzero tolerance selects nearest")
     parser.add_argument("--min-samples", type=int, default=3)
     parser.add_argument("--fit", action="store_true", help="fit physical scale and offset")
     parser.add_argument("--output-reconstruction", type=Path, help="export best fit (requires --fit)")
@@ -38,19 +39,19 @@ def main() -> None:
     try:
         frames = read_csv(args.can_log)
         reference = read_reference(args.reference, args.value_column)
-        results = discover_signal(frames, reference, tolerance=args.tolerance, min_samples=args.min_samples)
+        results = discover_signal(frames, reference, tolerance=args.tolerance, min_samples=args.min_samples, alignment=args.alignment)
         displayed = results[:args.top]
         if args.fit:
             displayed = fit_ranked(frames, reference, displayed, tolerance=args.tolerance,
-                                   min_samples=args.min_samples)
+                                   min_samples=args.min_samples, alignment=args.alignment)
         if args.output_reconstruction:
             if not displayed:
                 raise ValueError("no fitted candidate available for reconstruction")
             write_reconstruction(args.output_reconstruction, frames, reference, displayed[0],
-                                 tolerance=args.tolerance)
+                                 tolerance=args.tolerance, alignment=args.alignment)
         if args.report:
             write_report(args.report, frames, reference, displayed, args.value_column,
-                         tolerance=args.tolerance)
+                         tolerance=args.tolerance, alignment=args.alignment)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     searched = len(unique_ids(frames)) * len(byte_aligned_candidates())
@@ -60,6 +61,12 @@ def main() -> None:
     print(f"Candidates searched: {searched}")
     print(f"Candidates ranked: {len(results)}")
     print(f"Skipped (constant or insufficient aligned samples): {searched - len(results)}")
+    if displayed and displayed[0].alignment_diagnostics:
+        diagnostic = displayed[0].alignment_diagnostics
+        print(f"Alignment (best): {diagnostic.matched_sample_count}/{diagnostic.candidate_sample_count} matched; "
+              f"{diagnostic.unmatched_sample_count} unmatched; ratio {diagnostic.match_ratio:.6f}")
+        print(f"Timestamp error (seconds): mean {diagnostic.mean_absolute_timestamp_error:.9f}; "
+              f"max {diagnostic.max_absolute_timestamp_error:.9f}")
     if args.fit and displayed:
         print(f"Aligned samples (best): {displayed[0].aligned_samples:,}")
         print("\n=== BEST CANDIDATE ===")

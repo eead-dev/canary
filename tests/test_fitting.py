@@ -68,7 +68,7 @@ class FittingTests(unittest.TestCase):
 
     def test_alignment_export_and_ranking(self):
         frames = [Frame(t, 5, bytes([v]) + bytes(7)) for t, v in ((2.01, 3), (0.01, 1), (1.01, 2), (9, 99))]
-        reference = [(0, 7), (1, 9), (2, 11)]
+        reference = [(0, 7), (1, 9), (2, 11), (3, 13)]
         results = discover_and_fit(frames, reference, top_n=1, tolerance=0.02)
         ranked = discover_signal(frames, reference, tolerance=0.02)
         self.assertEqual((results[0].can_id, results[0].byte_offset, results[0].width_bits),

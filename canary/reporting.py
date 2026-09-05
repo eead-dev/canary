@@ -63,13 +63,13 @@ def _chart(rows: list[tuple[float, float, float]], predictions: list[float], nam
 
 
 def write_report(path: str | Path, frames: list[Frame], reference: Series,
-                 results: list[FittedResult], reference_name: str, *, tolerance: float = 0.0) -> None:
+                 results: list[FittedResult], reference_name: str, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
     """Write static HTML for fitted results in their existing ranked order."""
     if not results:
         raise ValueError("no fitted candidate available for report")
     best = results[0]
     series = extract_candidate(frames, best.can_id, Candidate(best.byte_offset, best.width_bits))
-    rows = align_observations(series, reference, tolerance=tolerance)
+    rows = align_observations(series, reference, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], best.scale, best.offset)
     bounds = timestamp_bounds(frames)
     duration = number(bounds[1] - bounds[0]) if bounds else "N/A"
