@@ -1,0 +1,1 @@
+"""CANary generator tests."""
