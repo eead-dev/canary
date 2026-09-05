@@ -175,3 +175,26 @@ matching is enabled. Unmatched samples are omitted. The CLI rejects input paths
 as output destinations and fails clearly if there is no fitted candidate.
 Production fitting uses only observation APIs and supplied reference values;
 existing package-wide dependency tests also cover this module.
+
+## Static discovery report
+
+Fit mode prints a capture summary, the best candidate's encoding and equation,
+then the existing ranked top-N results. Add `--report` to write a self-contained
+HTML report with embedded CSS and SVG, requiring no server, scripts, network,
+fonts, or plotting dependencies:
+
+```sh
+python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 5 --fit --output-reconstruction results/speed_reconstructed.csv --report results/speed_report.html
+```
+
+Open the HTML file directly in a browser. `--report` requires `--fit`, creates
+parent directories, and overwrites the report destination. Its path must differ
+from both input files and the reconstruction output. No fitted candidates means
+a clear error. All user-controlled report text is HTML-escaped.
+
+The report shows the capture summary, best candidate, fitted equation, metrics,
+and the requested top candidates in unchanged correlation order. The SVG plots
+every aligned reference/reconstruction sample at the candidate timestamp, with
+axes and a legend. Near-identical lines may overlap. Start bits are zero-based
+byte offsets multiplied by eight. Metrics remain in-sample measurements; the
+report does not assert signal identity beyond the supplied reference name.

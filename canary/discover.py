@@ -7,6 +7,7 @@ from .discovery import discover_signal
 from .fitting import fit_ranked, write_reconstruction
 from .observation import byte_aligned_candidates, read_csv, unique_ids
 from .reference import read_reference
+from .reporting import candidate_details, equation, write_report
 
 
 def main() -> None:
@@ -19,11 +20,18 @@ def main() -> None:
     parser.add_argument("--min-samples", type=int, default=3)
     parser.add_argument("--fit", action="store_true", help="fit physical scale and offset")
     parser.add_argument("--output-reconstruction", type=Path, help="export best fit (requires --fit)")
+    parser.add_argument("--report", type=Path, help="write self-contained HTML report (requires --fit)")
     args = parser.parse_args()
     if args.top < 1:
         parser.error("--top must be positive")
     if args.output_reconstruction and not args.fit:
         parser.error("--output-reconstruction requires --fit")
+    if args.report and not args.fit:
+        parser.error("--report requires --fit")
+    if args.report and args.report.resolve() in (
+            args.can_log.resolve(), args.reference.resolve(),
+            args.output_reconstruction.resolve() if args.output_reconstruction else None):
+        parser.error("report output must differ from inputs and reconstruction output")
     if args.output_reconstruction and args.output_reconstruction.resolve() in (
             args.can_log.resolve(), args.reference.resolve()):
         parser.error("reconstruction output must differ from input files")
@@ -40,13 +48,25 @@ def main() -> None:
                 raise ValueError("no fitted candidate available for reconstruction")
             write_reconstruction(args.output_reconstruction, frames, reference, displayed[0],
                                  tolerance=args.tolerance)
+        if args.report:
+            write_report(args.report, frames, reference, displayed, args.value_column,
+                         tolerance=args.tolerance)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
     searched = len(unique_ids(frames)) * len(byte_aligned_candidates())
     print(f"Reference: {args.value_column}")
+    if args.fit:
+        print(f"CAN frames: {len(frames):,}\nUnique CAN IDs: {len(unique_ids(frames))}")
     print(f"Candidates searched: {searched}")
     print(f"Candidates ranked: {len(results)}")
     print(f"Skipped (constant or insufficient aligned samples): {searched - len(results)}")
+    if args.fit and displayed:
+        print(f"Aligned samples (best): {displayed[0].aligned_samples:,}")
+        print("\n=== BEST CANDIDATE ===")
+        for label, value in candidate_details(displayed[0]):
+            print(f"{label + ':':<22}{value}")
+        print(equation(displayed[0]))
+        print("\n=== RANKED TOP CANDIDATES ===")
     for rank, result in enumerate(displayed, 1):
         print(f"\n#{rank}\nCAN ID:       0x{result.can_id:03X}")
         print(f"Byte offset:  {result.byte_offset}\nLength:       {result.width_bits} bits")
@@ -61,6 +81,8 @@ def main() -> None:
         print("No candidates have a defined correlation.")
     if args.output_reconstruction:
         print(f"Reconstruction written: {args.output_reconstruction}")
+    if args.report:
+        print(f"Report written: {args.report}")
 
 
 if __name__ == "__main__":
