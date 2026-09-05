@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .discovery import align_observations
 from .fitting import FittedResult, reconstruct
-from .observation import Candidate, Frame, byte_aligned_candidates, extract_candidate, timestamp_bounds, unique_ids
+from .observation import CandidateSpec, Frame, candidate_fields, extract_candidate, timestamp_bounds, unique_ids
 from .reference import Series
 
 
@@ -18,8 +18,9 @@ def equation(result: FittedResult) -> str:
 
 
 def candidate_details(result: FittedResult) -> list[tuple[str, str]]:
-    return [("CAN ID", f"0x{result.can_id:03X}"), ("Byte offset", str(result.byte_offset)),
-            ("Start bit", str(result.byte_offset * 8)), ("Length", f"{result.width_bits} bits"),
+    return [("CAN ID", f"0x{result.can_id:03X}")] + (
+            [("Byte offset", str(result.byte_offset))] if result.byte_offset is not None else []) + [
+            ("Start bit", str(result.start_bit)), ("Length", f"{result.width_bits} bits"),
             ("Endian", result.endian), ("Signed", "yes" if result.signed else "no (unsigned)"),
             ("Pearson correlation", number(result.correlation)), ("Scale", number(result.scale)),
             ("Offset", number(result.offset)), ("RMSE", number(result.rmse)),
@@ -68,7 +69,7 @@ def write_report(path: str | Path, frames: list[Frame], reference: Series,
     if not results:
         raise ValueError("no fitted candidate available for report")
     best = results[0]
-    series = extract_candidate(frames, best.can_id, Candidate(best.byte_offset, best.width_bits, best.endian, best.signed))
+    series = extract_candidate(frames, best.can_id, CandidateSpec(best.start_bit, best.width_bits, best.endian, best.signed))
     rows = align_observations(series, reference, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], best.scale, best.offset)
     bounds = timestamp_bounds(frames)
@@ -78,8 +79,8 @@ def write_report(path: str | Path, frames: list[Frame], reference: Series,
                       for label, value in candidate_details(best))
     table = []
     for rank, result in enumerate(results, 1):
-        values = [str(rank), f"0x{result.can_id:03X}", str(result.byte_offset),
-                  str(result.byte_offset * 8), str(result.width_bits), result.endian,
+        values = [str(rank), f"0x{result.can_id:03X}", str(result.byte_offset) if result.byte_offset is not None else "—",
+                  str(result.start_bit), str(result.width_bits), result.endian,
                   "yes" if result.signed else "no", number(result.correlation),
                   number(result.scale), number(result.offset), number(result.rmse),
                   number(result.mae), number(result.r_squared), str(result.aligned_samples)]
@@ -104,12 +105,13 @@ code{{display:block;background:#edf4fa;padding:16px;border-radius:6px;overflow-w
 <p>Reference: <strong>{escape(reference_name)}</strong></p></header>
 <section><h2>Capture summary</h2><div class="summary">
 <span>CAN frames: <strong>{len(frames):,}</strong></span><span>Unique CAN IDs: <strong>{len(ids)}</strong></span>
-<span>Candidates searched: <strong>{len(ids)*len(byte_aligned_candidates())}</strong></span>
+<span>Candidates searched: <strong>{len(ids)*len(candidate_fields())}</strong></span>
 <span>Capture duration: <strong>{duration} s</strong></span>
 <span>Aligned samples (best): <strong>{best.aligned_samples:,}</strong></span></div>
 <p class="muted">Timestamp tolerance: {number(tolerance)} s. Showing {len(results)} fitted candidates in absolute-correlation order.</p></section>
 <section><h2>Best candidate</h2><dl>{details}</dl><h3>Fitted equation</h3><code>{escape(equation(best))}</code>
-<p class="muted">Start bit is byte offset × 8, zero-based. Endianness is immaterial for 8-bit fields.</p></section>
+<p class="muted">Start bit: normalized LSB0 for little-endian, MSB0 for big-endian (not DBC sawtooth).
+Byte offset is shown only for byte-aligned starts. Endianness is immaterial only for byte-aligned 8-bit fields.</p></section>
 <section><h2>Reference vs reconstruction</h2><div class="legend"><span class="ref">━ Reference</span>
 <span class="rec">┄ Reconstructed</span></div>{_chart(rows, predictions, reference_name)}
 <p class="muted">All {len(rows):,} aligned samples are plotted at candidate timestamps. Nearly identical curves may overlap.

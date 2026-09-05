@@ -3,10 +3,11 @@
     "scenario": "baseline_easy",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "little",
     "signed": false,
@@ -38,7 +39,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -60,20 +62,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9996498572805833,
-        "scale": 2.576918189805204,
-        "offset": 0.8397503794651939,
-        "rmse": 0.778970016832355,
-        "mae": 0.6802757688788363,
-        "r_squared": 0.9992998371610905,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -82,20 +85,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9996498572805833,
-        "scale": 2.576918189805204,
-        "offset": 0.8397503794651939,
-        "rmse": 0.778970016832355,
-        "mae": 0.6802757688788363,
-        "r_squared": 0.9992998371610905,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -104,20 +108,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
+        "byte_offset": null,
         "width_bits": 16,
-        "endian": "big",
+        "endian": "little",
         "signed": false,
-        "correlation": 0.9993108389183328,
-        "scale": 0.010058859102230313,
-        "offset": -0.4025207478180022,
-        "rmse": 1.0927523406768305,
-        "mae": 0.8955641146674207,
-        "r_squared": 0.998622152779662,
+        "correlation": 0.9999999912690277,
+        "scale": 0.0024999910238327205,
+        "offset": -0.003695355746238249,
+        "rmse": 0.0038901604661270702,
+        "mae": 0.0031832355409008974,
+        "r_squared": 0.9999999825380554,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -126,7 +131,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 14
       }
     ],
     "alignment_tolerance": 0.0,
@@ -145,10 +151,11 @@
     "scenario": "noisy_reference",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "little",
     "signed": false,
@@ -180,7 +187,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -202,20 +210,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9995085146155115,
-        "scale": 2.576105547418587,
-        "offset": 0.8467096454566203,
-        "rmse": 0.9227043707931698,
-        "mae": 0.7641057178044915,
-        "r_squared": 0.9990172707889062,
+        "correlation": 0.9998557484657276,
+        "scale": 0.002499195515448692,
+        "offset": 0.003666336827187422,
+        "rmse": 0.49992539798652497,
+        "mae": 0.40246223897338396,
+        "r_squared": 0.99971151773996,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -224,20 +233,44 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 14
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9998557447377681,
+        "scale": 0.004998391249263171,
+        "offset": 0.004935087064559696,
+        "rmse": 0.4999318573812803,
+        "mae": 0.40245257523417427,
+        "r_squared": 0.9997115102851164,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9995085146155115,
-        "scale": 2.576105547418587,
-        "offset": 0.8467096454566203,
-        "rmse": 0.9227043707931698,
-        "mae": 0.7641057178044915,
-        "r_squared": 0.9990172707889062,
+        "correlation": 0.9998557447377681,
+        "scale": 0.004998391249263171,
+        "offset": 0.004935087064559696,
+        "rmse": 0.4999318573812803,
+        "mae": 0.40245257523417427,
+        "r_squared": 0.9997115102851164,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -246,29 +279,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 16,
-        "endian": "big",
-        "signed": false,
-        "correlation": 0.9991713004605988,
-        "scale": 0.010055704672363398,
-        "offset": -0.3952545470087472,
-        "rmse": 1.1980341509247276,
-        "mae": 0.9750430548298916,
-        "r_squared": 0.9983432876641237,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       }
     ],
     "alignment_tolerance": 0.0,
@@ -287,10 +299,11 @@
     "scenario": "timestamp_jitter",
     "seed": 42,
     "expected_support": "partially_supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "little",
     "signed": false,
@@ -322,7 +335,8 @@
           "match_ratio": 0.9998333333333334,
           "mean_absolute_timestamp_error": 0.0013481648488081585,
           "max_absolute_timestamp_error": 0.003964764999999204
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -344,20 +358,21 @@
           "match_ratio": 0.9998333333333334,
           "mean_absolute_timestamp_error": 0.0013481648488081585,
           "max_absolute_timestamp_error": 0.003964764999999204
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9996497707662335,
-        "scale": 2.576898593140773,
-        "offset": 0.8402480599343889,
-        "rmse": 0.7789594450218629,
-        "mae": 0.6802667181108865,
-        "r_squared": 0.9992996641929832,
+        "correlation": 0.9999999920933702,
+        "scale": 0.004999982400636896,
+        "offset": -0.002427894386279661,
+        "rmse": 0.0037014542106888304,
+        "mae": 0.003058317073293466,
+        "r_squared": 0.9999999841867404,
         "aligned_samples": 5999,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -366,20 +381,21 @@
           "match_ratio": 0.9998333333333334,
           "mean_absolute_timestamp_error": 0.0013481648488081585,
           "max_absolute_timestamp_error": 0.003964764999999204
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9996497707662335,
-        "scale": 2.576898593140773,
-        "offset": 0.8402480599343889,
-        "rmse": 0.7789594450218629,
-        "mae": 0.6802667181108865,
-        "r_squared": 0.9992996641929832,
+        "correlation": 0.9999999920933702,
+        "scale": 0.004999982400636896,
+        "offset": -0.002427894386279661,
+        "rmse": 0.0037014542106888304,
+        "mae": 0.003058317073293466,
+        "r_squared": 0.9999999841867404,
         "aligned_samples": 5999,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -388,20 +404,21 @@
           "match_ratio": 0.9998333333333334,
           "mean_absolute_timestamp_error": 0.0013481648488081585,
           "max_absolute_timestamp_error": 0.003964764999999204
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
+        "byte_offset": null,
         "width_bits": 16,
-        "endian": "big",
+        "endian": "little",
         "signed": false,
-        "correlation": 0.9993105351867769,
-        "scale": 0.010058863789057165,
-        "offset": -0.4025516544676009,
-        "rmse": 1.0928432204423755,
-        "mae": 0.8957046859915047,
-        "r_squared": 0.9986215457352826,
+        "correlation": 0.9999999912664922,
+        "scale": 0.002499991108936395,
+        "offset": -0.003697601659169436,
+        "rmse": 0.003890191947988355,
+        "mae": 0.003183151524899904,
+        "r_squared": 0.9999999825329848,
         "aligned_samples": 5999,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -410,7 +427,8 @@
           "match_ratio": 0.9998333333333334,
           "mean_absolute_timestamp_error": 0.0013481648488081585,
           "max_absolute_timestamp_error": 0.003964764999999204
-        }
+        },
+        "start_bit": 14
       }
     ],
     "alignment_tolerance": 0.004,
@@ -429,10 +447,11 @@
     "scenario": "correlated_distractor",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "little",
     "signed": false,
@@ -442,7 +461,7 @@
     "recovered": true,
     "true_field_rank": 1,
     "reason": "correct complete field ranked #1",
-    "distractor_rank": 3,
+    "distractor_rank": 14,
     "top_fitted": [
       {
         "can_id": 420,
@@ -464,7 +483,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -486,64 +506,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 790,
-        "byte_offset": 0,
-        "width_bits": 16,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9998383654724574,
-        "scale": 0.00985258695204943,
-        "offset": -0.5564846017390934,
-        "rmse": 0.5292803005489762,
-        "mae": 0.4653877073566883,
-        "r_squared": 0.9996767570706352,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 790,
-        "byte_offset": 0,
-        "width_bits": 16,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9998383654724574,
-        "scale": 0.00985258695204943,
-        "offset": -0.5564846017390934,
-        "rmse": 0.5292803005489762,
-        "mae": 0.4653877073566883,
-        "r_squared": 0.9996767570706352,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9996498572805833,
-        "scale": 2.576918189805204,
-        "offset": 0.8397503794651939,
-        "rmse": 0.778970016832355,
-        "mae": 0.6802757688788363,
-        "r_squared": 0.9992998371610905,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -552,7 +529,54 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999912690277,
+        "scale": 0.0024999910238327205,
+        "offset": -0.003695355746238249,
+        "rmse": 0.0038901604661270702,
+        "mae": 0.0031832355409008974,
+        "r_squared": 0.9999999825380554,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 14
       }
     ],
     "alignment_tolerance": 0.0,
@@ -571,24 +595,48 @@
     "scenario": "unusual_scale_offset",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
-    "width_bits": 16,
+    "start_bit": 16,
+    "width_bits": 12,
     "endian": "little",
     "signed": false,
     "correlation": 0.9999999391759833,
     "r_squared": 0.99999987835197,
     "aligned_samples": 6000,
-    "recovered": true,
-    "true_field_rank": 1,
-    "reason": "correct complete field ranked #1",
+    "recovered": false,
+    "true_field_rank": 2,
+    "reason": "another field ranked #1; true field rank is 2",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999391759833,
+        "scale": 0.037001233020336394,
+        "offset": -12.502655117593335,
+        "rmse": 0.010267713764602353,
+        "mae": 0.008754911756274103,
+        "r_squared": 0.99999987835197,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 16
+      },
+      {
+        "can_id": 420,
+        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": false,
@@ -606,7 +654,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -628,20 +677,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9963802148739888,
-        "scale": 9.461120252927708,
-        "offset": -7.930026201606481,
-        "rmse": 2.502558494162807,
-        "mae": 2.1463043468713607,
-        "r_squared": 0.9927735325923356,
+        "correlation": 0.999999889468759,
+        "scale": 0.01850044864500155,
+        "offset": -12.511493234708404,
+        "rmse": 0.013841358657459883,
+        "mae": 0.011359555027955777,
+        "r_squared": 0.9999997789375301,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -650,20 +700,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9963802148739888,
-        "scale": 9.461120252927708,
-        "offset": -7.930026201606481,
-        "rmse": 2.502558494162807,
-        "mae": 2.1463043468713607,
-        "r_squared": 0.9927735325923356,
+        "correlation": 0.999999889468759,
+        "scale": 0.01850044864500155,
+        "offset": -12.511493234708404,
+        "rmse": 0.013841358657459883,
+        "mae": 0.011359555027955777,
+        "r_squared": 0.9999997789375301,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -672,29 +723,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 16,
-        "endian": "big",
-        "signed": false,
-        "correlation": 0.9923718438070024,
-        "scale": 0.03665534140469569,
-        "offset": -12.123817610775511,
-        "rmse": 3.6292442677268664,
-        "mae": 2.9579050430431395,
-        "r_squared": 0.9848018763809094,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       }
     ],
     "alignment_tolerance": 0.0,
@@ -713,24 +743,48 @@
     "scenario": "long_constant_regions",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
-    "width_bits": 16,
+    "start_bit": 16,
+    "width_bits": 12,
     "endian": "little",
     "signed": false,
     "correlation": 0.9999999999999998,
     "r_squared": 1.0,
     "aligned_samples": 6000,
-    "recovered": true,
-    "true_field_rank": 1,
-    "reason": "correct complete field ranked #1",
+    "recovered": false,
+    "true_field_rank": 2,
+    "reason": "another field ranked #1; true field rank is 2",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999999999998,
+        "scale": 0.01,
+        "offset": 0.0,
+        "rmse": 6.925276609421396e-16,
+        "mae": 9.836575998178887e-17,
+        "r_squared": 1.0,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 16
+      },
+      {
+        "can_id": 420,
+        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": false,
@@ -748,7 +802,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -770,20 +825,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 12,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9991871905578233,
-        "scale": 2.634718357170998,
-        "offset": 0.6012992434499189,
-        "rmse": 0.6760271047680891,
-        "mae": 0.5204810695438638,
-        "r_squared": 0.9983750417748363,
+        "correlation": 0.9999999929220538,
+        "scale": 0.020000129386332475,
+        "offset": 0.00026707450194152216,
+        "rmse": 0.001995315762821688,
+        "mae": 0.0007962569986770503,
+        "r_squared": 0.9999999858441078,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -792,20 +848,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 17
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 12,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9991871905578233,
-        "scale": 2.634718357170998,
-        "offset": 0.6012992434499189,
-        "rmse": 0.6760271047680891,
-        "mae": 0.5204810695438638,
-        "r_squared": 0.9983750417748363,
+        "correlation": 0.9999999929220538,
+        "scale": 0.020000129386332475,
+        "offset": 0.00026707450194152216,
+        "rmse": 0.001995315762821688,
+        "mae": 0.0007962569986770503,
+        "r_squared": 0.9999999858441078,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -814,29 +871,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 16,
-        "endian": "big",
-        "signed": false,
-        "correlation": 0.9981865279226979,
-        "scale": 0.010271133428480086,
-        "offset": -0.6562913831866659,
-        "rmse": 1.0095235591846476,
-        "mae": 0.8235644440467539,
-        "r_squared": 0.9963763445263714,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 17
       }
     ],
     "alignment_tolerance": 0.0,
@@ -855,10 +891,11 @@
     "scenario": "unsupported_big_endian",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "big",
     "signed": false,
@@ -890,7 +927,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
@@ -912,64 +950,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 8,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9996498572805833,
-        "scale": 2.576918189805204,
-        "offset": 0.8397503794651939,
-        "rmse": 0.778970016832355,
-        "mae": 0.6802757688788363,
-        "r_squared": 0.9992998371610905,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 8,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9996498572805833,
-        "scale": 2.576918189805204,
-        "offset": 0.8397503794651939,
-        "rmse": 0.778970016832355,
-        "mae": 0.6802757688788363,
-        "r_squared": 0.9992998371610905,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 1,
+        "byte_offset": null,
         "width_bits": 16,
-        "endian": "little",
+        "endian": "big",
         "signed": false,
-        "correlation": 0.9993325186810095,
-        "scale": 0.010053785481013863,
-        "offset": -0.40233576205520194,
-        "rmse": 1.075432819260175,
-        "mae": 0.8770589435234104,
-        "r_squared": 0.9986654828933301,
+        "correlation": 0.9999999920660394,
+        "scale": 0.004999990322845649,
+        "offset": -0.002437505506065918,
+        "rmse": 0.003708354380705314,
+        "mae": 0.0030609967112718997,
+        "r_squared": 0.9999999841320789,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -978,7 +973,54 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 17
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": true,
+        "correlation": 0.9999999920660394,
+        "scale": 0.004999990322845649,
+        "offset": -0.002437505506065918,
+        "rmse": 0.003708354380705314,
+        "mae": 0.0030609967112718997,
+        "r_squared": 0.9999999841320789,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 17
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": false,
+        "correlation": 0.9999999912252764,
+        "scale": 0.0024999959176888894,
+        "offset": -0.0037115680790549277,
+        "rmse": 0.0038998952095459873,
+        "mae": 0.0031796666263043255,
+        "r_squared": 0.9999999824505524,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 18
       }
     ],
     "alignment_tolerance": 0.0,
@@ -1013,10 +1055,11 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       "partial_byte": {
-        "rank": 3,
+        "rank": 14,
         "can_id": 420,
         "byte_offset": 2,
         "width_bits": 8,
@@ -1036,7 +1079,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       }
     }
   },
@@ -1044,10 +1088,11 @@
     "scenario": "unsupported_signed",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
+    "start_bit": 16,
     "width_bits": 16,
     "endian": "little",
     "signed": true,
@@ -1079,20 +1124,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 16
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
+        "byte_offset": null,
+        "width_bits": 16,
         "endian": "little",
         "signed": true,
-        "correlation": 0.9997172145583124,
-        "scale": 2.559503671863332,
-        "offset": 1.2457820154488142,
-        "rmse": 0.7000580106759329,
-        "mae": 0.5891075128673151,
-        "r_squared": 0.9994345090842306,
+        "correlation": 0.9999999920962885,
+        "scale": 0.004999982288879446,
+        "offset": -0.0025858198317147973,
+        "rmse": 0.0037012783820945592,
+        "mae": 0.003058209584712432,
+        "r_squared": 0.999999984192577,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1101,42 +1147,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 15
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
+        "byte_offset": null,
         "width_bits": 16,
-        "endian": "big",
-        "signed": true,
-        "correlation": 0.9994179351825142,
-        "scale": 0.009991680252524698,
-        "offset": -0.020698575370169614,
-        "rmse": 1.0042889394158714,
-        "mae": 0.8172629703939042,
-        "r_squared": 0.99883620916448,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
         "endian": "little",
-        "signed": false,
-        "correlation": -0.8604851022859887,
-        "scale": -0.2175215978948381,
-        "offset": 26.57995667233208,
-        "rmse": 14.998388682090164,
-        "mae": 13.130987856615874,
-        "r_squared": 0.7404346112561284,
+        "signed": true,
+        "correlation": 0.9999999912690276,
+        "scale": 0.00249999102383272,
+        "offset": -0.0038569267572663435,
+        "rmse": 0.0038901604661270607,
+        "mae": 0.003183235540900964,
+        "r_squared": 0.9999999825380554,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1145,20 +1170,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 14
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 16,
-        "endian": "big",
-        "signed": false,
-        "correlation": -0.860470916145458,
-        "scale": -0.0008496695859928618,
-        "offset": 26.687069260272978,
-        "rmse": 14.999094010933742,
-        "mae": 13.131946077781937,
-        "r_squared": 0.7404101975322037,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999234215932,
+        "scale": 0.040003266022727704,
+        "offset": 0.013267563826972584,
+        "rmse": 0.011520978498930563,
+        "mae": 0.01002622448053876,
+        "r_squared": 0.9999998468431922,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1167,7 +1193,31 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 18
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.999999718933408,
+        "scale": 0.07999846979156806,
+        "offset": 0.03518820572390213,
+        "rmse": 0.022071954615064983,
+        "mae": 0.018576834843639502,
+        "r_squared": 0.9999994378668948,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 19
       }
     ],
     "alignment_tolerance": 0.0,
@@ -1185,34 +1235,35 @@
   {
     "scenario": "unsupported_bit_offset",
     "seed": 42,
-    "expected_support": "unsupported",
-    "candidates_searched": 132,
-    "candidates_ranked": 132,
+    "expected_support": "supported",
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
-    "byte_offset": 2,
-    "width_bits": 16,
+    "byte_offset": null,
+    "start_bit": 19,
+    "width_bits": 12,
     "endian": "little",
-    "signed": true,
-    "correlation": 0.5007866613940997,
-    "r_squared": 0.25078728023024865,
+    "signed": false,
+    "correlation": 0.9999999729340854,
+    "r_squared": 0.9999999458681714,
     "aligned_samples": 6000,
-    "recovered": false,
-    "true_field_rank": null,
-    "reason": "non-byte-aligned 12-bit target outside search space",
+    "recovered": true,
+    "true_field_rank": 1,
+    "reason": "correct complete field ranked #1",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 16,
+        "byte_offset": null,
+        "width_bits": 12,
         "endian": "little",
-        "signed": true,
-        "correlation": 0.5007866613940997,
-        "scale": 0.0007791123391980441,
-        "offset": 49.01971854172693,
-        "rmse": 25.481429270453305,
-        "mae": 21.219049131749177,
-        "r_squared": 0.25078728023024865,
+        "signed": false,
+        "correlation": 0.9999999729340854,
+        "scale": 0.02499992599533635,
+        "offset": 0.00012820982817629556,
+        "rmse": 0.006849321655963782,
+        "mae": 0.005651430486803477,
+        "r_squared": 0.9999999458681714,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1221,64 +1272,67 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 19
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
+        "byte_offset": null,
         "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999419058937,
+        "scale": 0.001562496437531337,
+        "offset": -0.011763698616562124,
+        "rmse": 0.010034650302169273,
+        "mae": 0.008149582208563468,
+        "r_squared": 0.9999998838117907,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 8,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999917576688458,
+        "scale": 0.40039203961148956,
+        "offset": 0.12315799187867782,
+        "rmse": 0.1195254385376886,
+        "mae": 0.1042401735874343,
+        "r_squared": 0.9999835154056275,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 23
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 8,
         "endian": "big",
-        "signed": true,
-        "correlation": 0.5000848778906212,
-        "scale": 0.0007784901290311815,
-        "offset": 49.00985392730481,
-        "rmse": 25.493371031821372,
-        "mae": 21.227865765664582,
-        "r_squared": 0.2500848850948775,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.500076854678517,
-        "scale": 0.19928953446492373,
-        "offset": 49.10858647161815,
-        "rmse": 25.49350742809629,
-        "mae": 21.228282414318606,
-        "r_squared": 0.25007686058515866,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 16,
-        "endian": "little",
         "signed": false,
-        "correlation": 0.49636309828251424,
-        "scale": 0.0007744944984530463,
-        "offset": 22.991334087343805,
-        "rmse": 25.55632955158855,
-        "mae": 21.27662152942978,
-        "r_squared": 0.24637632533661702,
+        "correlation": 0.9999432217682209,
+        "scale": 0.40074045402458053,
+        "offset": 0.0634438919855782,
+        "rmse": 0.31370466573241623,
+        "mae": 0.25670105240810775,
+        "r_squared": 0.9998864467602097,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1287,20 +1341,21 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 25
       },
       {
         "can_id": 420,
-        "byte_offset": 3,
-        "width_bits": 8,
-        "endian": "little",
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "big",
         "signed": false,
-        "correlation": 0.4955442223754998,
-        "scale": 0.1980208948730829,
-        "offset": 23.111902062894863,
-        "rmse": 25.57009803696262,
-        "mae": 21.289114321222165,
-        "r_squared": 0.24556407632973876,
+        "correlation": 0.9999359474059656,
+        "scale": 0.025047235198580604,
+        "offset": -0.126558068415612,
+        "rmse": 0.33319434189330777,
+        "mae": 0.2720625136729983,
+        "r_squared": 0.9998718989146655,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -1309,7 +1364,8 @@
           "match_ratio": 1.0,
           "mean_absolute_timestamp_error": 0.0,
           "max_absolute_timestamp_error": 0.0
-        }
+        },
+        "start_bit": 25
       }
     ],
     "alignment_tolerance": 0.0,

@@ -7,14 +7,14 @@ from pathlib import Path
 
 from canary.discovery import discover_signal
 from canary.fitting import fit_ranked
-from canary.observation import byte_aligned_candidates, read_csv, unique_ids
+from canary.observation import candidate_fields, read_csv, unique_ids
 from canary.reference import read_reference
 
 from .challenges import DEFAULT_ROOT, SCENARIOS, generate_challenges
 
 
 def matches_field(candidate, field: dict) -> bool:
-    return (candidate.can_id == field["can_id"] and candidate.byte_offset * 8 == field["start_bit"]
+    return (candidate.can_id == field["can_id"] and candidate.start_bit == field["start_bit"]
             and candidate.width_bits == field["width_bits"] and candidate.endian == field["endian"]
             and candidate.signed == field["signed"])
 
@@ -34,8 +34,8 @@ def evaluate_scenario(directory: Path) -> dict:
     true_rank = next((i for i, candidate in enumerate(ranked, 1) if matches_field(candidate, field)), None)
     if recovered:
         reason = "correct complete field ranked #1"
-    elif field["start_bit"] % 8 or field["width_bits"] not in (8, 16):
-        reason = "non-byte-aligned 12-bit target outside search space"
+    elif field["width_bits"] not in (8, 12, 16) or not 0 <= field["start_bit"] <= 64-field["width_bits"]:
+        reason = "target outside supported bit-field search space"
     elif top is None:
         reason = "no ranked candidates: insufficient exact matches or undefined correlation"
     else:
@@ -47,7 +47,7 @@ def evaluate_scenario(directory: Path) -> dict:
         comparison = {}
         for label, predicate in (
             ("correct", lambda c: matches_field(c, field)),
-            ("partial_byte", lambda c: c.can_id == field["can_id"] and c.byte_offset * 8 == field["start_bit"]
+            ("partial_byte", lambda c: c.can_id == field["can_id"] and c.start_bit == field["start_bit"]
              and c.width_bits == 8 and not c.signed),
         ):
             entry = next(((i, c) for i, c in enumerate(ranked, 1) if predicate(c)), None)
@@ -56,14 +56,15 @@ def evaluate_scenario(directory: Path) -> dict:
                 fit = fit_ranked(frames, reference, [candidate], alignment=mode, tolerance=tolerance)[0]
                 comparison[label] = {"rank": rank, **asdict(fit)}
     expected = metadata["expected_support"]
-    if field["start_bit"] % 8 == 0 and field["width_bits"] in (8, 16) and expected == "unsupported":
+    if field["width_bits"] in (8, 12, 16) and 0 <= field["start_bit"] <= 64-field["width_bits"] and expected == "unsupported":
         expected = "supported"
     return {
         "scenario": metadata["scenario"], "seed": metadata["seed"],
         "expected_support": expected,
-        "candidates_searched": len(unique_ids(frames)) * len(byte_aligned_candidates()),
+        "candidates_searched": len(unique_ids(frames)) * len(candidate_fields()),
         "candidates_ranked": len(ranked), "top_can_id": top.can_id if top else None,
-        "byte_offset": top.byte_offset if top else None, "width_bits": top.width_bits if top else None,
+        "byte_offset": top.byte_offset if top else None, "start_bit": top.start_bit if top else None,
+        "width_bits": top.width_bits if top else None,
         "endian": top.endian if top else None, "signed": top.signed if top else None,
         "correlation": top.correlation if top else None,
         "r_squared": fitted[0].r_squared if fitted else None,
@@ -98,13 +99,13 @@ def main() -> None:
         output.write_text(json.dumps(results, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
-    print(f"Candidates per CAN ID: {len(byte_aligned_candidates())}")
-    print("Scenario | Expected | Searched | Top ID | Byte | Bits | Endian | Signed | Pearson r | R-squared | Samples | Recovered | Notes")
+    print(f"Candidates per CAN ID: {len(candidate_fields())}")
+    print("Scenario | Expected | Searched | Top ID | Start bit | Bits | Endian | Signed | Pearson r | R-squared | Samples | Recovered | Notes")
     for row in results:
         fmt = lambda v: "N/A" if v is None else f"{v:.9f}"
         can_id = "N/A" if row["top_can_id"] is None else f"0x{row['top_can_id']:03X}"
         print(f"{row['scenario']} | {row['expected_support']} | {row['candidates_searched']} | {can_id} | "
-              f"{row['byte_offset']} | {row['width_bits']} | {row['endian']} | {row['signed']} | {fmt(row['correlation'])} | {fmt(row['r_squared'])} | "
+              f"{row['start_bit']} | {row['width_bits']} | {row['endian']} | {row['signed']} | {fmt(row['correlation'])} | {fmt(row['r_squared'])} | "
               f"{row['aligned_samples']} | {'yes' if row['recovered'] else 'no'} | {row['reason']}")
     print(f"Detailed results: {output}")
 

@@ -105,18 +105,22 @@ def update_frequencies(frames: list[Frame]) -> dict[int, float | None]:
 
 
 @dataclass(frozen=True)
-class Candidate:
-    """Byte-aligned integer field; optional CAN ID binds an encoding to a frame ID."""
+class CandidateSpec:
+    """Normalized bit locator: LE uses LSB0; BE uses MSB0 (not DBC sawtooth).
 
-    byte_offset: int
+    LE start_bit is the field's least significant bit. BE start_bit is its most
+    significant bit in a stream ordered byte 0 MSB through byte 7 LSB.
+    """
+
+    start_bit: int
     width_bits: int
     endian: str = "little"
     signed: bool = False
     can_id: int | None = None
 
     @property
-    def start_bit(self) -> int:
-        return self.byte_offset * 8
+    def byte_offset(self) -> int | None:
+        return self.start_bit // 8 if self.start_bit % 8 == 0 else None
 
     def __post_init__(self) -> None:
         if self.endian not in ("little", "big"):
@@ -125,28 +129,60 @@ class Candidate:
             raise ValueError("signed must be boolean")
         if self.can_id is not None:
             _validate_id(self.can_id)
-        if type(self.width_bits) is not int or self.width_bits not in (8, 16):
-            raise ValueError("candidate width must be 8 or 16 bits")
-        if (type(self.byte_offset) is not int
-                or not 0 <= self.byte_offset <= 8 - self.width_bits // 8):
+        if type(self.width_bits) is not int or self.width_bits not in (8, 12, 16):
+            raise ValueError("candidate width must be 8, 12 or 16 bits")
+        if (type(self.start_bit) is not int
+                or not 0 <= self.start_bit <= 64 - self.width_bits):
             raise ValueError("candidate must fit within the 8-byte payload")
-        if self.width_bits == 8:
+        if self.width_bits == 8 and self.start_bit % 8 == 0:
             object.__setattr__(self, "endian", "little")
 
 
-def byte_aligned_candidates(can_id: int | None = None) -> list[Candidate]:
+def Candidate(byte_offset: int | None = None, width_bits: int | None = None,
+              endian: str = "little", signed: bool = False, can_id: int | None = None,
+              *, start_bit: int | None = None) -> CandidateSpec:
+    """Compatibility constructor: give either a byte offset or a start bit."""
+    if start_bit is None:
+        if type(byte_offset) is not int:
+            raise ValueError("provide an integer byte_offset or start_bit")
+        start_bit = byte_offset * 8
+    elif byte_offset is not None:
+        raise ValueError("provide start_bit or byte_offset, not both")
+    return CandidateSpec(start_bit, width_bits, endian, signed, can_id)
+
+
+def byte_aligned_candidates(can_id: int | None = None) -> list[CandidateSpec]:
+    """Legacy 44-configuration subset, retained for compatibility."""
     return [Candidate(offset, width, endian, signed, can_id)
             for width in (8, 16) for offset in range(9 - width // 8)
             for endian in (("little",) if width == 8 else ("little", "big"))
             for signed in (False, True)]
 
 
+def candidate_fields(can_id: int | None = None) -> list[CandidateSpec]:
+    return [CandidateSpec(start, width, endian, signed, can_id)
+            for width in (8, 12, 16) for start in range(65 - width)
+            for endian in (("little",) if width == 8 and start % 8 == 0 else ("little", "big"))
+            for signed in (False, True)]
+
+
+def decode_words(words: list[int], candidate: CandidateSpec) -> list[int]:
+    """Decode pre-parsed payload integers in the candidate's byte order."""
+    shift = candidate.start_bit if candidate.endian == "little" else 64 - candidate.start_bit - candidate.width_bits
+    modulus = 1 << candidate.width_bits
+    mask = modulus - 1
+    values = [(word >> shift) & mask for word in words]
+    if candidate.signed:
+        sign = modulus >> 1
+        return [value - modulus if value & sign else value for value in values]
+    return values
+
+
 def extract_candidate(frames: list[Frame], can_id: int,
-                      candidate: Candidate) -> list[tuple[float, int]]:
+                      candidate: CandidateSpec) -> list[tuple[float, int]]:
     """Return (timestamp, decoded integer) pairs in file order."""
     if candidate.can_id is not None and candidate.can_id != can_id:
         raise ValueError("candidate CAN ID does not match selected CAN ID")
-    start = candidate.byte_offset
-    end = start + candidate.width_bits // 8
-    return [(frame.timestamp, int.from_bytes(frame.data[start:end], candidate.endian, signed=candidate.signed))
-            for frame in frames_for_id(frames, can_id)]
+    selected = frames_for_id(frames, can_id)
+    values = decode_words([int.from_bytes(frame.data, candidate.endian) for frame in selected], candidate)
+    return [(frame.timestamp, value) for frame, value in zip(selected, values)]

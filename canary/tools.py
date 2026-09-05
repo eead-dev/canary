@@ -9,7 +9,7 @@ from dataclasses import asdict
 from .discovery import align_samples, discover_signal, pearson
 from .fitting import fit_linear
 from .observation import (
-    Candidate, Frame, byte_aligned_candidates, extract_candidate, frame_counts,
+    Candidate, CandidateSpec, Frame, byte_aligned_candidates, candidate_fields, extract_candidate, frame_counts,
     frames_for_id, timestamp_bounds, unique_ids, update_frequencies,
 )
 from .reference import Series
@@ -37,10 +37,12 @@ def _reference(reference: Series) -> None:
         raise ValueError("reference must be a list of numeric (timestamp, value) pairs")
 
 
-def _encoding(can_id: int, candidate: Candidate) -> dict:
-    return {"can_id": can_id, "byte_offset": candidate.byte_offset,
-            "start_bit": candidate.byte_offset * 8, "width_bits": candidate.width_bits,
-            "endian": candidate.endian, "signed": candidate.signed}
+def _encoding(can_id: int, candidate: CandidateSpec) -> dict:
+    result = {"can_id": can_id, "start_bit": candidate.start_bit, "width_bits": candidate.width_bits,
+              "endian": candidate.endian, "signed": candidate.signed}
+    if candidate.byte_offset is not None:
+        result["byte_offset"] = candidate.byte_offset
+    return result
 
 
 def summarize_capture(frames: list[Frame]) -> dict:
@@ -78,12 +80,12 @@ def inspect_can_id(frames: list[Frame], can_id: int) -> dict:
 
 def list_candidate_fields(frames: list[Frame], can_id: int) -> dict:
     _selected(frames, can_id)
-    return {"can_id": can_id, "candidates": [_encoding(can_id, c) for c in byte_aligned_candidates()]}
+    return {"can_id": can_id, "candidates": [_encoding(can_id, c) for c in candidate_fields(can_id)]}
 
 
-def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed):
+def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit):
     selected = _selected(frames, can_id)
-    candidate = Candidate(byte_offset, width_bits, endian, signed, can_id)
+    candidate = Candidate(byte_offset, width_bits, endian, signed, can_id, start_bit=start_bit)
     _reference(reference)
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
@@ -93,14 +95,14 @@ def _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alig
     return candidate, xs, ys, asdict(aligned.diagnostics)
 
 
-def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int, width_bits: int,
-                      reference: Series, *, include_fit: bool = False,
+def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = None, width_bits: int | None = None,
+                      reference: Series | None = None, *, include_fit: bool = False,
                       tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
-                      endian: str = "little", signed: bool = False) -> dict:
+                      endian: str = "little", signed: bool = False, start_bit: int | None = None) -> dict:
     """Raw ranges cover aligned samples only; fit is included only on request."""
     if type(include_fit) is not bool:
         raise ValueError("include_fit must be boolean")
-    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed)
+    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit)
     result = {**_encoding(can_id, candidate), "correlation": pearson(xs, ys, min_samples=min_samples),
               "aligned_samples": len(xs), "raw_min": min(xs) if xs else None,
               "raw_max": max(xs) if xs else None, "alignment_diagnostics": diagnostics}
@@ -119,15 +121,17 @@ def search_candidates(frames: list[Frame], reference: Series, *, top_n: int = 10
     if type(tolerance) not in (int, float):
         raise ValueError("tolerance must be a finite nonnegative number")
     ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples, alignment=alignment)
-    return {"candidates_searched": len(unique_ids(frames)) * len(byte_aligned_candidates()),
-            "candidates_ranked": len(ranked), "results": [asdict(r) for r in ranked[:top_n]]}
+    return {"candidates_searched": len(unique_ids(frames)) * len(candidate_fields()),
+            "candidates_ranked": len(ranked),
+            "results": [{k: v for k, v in asdict(r).items() if k != "byte_offset" or v is not None}
+                        for r in ranked[:top_n]]}
 
 
-def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int, width_bits: int,
-                  reference: Series, *, tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
-                  endian: str = "little", signed: bool = False) -> dict:
+def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = None, width_bits: int | None = None,
+                  reference: Series | None = None, *, tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None,
+                  endian: str = "little", signed: bool = False, start_bit: int | None = None) -> dict:
     """Fit one explicit field; null fit means insufficient or constant raw data."""
-    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed)
+    candidate, xs, ys, diagnostics = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit)
     fit = fit_linear(xs, ys, min_samples=min_samples)
     return {**_encoding(can_id, candidate), "aligned_samples": len(xs),
             "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics}

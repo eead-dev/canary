@@ -79,9 +79,10 @@ class DiscoveryTests(unittest.TestCase):
                   for can_id in (9, 3) for i, v in enumerate(values)]
         reference = list(enumerate(values))
         results = discover_signal(frames, reference)
-        self.assertEqual([(r.can_id, r.byte_offset, r.width_bits) for r in results],
-                         [(can_id, 0, width) for can_id in (3, 9) for width in (8, 8, 16, 16, 16, 16)])
-        self.assertTrue(all(abs(r.correlation + 1) < 1e-12 and r.aligned_samples == 4 for r in results))
+        self.assertEqual((results[0].can_id, results[0].start_bit, results[0].width_bits), (3, 0, 8))
+        self.assertAlmostEqual(results[0].correlation, -1)
+        self.assertTrue(all(r.aligned_samples == 4 for r in results))
+        self.assertEqual(results, sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.start_bit, r.width_bits)))
         self.assertEqual(results, discover_signal(list(reversed(frames)), reference))
         self.assertEqual(discover_signal(frames, [(100, 1), (101, 2), (102, 3)]), [])
         self.assertEqual(discover_signal(frames, [(i, 0) for i in range(4)]), [])
@@ -92,7 +93,7 @@ class DiscoveryTests(unittest.TestCase):
         frames = read_csv(ROOT / "datasets/synthetic/can_log.csv")
         reference = read_reference(ROOT / "datasets/synthetic/speed_reference.csv", "speed_kph")
         results = discover_signal(frames, reference)
-        self.assertEqual(len(results), 264)
+        self.assertEqual(len(results), 3720)
         top = results[0]
         self.assertEqual((top.can_id, top.byte_offset, top.width_bits),
                          (SPEED.can_id, SPEED.start_byte, SPEED.width * 8))
@@ -101,7 +102,7 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(top.endian, "little")
         self.assertFalse(top.signed)
         self.assertEqual(results, sorted(results, key=lambda r: (-abs(r.correlation), r.can_id,
-                                                                 r.byte_offset, r.width_bits)))
+                                                                 r.start_bit, r.width_bits)))
 
     def test_cli(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -114,7 +115,7 @@ class DiscoveryTests(unittest.TestCase):
             with patch("sys.argv", args), redirect_stdout(output):
                 main()
             self.assertIn("Reference: measurement", output.getvalue())
-            self.assertIn("Candidates searched: 44", output.getvalue())
+            self.assertIn("Candidates searched: 620", output.getvalue())
             self.assertIn("Samples:      3", output.getvalue())
             self.assertNotIn("#2", output.getvalue())
             with patch("sys.argv", args + ["--tolerance", "nan"]), redirect_stderr(io.StringIO()):

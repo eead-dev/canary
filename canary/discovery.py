@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 import math
 
-from .observation import Frame, byte_aligned_candidates, extract_candidate, frames_for_id, unique_ids
+from .observation import Frame, candidate_fields, decode_words, frames_for_id, unique_ids
 from .reference import Series, validate_reference
 from .alignment import AlignmentDiagnostics, align_series, configuration
 
@@ -54,20 +54,25 @@ def pearson(xs: list[float], ys: list[float], *, min_samples: int = 3) -> float 
 @dataclass(frozen=True)
 class DiscoveryResult:
     can_id: int
-    byte_offset: int
+    byte_offset: int | None
     width_bits: int
     correlation: float
     aligned_samples: int
     endian: str = "little"
     signed: bool = False
     alignment_diagnostics: AlignmentDiagnostics | None = None
+    start_bit: int | None = None
+
+    def __post_init__(self):
+        if self.start_bit is None:
+            object.__setattr__(self, "start_bit", self.byte_offset * 8)
 
 
 def discover_signal(can_log: list[Frame], reference_series: Series, *,
                     tolerance: float = 0.0, min_samples: int = 3, alignment: str | None = None) -> list[DiscoveryResult]:
     """Search every supported field; omit candidates with undefined correlation.
 
-    Rank by descending absolute r, then CAN ID, byte offset, and field width.
+    Rank by descending absolute r, then CAN ID, position, and field width.
     No physical interpretation or scale/offset estimation is performed.
     """
     validate_reference(reference_series)
@@ -76,13 +81,17 @@ def discover_signal(can_log: list[Frame], reference_series: Series, *,
     results = []
     for can_id in unique_ids(can_log):
         frames = frames_for_id(can_log, can_id)
-        for candidate in byte_aligned_candidates(can_id):
-            series = extract_candidate(frames, can_id, candidate)
-            aligned = align_series(series, reference_series, config)
-            xs, ys = [x for _, x, _ in aligned.rows], [y for _, _, y in aligned.rows]
+        # Timestamps are identical for every field on this ID. Match indices once
+        # using the unchanged aligner, then decode only matched payloads.
+        aligned = align_series([(f.timestamp, i) for i, f in enumerate(frames)], reference_series, config)
+        matched_frames = [frames[i] for _, i, _ in aligned.rows]
+        ys = [y for _, _, y in aligned.rows]
+        words = {endian: [int.from_bytes(f.data, endian) for f in matched_frames] for endian in ("little", "big")}
+        for candidate in candidate_fields(can_id):
+            xs = decode_words(words[candidate.endian], candidate)
             r = pearson(xs, ys, min_samples=min_samples)
             if r is not None:
                 results.append(DiscoveryResult(can_id, candidate.byte_offset,
                                                candidate.width_bits, r, len(xs), candidate.endian, candidate.signed,
-                                               alignment_diagnostics=aligned.diagnostics))
-    return sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.byte_offset, r.width_bits))
+                                               alignment_diagnostics=aligned.diagnostics, start_bit=candidate.start_bit))
+    return sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.start_bit, r.width_bits))

@@ -47,7 +47,7 @@ class EncodingTests(unittest.TestCase):
         self.assertEqual(Candidate(0, 8, "big", True), Candidate(0, 8, "little", True))
 
     def test_invalid_encodings(self):
-        for args in ((0, 16, "middle", False), (0, 16, "big", 1), (7, 16, "big", True), (0, 12, "little", False)):
+        for args in ((0, 16, "middle", False), (0, 16, "big", 1), (7, 16, "big", True), (0, 10, "little", False)):
             with self.subTest(args=args), self.assertRaises(ValueError):
                 Candidate(*args)
         with self.assertRaises(ValueError):

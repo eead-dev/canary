@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 
 from .discovery import DiscoveryResult, align_observations, discover_signal
-from .observation import Candidate, Frame, extract_candidate
+from .observation import CandidateSpec, Frame, extract_candidate
 from .reference import Series
 from .alignment import AlignmentDiagnostics, align_series, configuration
 
@@ -89,7 +89,7 @@ def fit_linear(xs: list[float], ys: list[float], *, min_samples: int = 3) -> Lin
 @dataclass(frozen=True)
 class FittedResult:
     can_id: int
-    byte_offset: int
+    byte_offset: int | None
     width_bits: int
     endian: str
     signed: bool
@@ -101,6 +101,11 @@ class FittedResult:
     r_squared: float | None
     aligned_samples: int
     alignment_diagnostics: AlignmentDiagnostics | None = None
+    start_bit: int | None = None
+
+    def __post_init__(self):
+        if self.start_bit is None:
+            object.__setattr__(self, "start_bit", self.byte_offset * 8)
 
 
 def fit_ranked(can_log: list[Frame], reference_series: Series,
@@ -108,14 +113,14 @@ def fit_ranked(can_log: list[Frame], reference_series: Series,
                min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
     results = []
     for result in ranked:
-        raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits, result.endian, result.signed))
+        raw = extract_candidate(can_log, result.can_id, CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed))
         aligned = align_series(raw, reference_series, configuration(alignment, tolerance))
         rows = aligned.rows
         fit = fit_linear([x for _, x, _ in rows], [y for _, _, y in rows], min_samples=min_samples)
         if fit is not None:
             results.append(FittedResult(result.can_id, result.byte_offset, result.width_bits,
                                         result.endian, result.signed, result.correlation,
-                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows), aligned.diagnostics))
+                                        fit.scale, fit.offset, fit.rmse, fit.mae, fit.r_squared, len(rows), aligned.diagnostics, result.start_bit))
     return results
 
 
@@ -131,7 +136,7 @@ def discover_and_fit(can_log: list[Frame], reference_series: Series, top_n: int 
 def write_reconstruction(path: str | Path, can_log: list[Frame], reference_series: Series,
                          result: FittedResult, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
     """Write matched samples with candidate timestamps; overwrite the output."""
-    raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits, result.endian, result.signed))
+    raw = extract_candidate(can_log, result.can_id, CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed))
     rows = align_observations(raw, reference_series, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], result.scale, result.offset)
     path = Path(path)

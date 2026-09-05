@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .discovery import discover_signal
 from .fitting import fit_ranked, write_reconstruction
-from .observation import byte_aligned_candidates, read_csv, unique_ids
+from .observation import candidate_fields, read_csv, unique_ids
 from .reference import read_reference
 from .reporting import candidate_details, equation, write_report
 
@@ -54,12 +54,12 @@ def main() -> None:
                          tolerance=args.tolerance, alignment=args.alignment)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
-    searched = len(unique_ids(frames)) * len(byte_aligned_candidates())
+    searched = len(unique_ids(frames)) * len(candidate_fields())
     print(f"Reference: {args.value_column}")
     if args.fit:
         print(f"CAN frames: {len(frames):,}\nUnique CAN IDs: {len(unique_ids(frames))}")
     print(f"Candidates searched: {searched}")
-    print(f"Candidates per CAN ID: {len(byte_aligned_candidates())}")
+    print(f"Candidates per CAN ID: {len(candidate_fields())}")
     print(f"Candidates ranked: {len(results)}")
     print(f"Skipped (constant or insufficient aligned samples): {searched - len(results)}")
     if displayed and displayed[0].alignment_diagnostics:
@@ -77,7 +77,9 @@ def main() -> None:
         print("\n=== RANKED TOP CANDIDATES ===")
     for rank, result in enumerate(displayed, 1):
         print(f"\n#{rank}\nCAN ID:       0x{result.can_id:03X}")
-        print(f"Byte offset:  {result.byte_offset}\nLength:       {result.width_bits} bits")
+        if result.byte_offset is not None:
+            print(f"Byte offset:  {result.byte_offset}")
+        print(f"Start bit:    {result.start_bit}\nLength:       {result.width_bits} bits")
         print(f"Endian:       {result.endian}\nSigned:       {'yes' if result.signed else 'no'}")
         print(f"Correlation:  {result.correlation:.12f}\nSamples:      {result.aligned_samples}")
         if args.fit:

@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from canary.observation import byte_aligned_candidates, read_csv
+from canary.observation import CandidateSpec, candidate_fields, extract_candidate, read_csv
 from simulator.challenges import SCENARIOS, generate_challenges, generate_scenario
 from simulator.drive import simulate_drive
 from simulator.evaluate_challenges import evaluate_challenges
@@ -91,34 +91,51 @@ class ChallengeTests(unittest.TestCase):
         self.assertTrue(all(abs(f.timestamp - i/100) <= 0.002000001 for i, f in enumerate(can)))
         self.assertNotEqual(times, [f.timestamp for f in can])
 
-    def test_baseline_and_unusual_recovery(self):
-        for name in ("baseline_easy", "unusual_scale_offset"):
+    def test_baseline_recovery_and_narrow_field_ties(self):
+        for name in ("baseline_easy", "unusual_scale_offset", "long_constant_regions"):
             result = self.results[name]
-            self.assertTrue(result["recovered"])
             field = self.metadata(name)["target"]
             fit = result["top_fitted"][0]
+            if name == "baseline_easy":
+                self.assertTrue(result["recovered"])
+            else:
+                # All observed values fit in 12 bits. Preserve the existing
+                # positional/width tie-break, and report strict recovery honestly.
+                self.assertFalse(result["recovered"])
+                self.assertEqual(result["true_field_rank"], 2)
+                self.assertEqual((fit["can_id"], fit["start_bit"], fit["width_bits"], fit["endian"], fit["signed"]),
+                                 (field["can_id"], field["start_bit"], 12, field["endian"], field["signed"]))
+                frames = read_csv(self.root / name / "can_log.csv")
+                series = lambda width: extract_candidate(frames, field["can_id"],
+                    CandidateSpec(field["start_bit"], width, field["endian"], field["signed"]))
+                self.assertEqual(series(12), series(16))
+                self.assertEqual(fit["correlation"], result["top_fitted"][1]["correlation"])
             # OLS fits quantized raw values; repeated plateaus can bias coefficients.
             self.assertAlmostEqual(fit["scale"], field["scale"], delta=field["scale"] * 1e-4)
             self.assertAlmostEqual(fit["offset"], field["offset"], delta=field["scale"] / 2)
             self.assertLess(fit["rmse"], field["scale"] / 2)
 
-    def test_unsupported_fields_outside_search_space(self):
-        space = {(c.byte_offset * 8, c.width_bits, c.endian, c.signed) for c in byte_aligned_candidates()}
+    def test_bit_offset_field_recovery(self):
+        space = {(c.start_bit, c.width_bits, c.endian, c.signed) for c in candidate_fields()}
         for name in SCENARIOS:
             if name == "unsupported_bit_offset":
                 field = self.metadata(name)["target"]
-                self.assertNotIn((field["start_bit"], field["width_bits"], field["endian"], field["signed"]), space)
-                self.assertFalse(self.results[name]["recovered"])
+                self.assertIn((field["start_bit"], field["width_bits"], field["endian"], field["signed"]), space)
+                result = self.results[name]
+                self.assertTrue(result["recovered"])
+                self.assertEqual(result["true_field_rank"], 1)
+                self.assertEqual((result["top_can_id"], result["start_bit"], result["width_bits"], result["endian"], result["signed"]),
+                                 (field["can_id"], field["start_bit"], field["width_bits"], field["endian"], field["signed"]))
 
     def test_evaluation_schema_and_noise_degradation(self):
         required = {"scenario", "expected_support", "seed", "candidates_searched", "candidates_ranked",
-                    "top_can_id", "byte_offset", "width_bits", "endian", "signed", "correlation", "r_squared",
+                    "top_can_id", "byte_offset", "start_bit", "width_bits", "endian", "signed", "correlation", "r_squared",
                     "aligned_samples", "recovered", "true_field_rank", "reason", "distractor_rank", "top_fitted",
                     "alignment_tolerance", "alignment_mode", "alignment_diagnostics", "encoding_comparison"}
         self.assertEqual(len(self.results), 9)
         for result in self.results.values():
             self.assertEqual(set(result), required)
-            self.assertEqual(result["candidates_searched"], 132)
+            self.assertEqual(result["candidates_searched"], 1860)
             self.assertEqual(result["alignment_tolerance"], 0.004 if result["scenario"] == "timestamp_jitter" else 0)
             self.assertIn(result["expected_support"], ("supported", "partially_supported", "unsupported"))
             json.dumps(result, allow_nan=False)

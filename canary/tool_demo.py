@@ -25,11 +25,12 @@ def main() -> None:
         if search["results"]:
             best = search["results"][0]
             can_id = best["can_id"]
-            selection = (frames, can_id, best["byte_offset"], best["width_bits"], reference)
+            selection = {"frames": frames, "can_id": can_id, "start_bit": best["start_bit"],
+                         "width_bits": best["width_bits"], "reference": reference}
             output.update({"inspect_can_id": inspect_can_id(frames, can_id),
                            "list_candidate_fields": list_candidate_fields(frames, can_id),
-                           "analyze_candidate": analyze_candidate(*selection, include_fit=True, endian=best["endian"], signed=best["signed"]),
-                           "fit_candidate": fit_candidate(*selection, endian=best["endian"], signed=best["signed"])})
+                           "analyze_candidate": analyze_candidate(**selection, include_fit=True, endian=best["endian"], signed=best["signed"]),
+                           "fit_candidate": fit_candidate(**selection, endian=best["endian"], signed=best["signed"])})
         else:
             output["selection_status"] = "No ranked candidate; selected-candidate tools not invoked."
         print(json.dumps(output, indent=2, allow_nan=False))

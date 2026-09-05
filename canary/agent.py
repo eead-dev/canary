@@ -8,7 +8,7 @@ from . import tools
 from .llm.base import Message, ModelProvider, ModelResponse, ToolCall
 from .llm.errors import provider_error
 from .llm.retry import RetryingProvider
-from .observation import Candidate, read_csv
+from .observation import Candidate, CandidateSpec, read_csv
 from .reference import read_reference
 
 
@@ -19,7 +19,8 @@ def obj(properties: dict, required: list[str] | None = None) -> dict:
 
 ID = {"type": "integer", "minimum": 0, "maximum": 2047}
 FIELD = {"can_id": ID, "byte_offset": {"type": "integer", "minimum": 0, "maximum": 7},
-         "width_bits": {"type": "integer", "enum": [8, 16]}}
+         "start_bit": {"type": "integer", "minimum": 0, "maximum": 56},
+         "width_bits": {"type": "integer", "enum": [8, 12, 16]}}
 ENCODING = {"endian": {"type": "string", "enum": ["little", "big"]}, "signed": {"type": "boolean"}}
 OPTIONS = {"tolerance": {"type": "number", "minimum": 0},
            "min_samples": {"type": "integer", "minimum": 3}}
@@ -27,13 +28,12 @@ TOOL_SCHEMAS = {
     "summarize_capture": obj({}), "list_can_ids": obj({}),
     "inspect_can_id": obj({"can_id": ID}), "list_candidate_fields": obj({"can_id": ID}),
     "search_candidates": obj({"top_n": {"type": "integer", "minimum": 1, "maximum": 100}, **OPTIONS}, []),
-    "analyze_candidate": obj({**FIELD, **ENCODING, **OPTIONS, "include_fit": {"type": "boolean"}}, list(FIELD)),
-    "fit_candidate": obj({**FIELD, **ENCODING, **OPTIONS}, list(FIELD)),
+    "analyze_candidate": obj({**FIELD, **ENCODING, **OPTIONS, "include_fit": {"type": "boolean"}}, ["can_id", "width_bits"]),
+    "fit_candidate": obj({**FIELD, **ENCODING, **OPTIONS}, ["can_id", "width_bits"]),
 }
 CONCLUSION_SCHEMA = obj({
     "reference_name": {"type": "string", "minLength": 1, "maxLength": 256},
-    "selected_candidate": obj({**FIELD, "start_bit": {"type": "integer", "minimum": 0, "maximum": 56},
-                               **ENCODING}),
+    "selected_candidate": obj({**FIELD, **ENCODING}, ["can_id", "start_bit", "width_bits", "endian", "signed"]),
     **{k: {"type": "number"} for k in ("correlation", "scale", "offset", "rmse", "mae", "r_squared")},
     "confidence": {"type": "string", "enum": ["high", "medium", "low"]},
     "rationale": {"type": "string", "minLength": 1, "maxLength": 2000},
@@ -113,8 +113,9 @@ class ToolDispatcher:
         try:
             validate(call.arguments, TOOL_SCHEMAS[call.name])
             if "width_bits" in call.arguments:
-                Candidate(call.arguments["byte_offset"], call.arguments["width_bits"],
-                          call.arguments.get("endian", "little"), call.arguments.get("signed", False))
+                Candidate(call.arguments.get("byte_offset"), call.arguments["width_bits"],
+                          call.arguments.get("endian", "little"), call.arguments.get("signed", False),
+                          start_bit=call.arguments.get("start_bit"))
             kwargs = dict(call.arguments)
             if call.name in ("search_candidates", "analyze_candidate", "fit_candidate"):
                 kwargs["reference"] = self.reference
@@ -130,11 +131,11 @@ def checked_conclusion(data: dict, name: str, trace: list[dict]) -> AgentConclus
     if data["reference_name"] != name:
         raise ValueError("reference_name does not match supplied reference")
     field = data["selected_candidate"]
-    Candidate(field["byte_offset"], field["width_bits"], field["endian"], field["signed"])
-    if field["start_bit"] != field["byte_offset"] * 8:
+    candidate = CandidateSpec(field["start_bit"], field["width_bits"], field["endian"], field["signed"])
+    if "byte_offset" in field and field["byte_offset"] != candidate.byte_offset:
         raise ValueError("start_bit does not match byte offset")
     searches = [e["output"]["result"] for e in trace if e["name"] == "search_candidates" and e["output"]["ok"]]
-    if not any(any(all(r[k] == field[k] for k in (*FIELD, *ENCODING)) for r in s["results"]) for s in searches):
+    if not any(any(all(r[k] == field[k] for k in ("can_id", "start_bit", "width_bits", *ENCODING)) for r in s["results"]) for s in searches):
         raise ValueError("selected candidate must appear in collected search evidence")
     for event in reversed(trace):
         if event["name"] != "analyze_candidate" or not event["output"]["ok"]:

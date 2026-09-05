@@ -114,7 +114,7 @@ duplicate headers raise clear errors. Extra named columns are ignored.
 
 `canary/discovery.py` exposes `discover_signal(frames, reference_series)` returning
 ranked raw candidates. Reference series are lists of `(timestamp, value)` pairs.
-All 44 supported configurations are searched for each observed ID. Candidate
+All 620 supported configurations are searched for each observed ID. Candidate
 samples are sorted by timestamp and matched exactly by default. `--tolerance`
 sets an inclusive distance in seconds for greedy nearest matching, with earlier
 reference timestamps winning ties. Matches are monotonic and one-to-one; no
@@ -125,8 +125,8 @@ Pearson correlation uses normalized, centered sums from the standard library.
 `--min-samples` defaults to 3 and cannot be lower. Constant series and candidates
 with insufficient matches are omitted from ranking and counted as skipped.
 Empty inputs yield no ranked candidates. Scores sort by descending absolute
-correlation, preserving the sign; exact ties sort by ID, byte offset, then width.
-Results include encoding and aligned sample count. For 8-bit fields the reported
+correlation, preserving the sign; exact ties sort by ID, start bit, then width.
+Results include encoding and aligned sample count. For byte-aligned 8-bit fields the reported
 little endianness is immaterial. Correlation measures tracking, not semantic
 identity or statistical significance; overlapping fields can score similarly.
 
@@ -212,7 +212,7 @@ They invoke the existing extraction, alignment, discovery, and fitting APIs.
 | `summarize_capture(frames)` | `total_frames`, `unique_can_id_count`, `first_timestamp`, `last_timestamp`, `duration_seconds` |
 | `list_can_ids(frames)` | `can_ids`: records with `can_id`, `frame_count`, `update_frequency_hz` |
 | `inspect_can_id(frames, can_id)` | ID, count, frequency, `changing_byte_positions`, `byte_ranges` containing offset/min/max |
-| `list_candidate_fields(frames, can_id)` | ID and all 44 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
+| `list_candidate_fields(frames, can_id)` | ID and all 620 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
 | `analyze_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `correlation`, `aligned_samples`, aligned `raw_min`/`raw_max`; optional `fit` with `include_fit=True` |
 | `search_candidates(frames, reference, top_n=10)` | `candidates_searched`, `candidates_ranked`, ranked `results` using existing discovery result fields |
 | `fit_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `aligned_samples`, `fit` containing `scale`, `offset`, `rmse`, `mae`, `r_squared` |
@@ -353,7 +353,7 @@ Each has 6,000 samples over 60 seconds at 100 Hz, three standard CAN IDs and
 | long_constant_regions | 50 seconds of plateaus, 10 seconds of linear changes | supported |
 | unsupported_big_endian | Target bytes stored big-endian | supported since Ticket #10 |
 | unsupported_signed | Target shifted by −45, crossing zero; signed 16-bit representation | supported since Ticket #10 |
-| unsupported_bit_offset | Unsigned 12-bit field at LSB0 bit 19, scale 0.025 | unsupported |
+| unsupported_bit_offset | Unsigned 12-bit field at LSB0 bit 19, scale 0.025 | supported since Ticket #11 |
 
 Payload and perturbation RNG streams are separate and seeded; the baseline and
 reference-only noise variant have identical CAN logs. Noise can make a near-zero
@@ -408,31 +408,62 @@ failures. The CLI prints diagnostics for its top candidate. The challenge JSON
 records the mode, tolerance, and diagnostics. Matching may discard endpoint
 samples, which is expected under the no-extrapolation rule.
 
-## Byte-aligned integer encodings
+## Integer bit-field encodings
 
-`Candidate(byte_offset, width_bits, endian="little", signed=False, can_id=None)`
-preserves existing defaults and optionally binds the candidate to a CAN ID.
-`start_bit` is always `byte_offset * 8` (zero-based storage position, not Motorola
-DBC bit numbering). Widths remain restricted to 8 or 16 bits and must fit inside
-the eight-byte payload. A single `int.from_bytes` decoder handles byte order and
-two's-complement signed values.
+`CandidateSpec(start_bit, width_bits, endian="little", signed=False, can_id=None)`
+is the fundamental immutable representation. Widths are 8, 12, or 16; starts
+range from zero through `64 - width_bits`. An optional CAN ID binds the field.
+The compatibility factory `Candidate(byte_offset, width_bits, ...)` preserves
+existing calls; it also accepts `start_bit=` instead of a byte offset.
+`byte_offset` is derived when the start is divisible by eight, otherwise null.
 
-Enumeration has 16 eight-bit configurations (8 positions × 2 signedness choices)
-and 28 sixteen-bit configurations (7 positions × 2 byte orders × 2 signedness
-choices), giving 44 per ID, 132 per three-ID challenge, or 264 for the original
-six-ID synthetic capture. Eight-bit endianness is canonicalized to `little`,
-including manually constructed candidates, so equivalent endian variants are
-not enumerated. Signed and unsigned interpretations remain distinct even when
-the observed values happen to be identical. Existing ranking criteria remain
-unchanged; stable enumeration resolves otherwise exact ties.
+Little-endian uses LSB0 numbering: bit 0 is the least-significant bit of byte 0,
+and the start identifies the field's least-significant bit. Extraction is
+`(int.from_bytes(payload, "little") >> start_bit) & ((1 << width_bits) - 1)`.
 
-`analyze_candidate` and `fit_candidate` accept keyword `endian` and `signed`
-arguments. Discovery results, reconstruction, CLI output, and reports preserve
-that encoding. The agent tool schemas and fake/demo forwarding accept these
-same arguments; model instructions and orchestration are unchanged.
+Big-endian uses **normalized MSB0 numbering**, not DBC/Motorola sawtooth start
+numbers: bit 0 is the most-significant bit of byte 0, bit 7 its least-significant
+bit, and bit 8 the most-significant bit of byte 1. The start identifies the
+field's most-significant bit. Extraction is
+`(int.from_bytes(payload, "big") >> (64 - start_bit - width_bits)) & mask`.
+Thus starts at byte boundaries reproduce the previous big-endian byte decoder
+exactly. A DBC start number must not be passed directly as this normalized index.
 
-Challenge names and ground-truth fixtures are retained verbatim for historical
-comparison. The evaluator updates expected capability labels without editing
-metadata and records the full-width big-endian candidate versus its misleading
-unsigned partial byte in `encoding_comparison`. Non-byte-aligned 12-bit extraction
-remains outside the supported search space.
+After extraction, signed values use two's complement: subtract `2**width_bits`
+when the field's high bit is set. For 12 bits, 0x7FF is 2047, 0x800 is -2048,
+and 0xFFF is -1. No other widths are supported.
+
+`candidate_fields()` enumerates every valid start and signedness in both byte
+orders. Only byte-aligned eight-bit endian variants are equivalent; these are
+canonicalized to little and emitted once. Nonaligned eight-bit endian variants
+are distinct. Counts per ID are 212 eight-bit, 212 twelve-bit, and 196 sixteen-bit
+configurations: **620 total**, versus 44 previously. Three-ID challenges search
+1,860 candidates; the original six-ID capture searches 3,720.
+`byte_aligned_candidates()` remains the legacy 44-configuration subset.
+Signed and unsigned interpretations remain separate even when observed values
+happen to be identical. Ranking criteria remain unchanged; positional ties use
+start bit, then width, with stable enumeration resolving further ties.
+
+Discovery aligns frame indices once per CAN ID using the existing matcher,
+then parses each matched payload once per byte order. Candidate extraction is
+linear in sample count and uses shifts/masks on these cached words. Correlation,
+fitting, and alignment formulas are unchanged.
+
+`analyze_candidate` and `fit_candidate` accept keyword `start_bit`, `width_bits`,
+`endian`, `signed`, and `reference`, or their legacy byte-offset arguments.
+Supply exactly one locator. Tool encoding records omit byte offset for unaligned
+fields. CLI and reports always display the actual start bit. Agent schema and
+fake/demo forwarding carry the new locator; reasoning and orchestration do not
+change. Production modules remain independent of simulator layouts.
+
+Challenge names and fixtures remain unchanged for historical comparison. The
+evaluator checks the complete encoding, including start bit, after discovery;
+it never provides hidden metadata to the engine. It also retains the full-width
+big-endian versus partial-byte comparison. Capability labels do not force a
+particular ranking outcome when multiple encodings explain the same samples.
+
+With the default fixtures, the bit-offset target now ranks first. The
+`unusual_scale_offset` and `long_constant_regions` captures have identical raw
+series for the target's low 12 bits and its full 16 bits. The existing width
+tie-break ranks 12 bits first and the true 16-bit layout second; strict layout
+recovery remains false for those cases despite identical reconstructed values.
