@@ -112,6 +112,47 @@ class AgentTests(unittest.TestCase):
         result = self.run_provider(provider)
         self.assertEqual(result.status, "provider_error")
         self.assertNotIn("credential-sensitive", json.dumps(asdict(result)))
+        self.assertEqual(result.error["type"], "RuntimeError")
+
+    def test_provider_diagnostics_preserve_useful_message(self):
+        provider = MagicMock()
+        provider.respond.side_effect = ValueError("400 INVALID_ARGUMENT: unsupported model configuration")
+        with patch.dict("os.environ", {}, clear=True):
+            result = self.run_provider(provider)
+        self.assertEqual(result.status, "provider_error")
+        self.assertEqual(result.error, {"type": "ValueError", "message": "400 INVALID_ARGUMENT: unsupported model configuration"})
+
+    def test_provider_diagnostics_redact_sensitive_details(self):
+        from canary.llm.errors import provider_error
+        message = ('403 PERMISSION_DENIED\nGEMINI_API_KEY=key-example-123\n'
+                   'Authorization: Bearer private-auth\n'
+                   'headers={"x-goog-api-key": "header-only-secret"}\n'
+                   'password="not-in-environment"\n'
+                   'location private/location and private%2Flocation\n'
+                   'unlabeled key-example-123\nhttps://example.test/run?token=private-query')
+        with patch.dict("os.environ", {"GEMINI_API_KEY": "key-example-123", "OTHER": "private/location"}, clear=True):
+            result = provider_error(RuntimeError(message))
+        serialized = json.dumps(result)
+        self.assertIn("403 PERMISSION_DENIED", serialized)
+        for value in ("GEMINI_API_KEY", "Authorization", "private-auth", "header-only-secret",
+                      "not-in-environment", "private/location", "private%2Flocation", "key-example-123", "private-query"):
+            self.assertNotIn(value, serialized)
+
+    def test_cli_provider_error_json(self):
+        from canary.agent_cli import main
+        provider = MagicMock()
+        provider.respond.side_effect = RuntimeError("404 NOT_FOUND: model unavailable\nAuthorization: Bearer hidden")
+        output = io.StringIO()
+        with patch("canary.agent_cli.FakeProvider", return_value=provider), patch.dict("os.environ", {}, clear=True), patch("sys.argv", [
+            "canary.agent_cli", str(self.can), str(self.ref), "--value-column", "value", "--dry-run"
+        ]), redirect_stdout(output), self.assertRaises(SystemExit) as raised:
+            main()
+        self.assertEqual(raised.exception.code, 1)
+        result = json.loads(output.getvalue())
+        self.assertEqual(result["status"], "provider_error")
+        self.assertEqual(result["error"]["type"], "RuntimeError")
+        self.assertIn("404 NOT_FOUND", result["error"]["message"])
+        self.assertNotIn("hidden", output.getvalue())
 
     def test_gemini_environment_key_required(self):
         from canary.llm.gemini import GeminiProvider

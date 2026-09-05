@@ -6,6 +6,7 @@ import math
 
 from . import tools
 from .llm.base import Message, ModelProvider, ModelResponse, ToolCall
+from .llm.errors import provider_error
 from .observation import Candidate, read_csv
 from .reference import read_reference
 
@@ -95,6 +96,7 @@ class AgentRun:
     conclusion: AgentConclusion | None
     trace: list[dict]
     turns: int
+    error: dict | None = None
 
 
 class ToolDispatcher:
@@ -155,9 +157,8 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
     for turn in range(1, max_turns + 1):
         try:
             response = provider.respond(SYSTEM, messages, declarations, CONCLUSION_SCHEMA)
-        except Exception:
-            # Never echo SDK exceptions, which can contain transport credentials.
-            return AgentRun("provider_error", None, trace, turn)
+        except Exception as exc:
+            return AgentRun("provider_error", None, trace, turn, provider_error(exc))
         try:
             if not isinstance(response, ModelResponse) or type(response.text) is not str or type(response.tool_calls) is not list:
                 raise ValueError("invalid provider response")
