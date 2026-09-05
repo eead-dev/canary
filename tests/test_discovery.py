@@ -124,7 +124,7 @@ class DiscoveryTests(unittest.TestCase):
 
     def test_production_dependencies(self):
         allowed = {"argparse", "bisect", "collections", "csv", "dataclasses", "html", "json", "math", "pathlib", "re"}
-        local = {p.stem for p in (ROOT / "canary").glob("*.py")}
+        local = {p.stem for p in (ROOT / "canary").glob("*.py")} | {"llm"}
         for path in (ROOT / "canary").glob("*.py"):
             source = path.read_text(encoding="utf-8")
             with self.subTest(path=path.name):
@@ -134,7 +134,8 @@ class DiscoveryTests(unittest.TestCase):
                     if isinstance(node, ast.Import):
                         self.assertTrue(all(a.name.split(".")[0] in allowed for a in node.names))
                     elif isinstance(node, ast.ImportFrom):
-                        self.assertIn(node.module.split(".")[0], local if node.level else allowed)
+                        if node.module:
+                            self.assertIn(node.module.split(".")[0], local if node.level else allowed)
 
 
 if __name__ == "__main__":

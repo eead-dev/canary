@@ -136,7 +136,7 @@ class ObservationTests(unittest.TestCase):
             self.assertIn("line 2: timestamp", errors.getvalue())
 
     def test_analysis_has_no_simulator_dependency(self):
-        for path in (ROOT / "canary").glob("*.py"):
+        for path in (ROOT / "canary").rglob("*.py"):
             source = path.read_text(encoding="utf-8")
             with self.subTest(path=path.name):
                 self.assertNotIn("ground_truth", source)

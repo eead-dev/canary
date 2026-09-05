@@ -237,3 +237,63 @@ outputs and a selection status. A future agent can call these ordinary functions
 and consume their structured outputs without requiring a particular model,
 provider SDK, or transport protocol. Package-wide dependency tests cover both
 the tools and demo modules.
+
+## Engineering agent (optional Gemini provider)
+
+The bounded agent in `canary/agent.py` exposes only the seven structured tools.
+It loads the two user-specified CSVs locally and binds them to the tool dispatcher;
+the model cannot supply paths, execute a shell, or access arbitrary files.
+Tool argument JSON schemas reject missing/extra properties, invalid types,
+unsupported fields, and out-of-range values. Invalid calls return structured
+errors to the model. No deterministic ranking or fitting algorithms change.
+
+`canary/llm/base.py` defines plain message, tool-call, response, and provider
+contracts. `llm/fake.py` supplies an offline scripted provider. `llm/gemini.py`
+alone imports the optional official `google-genai` SDK (lazily). Its SDK chat
+retains conversation metadata, with automatic function execution disabled.
+Use a new provider instance for each run. The default model is
+`gemini-3.7-flash`; `--model` overrides it according to account availability.
+
+Offline test, requiring neither an SDK nor a key:
+
+```sh
+python -m canary.agent_cli datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --dry-run
+python -m unittest discover -v
+```
+
+For a real run, install the optional extra and set the key in the current
+Windows CMD session. Replace the placeholder locally; never commit credentials:
+
+```bat
+python -m pip install -e ".[gemini]"
+set GEMINI_API_KEY=YOUR_API_KEY_HERE
+python -m canary.agent_cli ^
+  datasets/synthetic/can_log.csv ^
+  datasets/synthetic/speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider gemini ^
+  --model gemini-3.7-flash
+```
+
+The adapter reads the key only from `GEMINI_API_KEY`; it does not load `.env`
+files. Core requirements remain empty. Setuptools is build-time packaging only.
+A real run sends the supplied reference name and deterministic tool results to
+Google. It does not send source code or raw files; tool results contain capture
+statistics and signal evidence. No real API calls occur in tests or dry-run.
+
+Output is JSON with `status`, `conclusion`, `trace`, and `turns`. A completed
+`AgentConclusion` contains the reference name, selected encoding, correlation,
+scale/offset, RMSE/MAE/R-squared, qualitative confidence, and rationale. Completion
+requires search evidence and a matching `analyze_candidate(include_fit=true)`
+result. Numeric claims are checked against that evidence; rationale/confidence
+remain model judgments, not proof of semantic identity. Gemini submits this
+object through an internal `submit_conclusion` declaration, which grants no
+additional engineering capability.
+
+`--max-turns` defaults to 12 and `--max-tool-calls` to 30. Each Gemini request has
+a 60-second HTTP timeout. Exhaustion, unavailable evidence, or provider failure
+returns no conclusion and a nonzero CLI exit code. Malformed responses receive
+bounded correction opportunities. Provider failures are sanitized to avoid
+printing credential-bearing exceptions. The fake provider's fixed sequence is
+summary/search, inspection/analysis, conclusion; it does not represent live model
+quality. All agent and adapter tests are offline, including SDK-shaped stubs.
