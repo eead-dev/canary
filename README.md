@@ -86,7 +86,7 @@ series = extract_candidate(frames, frames[0].can_id, Candidate(0, 16))
 ```
 
 The production `canary` package has no simulator dependency. It does not read
-ground-truth layouts or fit scale/offset.
+ground-truth layouts.
 Tests for observations live in `tests/test_observation.py`.
 
 ## Reference-based discovery
@@ -133,4 +133,45 @@ identity or statistical significance; overlapping fields can score similarly.
 `canary/discover.py` provides the CLI; `tests/test_discovery.py` validates it and
 the engine. Production code uses only observation APIs and supplied reference
 data; only tests consult the generator layout. This stage does not name signals
-beyond the user-supplied reference column, fit physical units, or detect counters.
+beyond the user-supplied reference column or detect counters.
+
+## Scale/offset fitting and reconstruction
+
+Add `--fit` to fit the top candidates in correlation order. Windows CMD:
+
+```bat
+python -m canary.discover ^
+  datasets/synthetic/can_log.csv ^
+  datasets/synthetic/speed_reference.csv ^
+  --value-column speed_kph --top 10 --fit ^
+  --output-reconstruction results/speed_reconstructed.csv
+```
+
+PowerShell or other shells, as one line:
+
+```sh
+python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 10 --fit --output-reconstruction results/speed_reconstructed.csv
+```
+
+`canary/fitting.py` provides `fit_linear(x, y)`, `reconstruct(raw, scale, offset)`,
+`reconstruction_metrics(reference, reconstructed)`, and
+`discover_and_fit(frames, reference_series, top_n=10)`. OLS fits
+`scale = sum((x-mean(x))*(y-mean(y))) / sum((x-mean(x))**2)` and
+`offset = mean(y) - scale*mean(x)`. Negative scales are supported.
+The same timestamp alignment and minimum sample count as discovery apply.
+Constant raw inputs or insufficient samples return no fit; non-finite inputs,
+unequal lengths, and numeric overflow raise errors.
+
+Reconstruction is `raw*scale + offset`. RMSE is the square root of mean squared
+residual, MAE is mean absolute residual, and R-squared is `1-SSE/SST`.
+R-squared is unavailable for constant references (which discovery already skips).
+Metrics describe the aligned samples used to fit, not held-out validation.
+Correlation ranking is preserved; no semantic inference is performed.
+
+The optional export requires `--fit`, creates parent directories, and overwrites
+the output CSV. It contains `timestamp,reference,reconstructed,raw` for the best
+candidate's aligned samples, using candidate timestamps even when tolerance
+matching is enabled. Unmatched samples are omitted. The CLI rejects input paths
+as output destinations and fails clearly if there is no fitted candidate.
+Production fitting uses only observation APIs and supplied reference values;
+existing package-wide dependency tests also cover this module.

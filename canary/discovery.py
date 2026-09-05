@@ -10,6 +10,13 @@ from .reference import Series, validate_reference
 
 def align_samples(candidate: Series, reference: Series, *, tolerance: float = 0.0
                   ) -> tuple[list[float], list[float]]:
+    """Return aligned raw/reference values using timestamp matching."""
+    rows = align_observations(candidate, reference, tolerance=tolerance)
+    return [x for _, x, _ in rows], [y for _, _, y in rows]
+
+
+def align_observations(candidate: Series, reference: Series, *, tolerance: float = 0.0
+                       ) -> list[tuple[float, float, float]]:
     """Greedy nearest matching in time order, without reuse or interpolation.
 
     Ties prefer the earlier reference timestamp. Matches are monotonic; skipped
@@ -23,7 +30,7 @@ def align_samples(candidate: Series, reference: Series, *, tolerance: float = 0.
         raise ValueError("candidate timestamps and values must be finite")
     times = [t for t, _ in reference]
     left = 0
-    xs, ys = [], []
+    rows = []
     for timestamp, value in sorted(candidate, key=lambda pair: pair[0]):
         index = bisect_left(times, timestamp, lo=left)
         options = [i for i in (index - 1, index) if left <= i < len(times)]
@@ -31,10 +38,9 @@ def align_samples(candidate: Series, reference: Series, *, tolerance: float = 0.
             continue
         match = min(options, key=lambda i: (abs(times[i] - timestamp), times[i]))
         if abs(times[match] - timestamp) <= tolerance:
-            xs.append(value)
-            ys.append(reference[match][1])
+            rows.append((timestamp, value, reference[match][1]))
             left = match + 1
-    return xs, ys
+    return rows
 
 
 def pearson(xs: list[float], ys: list[float], *, min_samples: int = 3) -> float | None:
