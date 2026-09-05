@@ -1,6 +1,6 @@
 [project]
 name = "canary"
 version = "0.1.0"
-description = "Synthetic automotive CAN traffic generator"
+description = "Synthetic automotive CAN generation and observation parsing"
 requires-python = ">=3.12"
 dependencies = []
