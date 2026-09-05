@@ -198,3 +198,42 @@ every aligned reference/reconstruction sample at the candidate timestamp, with
 axes and a legend. Near-identical lines may overlap. Start bits are zero-based
 byte offsets multiplied by eight. Metrics remain in-sample measurements; the
 report does not assert signal identity beyond the supplied reference name.
+
+## Structured engineering tools
+
+`canary/tools.py` exposes model-independent functions accepting a parsed
+`list[Frame]` and, where needed, a numeric reference series. Parse files using
+`read_csv` and `read_reference` first. Tools return JSON-serializable dictionaries
+with integer CAN IDs, numeric statistics, and `None` for unavailable values.
+They invoke the existing extraction, alignment, discovery, and fitting APIs.
+
+| Function | Returned fields |
+| --- | --- |
+| `summarize_capture(frames)` | `total_frames`, `unique_can_id_count`, `first_timestamp`, `last_timestamp`, `duration_seconds` |
+| `list_can_ids(frames)` | `can_ids`: records with `can_id`, `frame_count`, `update_frequency_hz` |
+| `inspect_can_id(frames, can_id)` | ID, count, frequency, `changing_byte_positions`, `byte_ranges` containing offset/min/max |
+| `list_candidate_fields(frames, can_id)` | ID and all 15 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
+| `analyze_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `correlation`, `aligned_samples`, aligned `raw_min`/`raw_max`; optional `fit` with `include_fit=True` |
+| `search_candidates(frames, reference, top_n=10)` | `candidates_searched`, `candidates_ranked`, ranked `results` using existing discovery result fields |
+| `fit_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `aligned_samples`, `fit` containing `scale`, `offset`, `rmse`, `mae`, `r_squared` |
+
+Analysis, search, and fit accept keyword-only `tolerance=0.0` and `min_samples=3`.
+Search's `top_n` and analysis's `include_fit` are also keyword-only. Invalid
+arguments and absent selected IDs raise `ValueError`. Empty captures have null
+timestamp bounds/duration; empty searches return no results. Insufficient or
+constant raw observations produce a null fit, and undefined correlation is null.
+Inspection ranges cover the whole selected capture; analysis ranges cover only
+aligned samples. No tool mutates inputs or writes files.
+
+Run all seven tools deterministically, selecting the top-ranked field for the
+candidate-specific calls, without a model:
+
+```sh
+python -m canary.tool_demo datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph
+```
+
+The demo prints one JSON object. If no candidate ranks, it prints capture/search
+outputs and a selection status. A future agent can call these ordinary functions
+and consume their structured outputs without requiring a particular model,
+provider SDK, or transport protocol. Package-wide dependency tests cover both
+the tools and demo modules.
