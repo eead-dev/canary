@@ -34,10 +34,6 @@ def evaluate_scenario(directory: Path) -> dict:
     true_rank = next((i for i, candidate in enumerate(ranked, 1) if matches_field(candidate, field)), None)
     if recovered:
         reason = "correct complete field ranked #1"
-    elif field["endian"] != "little":
-        reason = "big-endian target outside search space; partial/proxy fields may correlate"
-    elif field["signed"]:
-        reason = "signed target outside search space; unsigned interpretation is not recovery"
     elif field["start_bit"] % 8 or field["width_bits"] not in (8, 16):
         reason = "non-byte-aligned 12-bit target outside search space"
     elif top is None:
@@ -46,9 +42,25 @@ def evaluate_scenario(directory: Path) -> dict:
         reason = f"another field ranked #1; true field rank is {true_rank}"
     distractor = metadata.get("distractor")
     distractor_rank = next((i for i, c in enumerate(ranked, 1) if matches_field(c, distractor)), None) if distractor else None
+    comparison = None
+    if directory.name == "unsupported_big_endian":
+        comparison = {}
+        for label, predicate in (
+            ("correct", lambda c: matches_field(c, field)),
+            ("partial_byte", lambda c: c.can_id == field["can_id"] and c.byte_offset * 8 == field["start_bit"]
+             and c.width_bits == 8 and not c.signed),
+        ):
+            entry = next(((i, c) for i, c in enumerate(ranked, 1) if predicate(c)), None)
+            if entry:
+                rank, candidate = entry
+                fit = fit_ranked(frames, reference, [candidate], alignment=mode, tolerance=tolerance)[0]
+                comparison[label] = {"rank": rank, **asdict(fit)}
+    expected = metadata["expected_support"]
+    if field["start_bit"] % 8 == 0 and field["width_bits"] in (8, 16) and expected == "unsupported":
+        expected = "supported"
     return {
         "scenario": metadata["scenario"], "seed": metadata["seed"],
-        "expected_support": metadata["expected_support"],
+        "expected_support": expected,
         "candidates_searched": len(unique_ids(frames)) * len(byte_aligned_candidates()),
         "candidates_ranked": len(ranked), "top_can_id": top.can_id if top else None,
         "byte_offset": top.byte_offset if top else None, "width_bits": top.width_bits if top else None,
@@ -60,6 +72,7 @@ def evaluate_scenario(directory: Path) -> dict:
         "distractor_rank": distractor_rank, "top_fitted": [asdict(f) for f in fitted],
         "alignment_tolerance": tolerance, "alignment_mode": mode,
         "alignment_diagnostics": asdict(top.alignment_diagnostics) if top else None,
+        "encoding_comparison": comparison,
     }
 
 
@@ -85,12 +98,13 @@ def main() -> None:
         output.write_text(json.dumps(results, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
-    print("Scenario | Expected | Searched | Top ID | Byte | Bits | Pearson r | R-squared | Samples | Recovered | Notes")
+    print(f"Candidates per CAN ID: {len(byte_aligned_candidates())}")
+    print("Scenario | Expected | Searched | Top ID | Byte | Bits | Endian | Signed | Pearson r | R-squared | Samples | Recovered | Notes")
     for row in results:
         fmt = lambda v: "N/A" if v is None else f"{v:.9f}"
         can_id = "N/A" if row["top_can_id"] is None else f"0x{row['top_can_id']:03X}"
         print(f"{row['scenario']} | {row['expected_support']} | {row['candidates_searched']} | {can_id} | "
-              f"{row['byte_offset']} | {row['width_bits']} | {fmt(row['correlation'])} | {fmt(row['r_squared'])} | "
+              f"{row['byte_offset']} | {row['width_bits']} | {row['endian']} | {row['signed']} | {fmt(row['correlation'])} | {fmt(row['r_squared'])} | "
               f"{row['aligned_samples']} | {'yes' if row['recovered'] else 'no'} | {row['reason']}")
     print(f"Detailed results: {output}")
 

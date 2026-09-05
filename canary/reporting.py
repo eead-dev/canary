@@ -68,7 +68,7 @@ def write_report(path: str | Path, frames: list[Frame], reference: Series,
     if not results:
         raise ValueError("no fitted candidate available for report")
     best = results[0]
-    series = extract_candidate(frames, best.can_id, Candidate(best.byte_offset, best.width_bits))
+    series = extract_candidate(frames, best.can_id, Candidate(best.byte_offset, best.width_bits, best.endian, best.signed))
     rows = align_observations(series, reference, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], best.scale, best.offset)
     bounds = timestamp_bounds(frames)

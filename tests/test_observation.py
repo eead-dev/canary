@@ -101,7 +101,8 @@ class ObservationTests(unittest.TestCase):
         self.assertEqual(extract_candidate(frames, 6, Candidate(0, 16)), [])
 
     def test_candidate_configurations(self):
-        expected = [Candidate(i, 8) for i in range(8)] + [Candidate(i, 16) for i in range(7)]
+        expected = [Candidate(i, w, e, s) for w in (8, 16) for i in range(9-w//8)
+                    for e in (("little",) if w == 8 else ("little", "big")) for s in (False, True)]
         self.assertEqual(byte_aligned_candidates(), expected)
         for offset, width in ((-1, 8), (8, 8), (7, 16), (0, 32), (0.5, 8)):
             with self.subTest(offset=offset, width=width), self.assertRaises(ValueError):

@@ -106,28 +106,47 @@ def update_frequencies(frames: list[Frame]) -> dict[int, float | None]:
 
 @dataclass(frozen=True)
 class Candidate:
-    """Unsigned byte-aligned field, always little-endian for 16 bits."""
+    """Byte-aligned integer field; optional CAN ID binds an encoding to a frame ID."""
 
     byte_offset: int
     width_bits: int
+    endian: str = "little"
+    signed: bool = False
+    can_id: int | None = None
+
+    @property
+    def start_bit(self) -> int:
+        return self.byte_offset * 8
 
     def __post_init__(self) -> None:
+        if self.endian not in ("little", "big"):
+            raise ValueError("endian must be little or big")
+        if type(self.signed) is not bool:
+            raise ValueError("signed must be boolean")
+        if self.can_id is not None:
+            _validate_id(self.can_id)
         if type(self.width_bits) is not int or self.width_bits not in (8, 16):
             raise ValueError("candidate width must be 8 or 16 bits")
         if (type(self.byte_offset) is not int
                 or not 0 <= self.byte_offset <= 8 - self.width_bits // 8):
             raise ValueError("candidate must fit within the 8-byte payload")
+        if self.width_bits == 8:
+            object.__setattr__(self, "endian", "little")
 
 
-def byte_aligned_candidates() -> list[Candidate]:
-    return [Candidate(offset, width) for width in (8, 16)
-            for offset in range(9 - width // 8)]
+def byte_aligned_candidates(can_id: int | None = None) -> list[Candidate]:
+    return [Candidate(offset, width, endian, signed, can_id)
+            for width in (8, 16) for offset in range(9 - width // 8)
+            for endian in (("little",) if width == 8 else ("little", "big"))
+            for signed in (False, True)]
 
 
 def extract_candidate(frames: list[Frame], can_id: int,
                       candidate: Candidate) -> list[tuple[float, int]]:
-    """Return (timestamp, unsigned raw value) pairs in file order."""
+    """Return (timestamp, decoded integer) pairs in file order."""
+    if candidate.can_id is not None and candidate.can_id != can_id:
+        raise ValueError("candidate CAN ID does not match selected CAN ID")
     start = candidate.byte_offset
     end = start + candidate.width_bits // 8
-    return [(frame.timestamp, int.from_bytes(frame.data[start:end], "little"))
+    return [(frame.timestamp, int.from_bytes(frame.data[start:end], candidate.endian, signed=candidate.signed))
             for frame in frames_for_id(frames, can_id)]

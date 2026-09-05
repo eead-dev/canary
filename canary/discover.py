@@ -59,6 +59,7 @@ def main() -> None:
     if args.fit:
         print(f"CAN frames: {len(frames):,}\nUnique CAN IDs: {len(unique_ids(frames))}")
     print(f"Candidates searched: {searched}")
+    print(f"Candidates per CAN ID: {len(byte_aligned_candidates())}")
     print(f"Candidates ranked: {len(results)}")
     print(f"Skipped (constant or insufficient aligned samples): {searched - len(results)}")
     if displayed and displayed[0].alignment_diagnostics:
@@ -77,7 +78,7 @@ def main() -> None:
     for rank, result in enumerate(displayed, 1):
         print(f"\n#{rank}\nCAN ID:       0x{result.can_id:03X}")
         print(f"Byte offset:  {result.byte_offset}\nLength:       {result.width_bits} bits")
-        print(f"Endian:       {result.endian}\nSigned:       no")
+        print(f"Endian:       {result.endian}\nSigned:       {'yes' if result.signed else 'no'}")
         print(f"Correlation:  {result.correlation:.12f}\nSamples:      {result.aligned_samples}")
         if args.fit:
             print(f"Scale:        {result.scale:.12g}\nOffset:       {result.offset:.12g}")

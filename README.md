@@ -74,15 +74,15 @@ traffic, not a guaranteed transmitter period. Singleton IDs or zero elapsed time
 report unavailable. Unordered rows are accepted; selection and extraction retain
 file order. Empty captures have no timestamp bounds or duration.
 
-`byte_aligned_candidates()` returns eight unsigned 8-bit configurations and seven
-unsigned 16-bit little-endian configurations. For example:
+`byte_aligned_candidates()` returns 44 configurations: signed/unsigned 8-bit
+fields and signed/unsigned 16-bit fields in either byte order. For example:
 
 ```python
 from canary.observation import Candidate, extract_candidate, read_csv
 
 frames = read_csv("datasets/synthetic/can_log.csv")
 series = extract_candidate(frames, frames[0].can_id, Candidate(0, 16))
-# series contains (timestamp, raw_unsigned_value) pairs; no physical interpretation.
+# series contains (timestamp, decoded_integer) pairs; no physical interpretation.
 ```
 
 The production `canary` package has no simulator dependency. It does not read
@@ -114,7 +114,7 @@ duplicate headers raise clear errors. Extra named columns are ignored.
 
 `canary/discovery.py` exposes `discover_signal(frames, reference_series)` returning
 ranked raw candidates. Reference series are lists of `(timestamp, value)` pairs.
-All 15 supported configurations are searched for each observed ID. Candidate
+All 44 supported configurations are searched for each observed ID. Candidate
 samples are sorted by timestamp and matched exactly by default. `--tolerance`
 sets an inclusive distance in seconds for greedy nearest matching, with earlier
 reference timestamps winning ties. Matches are monotonic and one-to-one; no
@@ -212,7 +212,7 @@ They invoke the existing extraction, alignment, discovery, and fitting APIs.
 | `summarize_capture(frames)` | `total_frames`, `unique_can_id_count`, `first_timestamp`, `last_timestamp`, `duration_seconds` |
 | `list_can_ids(frames)` | `can_ids`: records with `can_id`, `frame_count`, `update_frequency_hz` |
 | `inspect_can_id(frames, can_id)` | ID, count, frequency, `changing_byte_positions`, `byte_ranges` containing offset/min/max |
-| `list_candidate_fields(frames, can_id)` | ID and all 15 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
+| `list_candidate_fields(frames, can_id)` | ID and all 44 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
 | `analyze_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `correlation`, `aligned_samples`, aligned `raw_min`/`raw_max`; optional `fit` with `include_fit=True` |
 | `search_candidates(frames, reference, top_n=10)` | `candidates_searched`, `candidates_ranked`, ranked `results` using existing discovery result fields |
 | `fit_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `aligned_samples`, `fit` containing `scale`, `offset`, `rmse`, `mae`, `r_squared` |
@@ -351,8 +351,8 @@ Each has 6,000 samples over 60 seconds at 100 Hz, three standard CAN IDs and
 | correlated_distractor | Second encoded field: `max(0, 1.02*target + 0.8*sin(t/3) + 0.3)` | supported |
 | unusual_scale_offset | Scale 0.037, offset −12.5 | supported |
 | long_constant_regions | 50 seconds of plateaus, 10 seconds of linear changes | supported |
-| unsupported_big_endian | Target bytes stored big-endian | unsupported |
-| unsupported_signed | Target shifted by −45, crossing zero; signed 16-bit representation | unsupported |
+| unsupported_big_endian | Target bytes stored big-endian | supported since Ticket #10 |
+| unsupported_signed | Target shifted by −45, crossing zero; signed 16-bit representation | supported since Ticket #10 |
 | unsupported_bit_offset | Unsigned 12-bit field at LSB0 bit 19, scale 0.025 | unsupported |
 
 Payload and perturbation RNG streams are separate and seeded; the baseline and
@@ -407,3 +407,32 @@ still omits unrankable candidates, so use candidate analysis to inspect alignmen
 failures. The CLI prints diagnostics for its top candidate. The challenge JSON
 records the mode, tolerance, and diagnostics. Matching may discard endpoint
 samples, which is expected under the no-extrapolation rule.
+
+## Byte-aligned integer encodings
+
+`Candidate(byte_offset, width_bits, endian="little", signed=False, can_id=None)`
+preserves existing defaults and optionally binds the candidate to a CAN ID.
+`start_bit` is always `byte_offset * 8` (zero-based storage position, not Motorola
+DBC bit numbering). Widths remain restricted to 8 or 16 bits and must fit inside
+the eight-byte payload. A single `int.from_bytes` decoder handles byte order and
+two's-complement signed values.
+
+Enumeration has 16 eight-bit configurations (8 positions × 2 signedness choices)
+and 28 sixteen-bit configurations (7 positions × 2 byte orders × 2 signedness
+choices), giving 44 per ID, 132 per three-ID challenge, or 264 for the original
+six-ID synthetic capture. Eight-bit endianness is canonicalized to `little`,
+including manually constructed candidates, so equivalent endian variants are
+not enumerated. Signed and unsigned interpretations remain distinct even when
+the observed values happen to be identical. Existing ranking criteria remain
+unchanged; stable enumeration resolves otherwise exact ties.
+
+`analyze_candidate` and `fit_candidate` accept keyword `endian` and `signed`
+arguments. Discovery results, reconstruction, CLI output, and reports preserve
+that encoding. The agent tool schemas and fake/demo forwarding accept these
+same arguments; model instructions and orchestration are unchanged.
+
+Challenge names and ground-truth fixtures are retained verbatim for historical
+comparison. The evaluator updates expected capability labels without editing
+metadata and records the full-width big-endian candidate versus its misleading
+unsigned partial byte in `encoding_comparison`. Non-byte-aligned 12-bit extraction
+remains outside the supported search space.

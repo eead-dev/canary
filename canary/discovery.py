@@ -76,12 +76,13 @@ def discover_signal(can_log: list[Frame], reference_series: Series, *,
     results = []
     for can_id in unique_ids(can_log):
         frames = frames_for_id(can_log, can_id)
-        for candidate in byte_aligned_candidates():
+        for candidate in byte_aligned_candidates(can_id):
             series = extract_candidate(frames, can_id, candidate)
             aligned = align_series(series, reference_series, config)
             xs, ys = [x for _, x, _ in aligned.rows], [y for _, _, y in aligned.rows]
             r = pearson(xs, ys, min_samples=min_samples)
             if r is not None:
                 results.append(DiscoveryResult(can_id, candidate.byte_offset,
-                                               candidate.width_bits, r, len(xs), alignment_diagnostics=aligned.diagnostics))
+                                               candidate.width_bits, r, len(xs), candidate.endian, candidate.signed,
+                                               alignment_diagnostics=aligned.diagnostics))
     return sorted(results, key=lambda r: (-abs(r.correlation), r.can_id, r.byte_offset, r.width_bits))

@@ -41,11 +41,11 @@ class ToolTests(unittest.TestCase):
 
     def test_candidate_listing(self):
         result = list_candidate_fields(self.frames, 291)
-        self.assertEqual(len(result["candidates"]), 15)
+        self.assertEqual(len(result["candidates"]), 44)
         self.assertEqual([(r["byte_offset"], r["width_bits"]) for r in result["candidates"]],
-                         [(i, 8) for i in range(8)] + [(i, 16) for i in range(7)])
-        self.assertTrue(all(r["start_bit"] == r["byte_offset"] * 8 and not r["signed"]
-                            and r["endian"] == "little" for r in result["candidates"]))
+                         [(i, w) for w in (8, 16) for i in range(9-w//8)
+                          for _ in range(2 if w == 8 else 4)])
+        self.assertTrue(all(r["start_bit"] == r["byte_offset"] * 8 for r in result["candidates"]))
 
     def test_analysis(self):
         result = analyze_candidate(self.frames, 291, 0, 8, self.reference, include_fit=True)
@@ -58,7 +58,7 @@ class ToolTests(unittest.TestCase):
 
     def test_search_consistency(self):
         result = search_candidates(self.frames, self.reference, top_n=2)
-        self.assertEqual(result["candidates_searched"], 15)
+        self.assertEqual(result["candidates_searched"], 44)
         expected = discover_signal(self.frames, self.reference)
         self.assertEqual(result["candidates_ranked"], len(expected))
         self.assertEqual(result["results"], [asdict(r) for r in expected[:2]])

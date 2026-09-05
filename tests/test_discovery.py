@@ -80,7 +80,7 @@ class DiscoveryTests(unittest.TestCase):
         reference = list(enumerate(values))
         results = discover_signal(frames, reference)
         self.assertEqual([(r.can_id, r.byte_offset, r.width_bits) for r in results],
-                         [(3, 0, 8), (3, 0, 16), (9, 0, 8), (9, 0, 16)])
+                         [(can_id, 0, width) for can_id in (3, 9) for width in (8, 8, 16, 16, 16, 16)])
         self.assertTrue(all(abs(r.correlation + 1) < 1e-12 and r.aligned_samples == 4 for r in results))
         self.assertEqual(results, discover_signal(list(reversed(frames)), reference))
         self.assertEqual(discover_signal(frames, [(100, 1), (101, 2), (102, 3)]), [])
@@ -92,7 +92,7 @@ class DiscoveryTests(unittest.TestCase):
         frames = read_csv(ROOT / "datasets/synthetic/can_log.csv")
         reference = read_reference(ROOT / "datasets/synthetic/speed_reference.csv", "speed_kph")
         results = discover_signal(frames, reference)
-        self.assertEqual(len(results), 90)
+        self.assertEqual(len(results), 264)
         top = results[0]
         self.assertEqual((top.can_id, top.byte_offset, top.width_bits),
                          (SPEED.can_id, SPEED.start_byte, SPEED.width * 8))
@@ -114,7 +114,7 @@ class DiscoveryTests(unittest.TestCase):
             with patch("sys.argv", args), redirect_stdout(output):
                 main()
             self.assertIn("Reference: measurement", output.getvalue())
-            self.assertIn("Candidates searched: 15", output.getvalue())
+            self.assertIn("Candidates searched: 44", output.getvalue())
             self.assertIn("Samples:      3", output.getvalue())
             self.assertNotIn("#2", output.getvalue())
             with patch("sys.argv", args + ["--tolerance", "nan"]), redirect_stderr(io.StringIO()):

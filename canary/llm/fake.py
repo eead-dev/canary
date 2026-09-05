@@ -15,7 +15,7 @@ class FakeProvider:
         best = search["results"][0]
         analysis = next((e["output"]["result"] for e in events if e["name"] == "analyze_candidate"), None)
         if analysis is None:
-            args = {k: best[k] for k in ("can_id", "byte_offset", "width_bits")}
+            args = {k: best[k] for k in ("can_id", "byte_offset", "width_bits", "endian", "signed")}
             return ModelResponse(tool_calls=[ToolCall("inspect", "inspect_can_id", {"can_id": best["can_id"]}),
                                               ToolCall("analysis", "analyze_candidate", {**args, "include_fit": True})])
         field = {k: analysis[k] for k in ("can_id", "byte_offset", "start_bit", "width_bits", "endian", "signed")}

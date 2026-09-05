@@ -103,9 +103,9 @@ class ChallengeTests(unittest.TestCase):
             self.assertLess(fit["rmse"], field["scale"] / 2)
 
     def test_unsupported_fields_outside_search_space(self):
-        space = {(c.byte_offset * 8, c.width_bits, "little", False) for c in byte_aligned_candidates()}
+        space = {(c.byte_offset * 8, c.width_bits, c.endian, c.signed) for c in byte_aligned_candidates()}
         for name in SCENARIOS:
-            if name.startswith("unsupported_"):
+            if name == "unsupported_bit_offset":
                 field = self.metadata(name)["target"]
                 self.assertNotIn((field["start_bit"], field["width_bits"], field["endian"], field["signed"]), space)
                 self.assertFalse(self.results[name]["recovered"])
@@ -114,16 +114,29 @@ class ChallengeTests(unittest.TestCase):
         required = {"scenario", "expected_support", "seed", "candidates_searched", "candidates_ranked",
                     "top_can_id", "byte_offset", "width_bits", "endian", "signed", "correlation", "r_squared",
                     "aligned_samples", "recovered", "true_field_rank", "reason", "distractor_rank", "top_fitted",
-                    "alignment_tolerance", "alignment_mode", "alignment_diagnostics"}
+                    "alignment_tolerance", "alignment_mode", "alignment_diagnostics", "encoding_comparison"}
         self.assertEqual(len(self.results), 9)
         for result in self.results.values():
             self.assertEqual(set(result), required)
-            self.assertEqual(result["candidates_searched"], 45)
+            self.assertEqual(result["candidates_searched"], 132)
             self.assertEqual(result["alignment_tolerance"], 0.004 if result["scenario"] == "timestamp_jitter" else 0)
             self.assertIn(result["expected_support"], ("supported", "partially_supported", "unsupported"))
             json.dumps(result, allow_nan=False)
         self.assertGreater(self.results["noisy_reference"]["top_fitted"][0]["rmse"],
                            self.results["baseline_easy"]["top_fitted"][0]["rmse"])
+
+    def test_new_encoding_recovery_and_big_endian_false_positive(self):
+        for name in ("unsupported_big_endian", "unsupported_signed"):
+            result = self.results[name]
+            self.assertTrue(result["recovered"])
+            self.assertEqual(result["true_field_rank"], 1)
+            self.assertEqual(result["expected_support"], "supported")
+        comparison = self.results["unsupported_big_endian"]["encoding_comparison"]
+        correct, partial = comparison["correct"], comparison["partial_byte"]
+        self.assertLess(correct["rank"], partial["rank"])
+        self.assertGreater(correct["correlation"], partial["correlation"])
+        self.assertGreater(correct["r_squared"], partial["r_squared"])
+        self.assertLess(correct["rmse"], partial["rmse"])
 
     def test_correlated_distractor_encoded(self):
         import math

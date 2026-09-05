@@ -108,7 +108,7 @@ def fit_ranked(can_log: list[Frame], reference_series: Series,
                min_samples: int = 3, alignment: str | None = None) -> list[FittedResult]:
     results = []
     for result in ranked:
-        raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits))
+        raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits, result.endian, result.signed))
         aligned = align_series(raw, reference_series, configuration(alignment, tolerance))
         rows = aligned.rows
         fit = fit_linear([x for _, x, _ in rows], [y for _, _, y in rows], min_samples=min_samples)
@@ -131,7 +131,7 @@ def discover_and_fit(can_log: list[Frame], reference_series: Series, top_n: int 
 def write_reconstruction(path: str | Path, can_log: list[Frame], reference_series: Series,
                          result: FittedResult, *, tolerance: float = 0.0, alignment: str | None = None) -> None:
     """Write matched samples with candidate timestamps; overwrite the output."""
-    raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits))
+    raw = extract_candidate(can_log, result.can_id, Candidate(result.byte_offset, result.width_bits, result.endian, result.signed))
     rows = align_observations(raw, reference_series, tolerance=tolerance, alignment=alignment)
     predictions = reconstruct([x for _, x, _ in rows], result.scale, result.offset)
     path = Path(path)
