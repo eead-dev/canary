@@ -49,6 +49,7 @@ There is no automatic provider fallback.
 - `validation/`: isolated post-discovery comparison with pinned public definitions.
 - `tests/`: deterministic, evidence and mocked-provider regression coverage.
 - `examples/comma2k19/`: curated evidence; `results/`: ignored working output.
-- `docs/assets/`: placeholders for future screenshots and diagrams; no frontend yet.
+- `frontend/`: static React evidence workspace; no backend API or live execution.
+- `docs/assets/`: real workspace screenshots and a reserved diagrams directory.
 
 See [reproduction steps](reproducibility.md) and the [public demo](../examples/comma2k19/README.md).

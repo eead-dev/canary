@@ -6,6 +6,8 @@
 ![Core dependencies: standard library](https://img.shields.io/badge/Core-standard_library-2E7D32)
 [![Tests: 217 passing](https://img.shields.io/badge/Tests-217_passing-2E7D32)](examples/comma2k19/evidence/tests.txt)
 
+![CANary workspace showing the recovered CAN signal and measured GNSS reconstruction](docs/assets/screenshots/desktop-workspace.png)
+
 > **Real public vehicle data:** CANary recovered the `0x0AA` wheel-speed signal family from a 2017 Toyota RAV4 capture, fitting an independent GNSS speed reference with **r ≈ 0.9987** and **RMSE ≈ 0.45 km/h**. Discovery used no DBC. The agent preserved layout ambiguity instead of claiming a uniquely identified encoding.
 
 [Real-world result](#real-world-benchmark) · [Quick start](#quick-start) · [Architecture](#architecture) · [Tests](#tests-and-reliability)
@@ -153,6 +155,43 @@ For local inference, pull a suitable tool-capable model, such as `ollama pull gp
 
 The agent prints JSON containing the conclusion, tool trace, per-attempt diagnostics, active analysis configuration, and retry counts. Alignment settings belong to the session; model tool arguments cannot override them. Defaults remain 12 exploration turns, 30 tool calls, and three finalization repair attempts. Ollama output limits are omitted by default; `--ollama-max-tokens` is optional.
 
+## Frontend demo
+
+The [React workspace](frontend/DESIGN.md) visualizes the curated Toyota evidence:
+reference versus reconstruction, candidate bit positions, affine ambiguity, ranked
+candidates, and the recorded agent decision and validation trace. The inspected
+layout is shareable through the URL. [Mobile screenshot](docs/assets/screenshots/mobile-workspace.png).
+
+Phase 1 uses **curated static evidence only**. “Run Toyota RAV4 Demo” loads recorded
+results; it does not launch an agent. Configuration is read-only. Arbitrary uploads,
+backend API wiring and live execution are not implemented in the frontend.
+
+Install Node.js 22.12+ with npm, then from the repository root in Windows CMD:
+
+```bat
+cd frontend
+npm ci
+npm run dev
+```
+
+Open `http://127.0.0.1:5173`. No Python environment, provider credentials or source
+array downloads are needed for this static demo. Development and build commands
+verify the curated artifact SHA-256 hashes and package local copies automatically.
+
+```bat
+npm run build
+npm test
+npx playwright install chromium
+npm run test:e2e
+npm run preview
+```
+
+The production preview uses `http://127.0.0.1:4173`. Browser tests cover interaction,
+accessibility, desktop/mobile layouts and visual regressions; screenshot baselines
+are recorded on Windows/Chromium with system fonts. On another OS, review and create
+its platform-specific baselines with `npm run test:visual:update`. Never update
+baselines merely to hide a regression. See [frontend QA notes](frontend/QA.md).
+
 ## Providers
 
 All adapters implement the same message/tool interface and use the same analysis tools, evidence registry, and conclusion validator. There is no automatic provider fallback.
@@ -198,7 +237,8 @@ validation/              Isolated post-discovery public-definition checks
 tests/                   Deterministic, agent, and provider regressions
 datasets/                Synthetic fixtures and real-data provenance
 examples/comma2k19/      Curated public demo and immutable evidence copies
-docs/                    Architecture, reproduction, and asset placeholders
+frontend/                Static React evidence workspace and browser tests
+docs/                    Architecture, reproduction, and real workspace screenshots
 results/                 Ignored generated working output
 ```
 

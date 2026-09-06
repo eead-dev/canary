@@ -1,0 +1,6 @@
+node_modules/
+dist/
+public/evidence/
+test-results/
+playwright-report/
+*.tsbuildinfo
