@@ -94,6 +94,9 @@ Return only AgentDecision: candidate_ref, signal_confidence, layout_confidence,
 layout_ambiguous, alternative_refs, and rationale. Do not emit layouts or metrics.
 Only analyzed_fitted references are selectable. Search_candidate and
 analyzed_unfitted references must first be analyzed with include_fit=true.
+For candidate tools use start_bit only. Omit byte_offset entirely, including null.
+Search already returns candidate configurations; do not enumerate the entire
+field space again to inspect ranked candidates.
 Use the explicit selectable_candidate_refs allowlist in finalization; alternatives
 must also be fitted and satisfy the supplied distinct_alternative_refs evidence.
 Stop gathering evidence once you have enough validated evidence to conclude.
@@ -317,7 +320,12 @@ FINALIZATION = ('Return only a valid AgentDecision using the evidence already ga
 
 def finalization_guidance(error=None, registry=None):
     """Repair instructions derive nested field constraints from the canonical schema."""
-    guidance = {'instruction': FINALIZATION, 'expected_schema': DECISION_SCHEMA,
+    guidance = {'instruction': FINALIZATION + ' Select candidate_ref only from valid_candidate_refs. '
+                'For that candidate, select alternative_refs only from valid_alternative_refs_by_candidate. '
+                'If its list is empty, return alternative_refs: []. Never invent an alternative to fill the array.',
+                'expected_schema': registry.decision_schema(DECISION_SCHEMA) if registry is not None else DECISION_SCHEMA,
+                'valid_candidate_refs': registry.selectable_refs() if registry is not None else [],
+                'valid_alternative_refs_by_candidate': registry.alternative_allowlists() if registry is not None else {},
                 'selectable_candidate_refs': registry.selectable_refs() if registry is not None else [],
                 'allowed_evidence': registry.summaries() if registry is not None else []}
     if error is not None:
@@ -410,8 +418,10 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
     dispatcher = ToolDispatcher(read_csv(can_log), read_reference(reference_path, value_column), analysis_config)
     registry = EvidenceRegistry()
     declarations = [{"name": name, "description": getattr(tools, name).__doc__ or name,
-                     "parameters": {**schema, 'properties': {k: v for k, v in schema['properties'].items()
-                                                              if k not in OPTIONS}}}
+                     "parameters": {**schema,
+                                    'required': [*schema['required'], 'start_bit'] if 'width_bits' in schema['properties'] else schema['required'],
+                                    'properties': {k: v for k, v in schema['properties'].items()
+                                                   if k not in OPTIONS and k != 'byte_offset'}}}
                     for name, schema in TOOL_SCHEMAS.items()]
     messages = [Message("user", {"reference_name": value_column, "task": "Investigate the supplied capture using tools.",
                                  'analysis_config': asdict(analysis_config)})]
@@ -433,7 +443,8 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
         turn += 1
         try:
             response = provider.respond(SYSTEM + ('\n' + FINALIZATION if phase == 'finalization' else ''),
-                                        messages, [] if phase == 'finalization' else declarations, DECISION_SCHEMA)
+                                        messages, [] if phase == 'finalization' else declarations,
+                                        registry.decision_schema(DECISION_SCHEMA) if phase == 'finalization' else DECISION_SCHEMA)
         except Exception as exc:
             if phase == 'finalization' and isinstance(exc, ValueError):
                 last_validation_error = provider_error(exc)
@@ -442,6 +453,7 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                 continue
             return outcome("provider_error", None, trace, turn, provider_error(exc))
         conclusion_attempt = turn_trace[-1]['response_kind'] == 'final_candidate'
+        decision_ref = None
         try:
             if not isinstance(response, ModelResponse) or type(response.text) is not str or type(response.tool_calls) is not list:
                 raise ValueError("invalid provider response")
@@ -457,6 +469,8 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                     raise ValueError('response JSON must be an AgentConclusion object')
                 conclusion_attempt = True
             if data is not None:
+                if isinstance(data, dict):
+                    decision_ref = data.get('candidate_ref')
                 turn_trace[-1]['conclusion_parsing_attempted'] = True
                 if response.tool_calls:
                     raise ValueError("conclusion cannot accompany tool calls")
@@ -466,7 +480,10 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                     conclusion = checked_conclusion(data, value_column, trace)
                 else:
                     validate(data, DECISION_SCHEMA, 'decision')
-                    data = registry.assemble(data, value_column)
+                    assembled = registry.assemble(data, value_column)
+                    validate(data, registry.decision_schema(DECISION_SCHEMA), 'decision')
+                    turn_trace[-1]['decision'] = {k: data[k] for k in DECISION_SCHEMA['properties'] if k != 'rationale'}
+                    data = assembled
                     conclusion = checked_conclusion(data, value_column, trace)
                 turn_trace[-1]['validation'] = 'passed'
                 return outcome("complete", conclusion, trace, turn)
@@ -499,6 +516,19 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
             last_validation_error = provider_error(exc)
             turn_trace[-1].update(validation='failed', error=last_validation_error)
             if phase == 'exploration' and conclusion_attempt:
+                comparisons = registry.unfitted_comparisons(decision_ref)
+                if comparisons:
+                    turn_trace[-1]['transition'] = 'awaiting_comparison_evidence'
+                    messages.append(Message('user', {'error': last_validation_error,
+                        'code': 'comparison_evidence_required',
+                        'valid_candidate_refs': registry.selectable_refs(),
+                        'valid_alternative_refs_by_candidate': registry.alternative_allowlists(),
+                        'unfitted_search_comparisons': comparisons[:5],
+                        'instruction': 'No fitted distinct alternative is available for this selection. '
+                            'Do not invent alternative_refs. The strict validator requires comparison '
+                            'with an observed distinct search hypothesis. Continue exploration: analyze '
+                            'a listed comparison with include_fit=true, then decide using fitted refs.'}))
+                    continue
                 if registry.selectable_refs():
                     phase = 'finalization'
                     turn_trace[-1]['transition'] = 'reactive_finalization'

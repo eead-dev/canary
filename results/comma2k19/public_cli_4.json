@@ -1,0 +1,2385 @@
+{
+  "status": "complete",
+  "conclusion": {
+    "reference_name": "speed_kph",
+    "selected_candidate": {
+      "can_id": 170,
+      "start_bit": 32,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    "correlation": 0.9986674420646725,
+    "scale": 0.010200090617480912,
+    "offset": -69.66469113659188,
+    "rmse": 0.44796295043175166,
+    "mae": 0.32880526956485495,
+    "r_squared": 0.9973366598399963,
+    "confidence": "high",
+    "rationale": "Correlation (0.9987) and fit metrics (r\u00b2\u22480.997, RMSE\u22480.45) provide strong evidence that the decoded series tracks the reference, but multiple affine\u2011equivalent layouts prevent a unique determination of start bit, width, endian or signedness.",
+    "signal_confidence": "high",
+    "layout_confidence": "low",
+    "layout_ambiguous": true,
+    "equivalent_layouts": [
+      {
+        "can_id": 170,
+        "start_bit": 32,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": true
+      },
+      {
+        "can_id": 170,
+        "start_bit": 33,
+        "width_bits": 15,
+        "endian": "big",
+        "signed": false
+      },
+      {
+        "can_id": 170,
+        "start_bit": 33,
+        "width_bits": 15,
+        "endian": "big",
+        "signed": true
+      }
+    ],
+    "alternative_candidates": [],
+    "affine_equivalent_layouts": [
+      {
+        "can_id": 170,
+        "start_bit": 33,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": false
+      },
+      {
+        "can_id": 170,
+        "start_bit": 33,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": true
+      },
+      {
+        "can_id": 170,
+        "start_bit": 34,
+        "width_bits": 15,
+        "endian": "big",
+        "signed": false
+      },
+      {
+        "can_id": 170,
+        "start_bit": 34,
+        "width_bits": 15,
+        "endian": "big",
+        "signed": true
+      },
+      {
+        "can_id": 170,
+        "start_bit": 34,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": false
+      },
+      {
+        "can_id": 170,
+        "start_bit": 34,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": true
+      },
+      {
+        "can_id": 170,
+        "start_bit": 35,
+        "width_bits": 15,
+        "endian": "big",
+        "signed": false
+      },
+      {
+        "can_id": 170,
+        "start_bit": 35,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": false
+      }
+    ],
+    "ambiguity_reason": "affine_equivalent_layouts"
+  },
+  "trace": [
+    {
+      "id": "call_repg6wsy",
+      "name": "summarize_capture",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "total_frames": 53800,
+          "unique_can_id_count": 90,
+          "first_timestamp": 46408.58493039533,
+          "last_timestamp": 46468.577629821,
+          "duration_seconds": 59.992699425667524
+        }
+      }
+    },
+    {
+      "id": "call_nsqqknfg",
+      "name": "list_can_ids",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "can_ids": [
+            {
+              "can_id": 36,
+              "frame_count": 4974,
+              "update_frequency_hz": 82.90094736946361
+            },
+            {
+              "can_id": 37,
+              "frame_count": 4974,
+              "update_frequency_hz": 82.9009496151718
+            },
+            {
+              "can_id": 170,
+              "frame_count": 4974,
+              "update_frequency_hz": 82.8997556906523
+            },
+            {
+              "can_id": 180,
+              "frame_count": 2487,
+              "update_frequency_hz": 41.449336477260445
+            },
+            {
+              "can_id": 186,
+              "frame_count": 2487,
+              "update_frequency_hz": 41.44736963080928
+            },
+            {
+              "can_id": 426,
+              "frame_count": 1243,
+              "update_frequency_hz": 20.727331963754217
+            },
+            {
+              "can_id": 452,
+              "frame_count": 2547,
+              "update_frequency_hz": 42.45388517990484
+            },
+            {
+              "can_id": 464,
+              "frame_count": 1890,
+              "update_frequency_hz": 31.496020172249818
+            },
+            {
+              "can_id": 466,
+              "frame_count": 1890,
+              "update_frequency_hz": 31.502418505840215
+            },
+            {
+              "can_id": 467,
+              "frame_count": 1890,
+              "update_frequency_hz": 31.502038194594373
+            },
+            {
+              "can_id": 547,
+              "frame_count": 2487,
+              "update_frequency_hz": 41.44933613171327
+            },
+            {
+              "can_id": 548,
+              "frame_count": 2487,
+              "update_frequency_hz": 41.44925099892507
+            },
+            {
+              "can_id": 552,
+              "frame_count": 2487,
+              "update_frequency_hz": 41.450237461178844
+            },
+            {
+              "can_id": 562,
+              "frame_count": 1658,
+              "update_frequency_hz": 27.634294281315434
+            },
+            {
+              "can_id": 608,
+              "frame_count": 3000,
+              "update_frequency_hz": 49.9894158574384
+            },
+            {
+              "can_id": 610,
+              "frame_count": 1499,
+              "update_frequency_hz": 24.994463370411637
+            },
+            {
+              "can_id": 705,
+              "frame_count": 1890,
+              "update_frequency_hz": 31.502961828980258
+            },
+            {
+              "can_id": 725,
+              "frame_count": 2547,
+              "update_frequency_hz": 42.45765922982227
+            },
+            {
+              "can_id": 800,
+              "frame_count": 1243,
+              "update_frequency_hz": 20.726515957857007
+            },
+            {
+              "can_id": 849,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9997704547371026
+            },
+            {
+              "can_id": 896,
+              "frame_count": 62,
+              "update_frequency_hz": 1.0409846143471702
+            },
+            {
+              "can_id": 897,
+              "frame_count": 12,
+              "update_frequency_hz": 0.20001117774708824
+            },
+            {
+              "can_id": 900,
+              "frame_count": 20,
+              "update_frequency_hz": 0.3333025365395367
+            },
+            {
+              "can_id": 902,
+              "frame_count": 20,
+              "update_frequency_hz": 0.33331378581110727
+            },
+            {
+              "can_id": 905,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999837924942744
+            },
+            {
+              "can_id": 911,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999848048127125
+            },
+            {
+              "can_id": 916,
+              "frame_count": 200,
+              "update_frequency_hz": 3.332781409529221
+            },
+            {
+              "can_id": 918,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9989836808707121
+            },
+            {
+              "can_id": 921,
+              "frame_count": 62,
+              "update_frequency_hz": 1.0302239247378693
+            },
+            {
+              "can_id": 933,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999566376768829
+            },
+            {
+              "can_id": 944,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0000116862495283
+            },
+            {
+              "can_id": 945,
+              "frame_count": 60,
+              "update_frequency_hz": 0.999944284917877
+            },
+            {
+              "can_id": 951,
+              "frame_count": 199,
+              "update_frequency_hz": 3.316318426846321
+            },
+            {
+              "can_id": 955,
+              "frame_count": 59,
+              "update_frequency_hz": 0.9857893141495291
+            },
+            {
+              "can_id": 956,
+              "frame_count": 66,
+              "update_frequency_hz": 1.1165379008585599
+            },
+            {
+              "can_id": 979,
+              "frame_count": 115,
+              "update_frequency_hz": 1.9073906288091302
+            },
+            {
+              "can_id": 998,
+              "frame_count": 20,
+              "update_frequency_hz": 0.33331804078546456
+            },
+            {
+              "can_id": 999,
+              "frame_count": 20,
+              "update_frequency_hz": 0.3333030435752339
+            },
+            {
+              "can_id": 1000,
+              "frame_count": 20,
+              "update_frequency_hz": 0.3333445827441706
+            },
+            {
+              "can_id": 1001,
+              "frame_count": 20,
+              "update_frequency_hz": 0.3333491001024982
+            },
+            {
+              "can_id": 1008,
+              "frame_count": 120,
+              "update_frequency_hz": 1.9977001128497722
+            },
+            {
+              "can_id": 1014,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0000317798178344
+            },
+            {
+              "can_id": 1017,
+              "frame_count": 240,
+              "update_frequency_hz": 4.002097778933681
+            },
+            {
+              "can_id": 1043,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0000292288203618
+            },
+            {
+              "can_id": 1056,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9928727206939356
+            },
+            {
+              "can_id": 1059,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9911905746974492
+            },
+            {
+              "can_id": 1114,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0005980794287563
+            },
+            {
+              "can_id": 1176,
+              "frame_count": 120,
+              "update_frequency_hz": 2.001005947626911
+            },
+            {
+              "can_id": 1177,
+              "frame_count": 120,
+              "update_frequency_hz": 2.0009762336841144
+            },
+            {
+              "can_id": 1178,
+              "frame_count": 120,
+              "update_frequency_hz": 2.000826813377667
+            },
+            {
+              "can_id": 1179,
+              "frame_count": 120,
+              "update_frequency_hz": 2.001204906908678
+            },
+            {
+              "can_id": 1180,
+              "frame_count": 120,
+              "update_frequency_hz": 2.001119508360696
+            },
+            {
+              "can_id": 1181,
+              "frame_count": 120,
+              "update_frequency_hz": 2.0012065373881565
+            },
+            {
+              "can_id": 1190,
+              "frame_count": 75,
+              "update_frequency_hz": 1.250040489114164
+            },
+            {
+              "can_id": 1191,
+              "frame_count": 120,
+              "update_frequency_hz": 2.001320843794408
+            },
+            {
+              "can_id": 1192,
+              "frame_count": 120,
+              "update_frequency_hz": 2.001197252760096
+            },
+            {
+              "can_id": 1196,
+              "frame_count": 120,
+              "update_frequency_hz": 1.9997753347974037
+            },
+            {
+              "can_id": 1228,
+              "frame_count": 59,
+              "update_frequency_hz": 0.9794748992764014
+            },
+            {
+              "can_id": 1237,
+              "frame_count": 48,
+              "update_frequency_hz": 0.8130274714670498
+            },
+            {
+              "can_id": 1263,
+              "frame_count": 51,
+              "update_frequency_hz": 0.8402713712085798
+            },
+            {
+              "can_id": 1279,
+              "frame_count": 47,
+              "update_frequency_hz": 0.7692423454018398
+            },
+            {
+              "can_id": 1408,
+              "frame_count": 40,
+              "update_frequency_hz": 0.6664952535019771
+            },
+            {
+              "can_id": 1409,
+              "frame_count": 40,
+              "update_frequency_hz": 0.6666303882611245
+            },
+            {
+              "can_id": 1410,
+              "frame_count": 40,
+              "update_frequency_hz": 0.6665797528026135
+            },
+            {
+              "can_id": 1552,
+              "frame_count": 143,
+              "update_frequency_hz": 2.374619351874354
+            },
+            {
+              "can_id": 1553,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0024209508707695
+            },
+            {
+              "can_id": 1554,
+              "frame_count": 10,
+              "update_frequency_hz": 0.15734601315625657
+            },
+            {
+              "can_id": 1555,
+              "frame_count": 30,
+              "update_frequency_hz": 0.5000068132393343
+            },
+            {
+              "can_id": 1556,
+              "frame_count": 8,
+              "update_frequency_hz": 0.1492209117479368
+            },
+            {
+              "can_id": 1557,
+              "frame_count": 8,
+              "update_frequency_hz": 0.14923756744249345
+            },
+            {
+              "can_id": 1561,
+              "frame_count": 7,
+              "update_frequency_hz": 0.11654818728370048
+            },
+            {
+              "can_id": 1562,
+              "frame_count": 6,
+              "update_frequency_hz": 0.09999681738931139
+            },
+            {
+              "can_id": 1568,
+              "frame_count": 200,
+              "update_frequency_hz": 3.333135782674069
+            },
+            {
+              "can_id": 1569,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999742593462764
+            },
+            {
+              "can_id": 1570,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999349151120733
+            },
+            {
+              "can_id": 1571,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999840823776112
+            },
+            {
+              "can_id": 1572,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999334122986362
+            },
+            {
+              "can_id": 1584,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9979313405054562
+            },
+            {
+              "can_id": 1589,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9979944996057811
+            },
+            {
+              "can_id": 1592,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9997351325237032
+            },
+            {
+              "can_id": 1593,
+              "frame_count": 60,
+              "update_frequency_hz": 0.999892396850953
+            },
+            {
+              "can_id": 1595,
+              "frame_count": 120,
+              "update_frequency_hz": 1.999732029309243
+            },
+            {
+              "can_id": 1596,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999766066997798
+            },
+            {
+              "can_id": 1597,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999380947873643
+            },
+            {
+              "can_id": 1600,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0000253250028677
+            },
+            {
+              "can_id": 1656,
+              "frame_count": 60,
+              "update_frequency_hz": 1.0005728270898957
+            },
+            {
+              "can_id": 1664,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999421047136434
+            },
+            {
+              "can_id": 1728,
+              "frame_count": 199,
+              "update_frequency_hz": 3.321545788711811
+            },
+            {
+              "can_id": 1745,
+              "frame_count": 60,
+              "update_frequency_hz": 0.9999834937754251
+            },
+            {
+              "can_id": 1779,
+              "frame_count": 60,
+              "update_frequency_hz": 0.999999705542452
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "call_dwt7rw0d",
+      "name": "search_candidates",
+      "arguments": {
+        "top_n": 5
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "candidates_searched": 73800,
+          "candidates_ranked": 10536,
+          "performance": {
+            "candidates_enumerated": 73800,
+            "unique_decoded_series": 18009,
+            "equivalence_classes": 18009,
+            "equivalent_candidates_grouped": 55791,
+            "constant_candidates_skipped": 46200,
+            "decoding_seconds": 11.500025500106858,
+            "correlation_seconds": 2.396911200557952,
+            "total_seconds": 18.11326480000571
+          },
+          "results": [
+            {
+              "candidate_ref": "cand_0001",
+              "rank": 1,
+              "can_id": 170,
+              "width_bits": 15,
+              "correlation": 0.9986674420646726,
+              "aligned_samples": 579,
+              "endian": "big",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 4974,
+                "matched_sample_count": 579,
+                "unmatched_sample_count": 4395,
+                "match_ratio": 0.11640530759951749,
+                "mean_absolute_timestamp_error": 0.014437113473191255,
+                "max_absolute_timestamp_error": 0.019960625002568122
+              },
+              "start_bit": 34,
+              "equivalence": {
+                "representative": {
+                  "candidate_ref": "cand_0001",
+                  "start_bit": 34,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                "equivalent_candidates": [],
+                "equivalence_count": 1,
+                "evidence": "identical decoded time series on this aligned capture"
+              },
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0002",
+              "rank": 2,
+              "can_id": 170,
+              "width_bits": 16,
+              "correlation": 0.9986674420646726,
+              "aligned_samples": 579,
+              "endian": "big",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 4974,
+                "matched_sample_count": 579,
+                "unmatched_sample_count": 4395,
+                "match_ratio": 0.11640530759951749,
+                "mean_absolute_timestamp_error": 0.014437113473191255,
+                "max_absolute_timestamp_error": 0.019960625002568122
+              },
+              "start_bit": 34,
+              "equivalence": {
+                "representative": {
+                  "candidate_ref": "cand_0002",
+                  "start_bit": 34,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                "equivalent_candidates": [],
+                "equivalence_count": 1,
+                "evidence": "identical decoded time series on this aligned capture"
+              },
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0003",
+              "rank": 3,
+              "can_id": 170,
+              "width_bits": 16,
+              "correlation": 0.9986674420646726,
+              "aligned_samples": 579,
+              "endian": "big",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 4974,
+                "matched_sample_count": 579,
+                "unmatched_sample_count": 4395,
+                "match_ratio": 0.11640530759951749,
+                "mean_absolute_timestamp_error": 0.014437113473191255,
+                "max_absolute_timestamp_error": 0.019960625002568122
+              },
+              "start_bit": 35,
+              "equivalence": {
+                "representative": {
+                  "candidate_ref": "cand_0003",
+                  "start_bit": 35,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                "equivalent_candidates": [],
+                "equivalence_count": 1,
+                "evidence": "identical decoded time series on this aligned capture"
+              },
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0004",
+              "rank": 4,
+              "can_id": 170,
+              "width_bits": 16,
+              "correlation": 0.9986674420646725,
+              "aligned_samples": 579,
+              "endian": "big",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 4974,
+                "matched_sample_count": 579,
+                "unmatched_sample_count": 4395,
+                "match_ratio": 0.11640530759951749,
+                "mean_absolute_timestamp_error": 0.014437113473191255,
+                "max_absolute_timestamp_error": 0.019960625002568122
+              },
+              "start_bit": 32,
+              "equivalence": {
+                "representative": {
+                  "candidate_ref": "cand_0004",
+                  "start_bit": 32,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                "equivalent_candidates": [
+                  {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  }
+                ],
+                "equivalence_count": 4,
+                "evidence": "identical decoded time series on this aligned capture"
+              },
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0005",
+              "rank": 5,
+              "can_id": 170,
+              "width_bits": 16,
+              "correlation": 0.9986674420646725,
+              "aligned_samples": 579,
+              "endian": "big",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 4974,
+                "matched_sample_count": 579,
+                "unmatched_sample_count": 4395,
+                "match_ratio": 0.11640530759951749,
+                "mean_absolute_timestamp_error": 0.014437113473191255,
+                "max_absolute_timestamp_error": 0.019960625002568122
+              },
+              "start_bit": 32,
+              "equivalence": {
+                "representative": {
+                  "candidate_ref": "cand_0004",
+                  "start_bit": 32,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                "equivalent_candidates": [
+                  {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  }
+                ],
+                "equivalence_count": 4,
+                "evidence": "identical decoded time series on this aligned capture"
+              },
+              "evidence_state": "search_candidate",
+              "selectable": false
+            }
+          ],
+          "hypotheses": [
+            {
+              "rank": 1,
+              "representative": {
+                "candidate_ref": "cand_0001",
+                "start_bit": 34,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "correlation": 0.9986674420646726,
+              "equivalence_count": 1,
+              "equivalent_candidates": [],
+              "evidence": "identical decoded time series on this aligned capture",
+              "exact_raw_equivalents": [],
+              "affine_equivalents": [
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0004",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0008",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0009",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0010",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0011",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 65536.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0002",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0012",
+                    "start_bit": 35,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0003",
+                    "start_bit": 35,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 4.0,
+                  "offset_between_raw": 65537.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                }
+              ],
+              "distinct_alternatives": [],
+              "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+              "layout_ambiguous": true,
+              "ambiguity_reason": "affine_equivalent_layouts"
+            },
+            {
+              "rank": 2,
+              "representative": {
+                "candidate_ref": "cand_0002",
+                "start_bit": 34,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "correlation": 0.9986674420646726,
+              "equivalence_count": 1,
+              "equivalent_candidates": [],
+              "evidence": "identical decoded time series on this aligned capture",
+              "exact_raw_equivalents": [],
+              "affine_equivalents": [
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0004",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16384.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0008",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0009",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0010",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0001",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0011",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": 65536.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0012",
+                    "start_bit": 35,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": 32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0003",
+                    "start_bit": 35,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 65537.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                }
+              ],
+              "distinct_alternatives": [],
+              "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+              "layout_ambiguous": true,
+              "ambiguity_reason": "affine_equivalent_layouts"
+            },
+            {
+              "rank": 3,
+              "representative": {
+                "candidate_ref": "cand_0003",
+                "start_bit": 35,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "correlation": 0.9986674420646726,
+              "equivalence_count": 1,
+              "equivalent_candidates": [],
+              "evidence": "identical decoded time series on this aligned capture",
+              "exact_raw_equivalents": [],
+              "affine_equivalents": [
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0004",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.125,
+                  "offset_between_raw": 8191.875000000001,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.125,
+                  "offset_between_raw": 8191.875000000001,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.125,
+                  "offset_between_raw": 8191.875000000001,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.125,
+                  "offset_between_raw": 8191.875000000001,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0008",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16383.750000000002,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0009",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16383.750000000002,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0010",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": 16383.750000000002,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0001",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.25,
+                  "offset_between_raw": -16384.25,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0011",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 32767.500000000004,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0002",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": -32768.5,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0012",
+                    "start_bit": 35,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": -0.5,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                }
+              ],
+              "distinct_alternatives": [],
+              "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+              "layout_ambiguous": true,
+              "ambiguity_reason": "affine_equivalent_layouts"
+            },
+            {
+              "rank": 4,
+              "representative": {
+                "candidate_ref": "cand_0004",
+                "start_bit": 32,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "correlation": 0.9986674420646725,
+              "equivalence_count": 4,
+              "equivalent_candidates": [
+                {
+                  "candidate_ref": "cand_0005",
+                  "start_bit": 32,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0006",
+                  "start_bit": 33,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0007",
+                  "start_bit": 33,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture",
+              "exact_raw_equivalents": [
+                {
+                  "candidate_ref": "cand_0005",
+                  "start_bit": 32,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0006",
+                  "start_bit": 33,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0007",
+                  "start_bit": 33,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                }
+              ],
+              "affine_equivalents": [
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0008",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0009",
+                    "start_bit": 33,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0010",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0001",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": -32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0011",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 4.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0002",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 4.0,
+                  "offset_between_raw": -65536.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0012",
+                    "start_bit": 35,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 4.0,
+                  "offset_between_raw": -32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0003",
+                    "start_bit": 35,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 8.0,
+                  "offset_between_raw": -65535.00000000001,
+                  "rmse_between_raw": 7.275957614183426e-12,
+                  "max_abs_residual": 7.275957614183426e-12,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                }
+              ],
+              "distinct_alternatives": [],
+              "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+              "layout_ambiguous": true,
+              "ambiguity_reason": "affine_equivalent_layouts"
+            },
+            {
+              "rank": 8,
+              "representative": {
+                "candidate_ref": "cand_0008",
+                "start_bit": 33,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "correlation": 0.9986674420646725,
+              "equivalence_count": 3,
+              "equivalent_candidates": [
+                {
+                  "candidate_ref": "cand_0009",
+                  "start_bit": 33,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0010",
+                  "start_bit": 34,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture",
+              "exact_raw_equivalents": [
+                {
+                  "candidate_ref": "cand_0009",
+                  "start_bit": 33,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                },
+                {
+                  "candidate_ref": "cand_0010",
+                  "start_bit": 34,
+                  "width_bits": 15,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 170,
+                  "evidence_state": "search_candidate",
+                  "selectable": false
+                }
+              ],
+              "affine_equivalents": [
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0004",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0005",
+                    "start_bit": 32,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0006",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0007",
+                    "start_bit": 33,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 0.5,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0001",
+                    "start_bit": 34,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 1.0,
+                  "offset_between_raw": -32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0011",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": 0.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0002",
+                    "start_bit": 34,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": true,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": -65536.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0012",
+                    "start_bit": 35,
+                    "width_bits": 15,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 2.0,
+                  "offset_between_raw": -32768.0,
+                  "rmse_between_raw": 0.0,
+                  "max_abs_residual": 0.0,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                },
+                {
+                  "candidate": {
+                    "candidate_ref": "cand_0003",
+                    "start_bit": 35,
+                    "width_bits": 16,
+                    "endian": "big",
+                    "signed": false,
+                    "can_id": 170,
+                    "evidence_state": "search_candidate",
+                    "selectable": false
+                  },
+                  "relationship_type": "affine",
+                  "scale_between_raw": 4.0,
+                  "offset_between_raw": -65535.00000000001,
+                  "rmse_between_raw": 7.275957614183426e-12,
+                  "max_abs_residual": 7.275957614183426e-12,
+                  "sample_count": 579,
+                  "reason": "every residual within 1e-8 raw units"
+                }
+              ],
+              "distinct_alternatives": [],
+              "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+              "layout_ambiguous": true,
+              "ambiguity_reason": "affine_equivalent_layouts"
+            }
+          ]
+        }
+      },
+      "analysis_config": "session"
+    },
+    {
+      "id": "call_81v7x0w6",
+      "name": "analyze_candidate",
+      "arguments": {
+        "can_id": 170,
+        "endian": "big",
+        "signed": false,
+        "start_bit": 32,
+        "width_bits": 16,
+        "include_fit": true
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "candidate_ref": "cand_0004",
+          "can_id": 170,
+          "start_bit": 32,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": false,
+          "correlation": 0.9986674420646725,
+          "aligned_samples": 579,
+          "raw_min": 9665,
+          "raw_max": 13907,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 4974,
+            "matched_sample_count": 579,
+            "unmatched_sample_count": 4395,
+            "match_ratio": 0.11640530759951749,
+            "mean_absolute_timestamp_error": 0.014437113473191255,
+            "max_absolute_timestamp_error": 0.019960625002568122
+          },
+          "equivalence": {
+            "representative": {
+              "candidate_ref": "cand_0004",
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "can_id": 170,
+              "evidence_state": "analyzed_fitted",
+              "selectable": true
+            },
+            "equivalent_candidates": [
+              {
+                "candidate_ref": "cand_0005",
+                "start_bit": 32,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              {
+                "candidate_ref": "cand_0006",
+                "start_bit": 33,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              {
+                "candidate_ref": "cand_0007",
+                "start_bit": 33,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              }
+            ],
+            "equivalence_count": 4,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.010200090617480912,
+            "offset": -69.66469113659188,
+            "rmse": 0.44796295043175166,
+            "mae": 0.32880526956485495,
+            "r_squared": 0.9973366598399963
+          },
+          "exact_raw_equivalents": [
+            {
+              "candidate_ref": "cand_0005",
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "can_id": 170,
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0006",
+              "start_bit": 33,
+              "width_bits": 15,
+              "endian": "big",
+              "signed": false,
+              "can_id": 170,
+              "evidence_state": "search_candidate",
+              "selectable": false
+            },
+            {
+              "candidate_ref": "cand_0007",
+              "start_bit": 33,
+              "width_bits": 15,
+              "endian": "big",
+              "signed": true,
+              "can_id": 170,
+              "evidence_state": "search_candidate",
+              "selectable": false
+            }
+          ],
+          "affine_equivalents": [
+            {
+              "candidate": {
+                "candidate_ref": "cand_0008",
+                "start_bit": 33,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 2.0,
+              "offset_between_raw": 0.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0009",
+                "start_bit": 33,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 2.0,
+              "offset_between_raw": 0.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0010",
+                "start_bit": 34,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 2.0,
+              "offset_between_raw": 0.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0001",
+                "start_bit": 34,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 2.0,
+              "offset_between_raw": -32768.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0011",
+                "start_bit": 34,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 4.0,
+              "offset_between_raw": 0.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0002",
+                "start_bit": 34,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": true,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 4.0,
+              "offset_between_raw": -65536.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0012",
+                "start_bit": 35,
+                "width_bits": 15,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 4.0,
+              "offset_between_raw": -32768.0,
+              "rmse_between_raw": 0.0,
+              "max_abs_residual": 0.0,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            },
+            {
+              "candidate": {
+                "candidate_ref": "cand_0003",
+                "start_bit": 35,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 170,
+                "evidence_state": "search_candidate",
+                "selectable": false
+              },
+              "relationship_type": "affine",
+              "scale_between_raw": 8.0,
+              "offset_between_raw": -65535.00000000001,
+              "rmse_between_raw": 7.275957614183426e-12,
+              "max_abs_residual": 7.275957614183426e-12,
+              "sample_count": 579,
+              "reason": "every residual within 1e-8 raw units"
+            }
+          ],
+          "distinct_alternatives": [],
+          "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+          "layout_ambiguous": true,
+          "ambiguity_reason": "affine_equivalent_layouts",
+          "evidence_state": "analyzed_fitted",
+          "selectable": true
+        }
+      },
+      "analysis_config": "session"
+    }
+  ],
+  "turns": 5,
+  "error": null,
+  "retry_count": 0,
+  "provider_attempts": 5,
+  "analysis_config": {
+    "alignment": "nearest",
+    "timestamp_tolerance": 0.02,
+    "min_samples": 300
+  },
+  "turn_trace": [
+    {
+      "turn": 1,
+      "attempt": 1,
+      "phase": "exploration",
+      "response_kind": "tool_calls",
+      "tool_call_count": 1,
+      "conclusion_parsing_attempted": false,
+      "validation": "not_attempted",
+      "provider": "OllamaProvider",
+      "model": "gpt-oss:[REDACTED]0b-cloud"
+    },
+    {
+      "turn": 2,
+      "attempt": 2,
+      "phase": "exploration",
+      "response_kind": "tool_calls",
+      "tool_call_count": 1,
+      "conclusion_parsing_attempted": false,
+      "validation": "not_attempted",
+      "provider": "OllamaProvider",
+      "model": "gpt-oss:[REDACTED]0b-cloud"
+    },
+    {
+      "turn": 3,
+      "attempt": 3,
+      "phase": "exploration",
+      "response_kind": "tool_calls",
+      "tool_call_count": 1,
+      "conclusion_parsing_attempted": false,
+      "validation": "not_attempted",
+      "provider": "OllamaProvider",
+      "model": "gpt-oss:[REDACTED]0b-cloud"
+    },
+    {
+      "turn": 4,
+      "attempt": 4,
+      "phase": "exploration",
+      "response_kind": "tool_calls",
+      "tool_call_count": 1,
+      "conclusion_parsing_attempted": false,
+      "validation": "not_attempted",
+      "provider": "OllamaProvider",
+      "model": "gpt-oss:[REDACTED]0b-cloud"
+    },
+    {
+      "turn": 5,
+      "attempt": 5,
+      "phase": "finalization",
+      "response_kind": "plain_text",
+      "tool_call_count": 0,
+      "conclusion_parsing_attempted": true,
+      "validation": "passed",
+      "provider": "OllamaProvider",
+      "model": "gpt-oss:[REDACTED]0b-cloud",
+      "decision": {
+        "candidate_ref": "cand_0004",
+        "signal_confidence": "high",
+        "layout_confidence": "low",
+        "layout_ambiguous": true,
+        "alternative_refs": []
+      }
+    }
+  ]
+}

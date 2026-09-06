@@ -52,8 +52,9 @@ class RepairTests(unittest.TestCase):
         self.assertTrue(all(d['phase'] == 'finalization' for d in result.turn_trace[5:]))
         self.assertTrue(all(tools == [] for _, tools in provider.requests[5:]))
         feedback = provider.requests[5][0][-1].content
-        self.assertEqual(feedback['expected_schema'], DECISION_SCHEMA)
-        self.assertEqual(feedback['instruction'], FINALIZATION)
+        self.assertEqual(feedback['expected_schema']['required'], DECISION_SCHEMA['required'])
+        self.assertIn('enum', feedback['expected_schema']['properties']['candidate_ref'])
+        self.assertTrue(feedback['instruction'].startswith(FINALIZATION))
         self.assertIn('unknown properties: unexpected', feedback['error']['message'])
         self.assertEqual(len(result.trace), 6)
         json.dumps(asdict(result), allow_nan=False)
@@ -73,7 +74,8 @@ class RepairTests(unittest.TestCase):
         self.assertEqual([d['phase'] for d in result.turn_trace[5:]], ['finalization'] * 3)
         self.assertTrue(all(tools == [] for _, tools in provider.requests[5:]))
         for messages, _ in provider.requests[5:]:
-            self.assertEqual(messages[-1].content['expected_schema'], DECISION_SCHEMA)
+            self.assertEqual(messages[-1].content['expected_schema']['required'], DECISION_SCHEMA['required'])
+            self.assertIn('enum', messages[-1].content['expected_schema']['properties']['candidate_ref'])
         self.assertIsNone(result.conclusion)
 
     def test_nested_unknown_field_rejected_and_named(self):

@@ -22,9 +22,39 @@ class EvidenceRegistry:
         self.references = {}
         self.analyses = {}
         self.states = {}
+        self.searched = {}
+
+    def unfitted_comparisons(self, selected_ref):
+        if selected_ref not in self.analyses:
+            # A malformed attempted decision may omit its selection entirely.
+            # Do not lock tools while collected evidence still needs comparison.
+            return next((comparisons for ref in self.selectable_refs()
+                         if (comparisons := self.unfitted_comparisons(ref))), [])
+        if self.alternative_allowlists()[selected_ref]:
+            return []
+        a = self.analyses[selected_ref]
+        group = a['equivalence']
+        related = [layout(a), layout(group['representative']),
+                   *[layout(c) for c in group['equivalent_candidates']],
+                   *[layout(e['candidate']) for e in a['affine_equivalents']]]
+        return [{'candidate_ref': ref, **candidate} for ref, candidate in self.searched.items()
+                if candidate not in related and ref not in self.analyses]
 
     def selectable_refs(self):
         return [ref for ref in self.analyses if self.states.get(ref) == 'analyzed_fitted']
+
+    def alternative_allowlists(self):
+        return {a['candidate_ref']: a['distinct_alternative_refs'] for a in self.summaries()}
+
+    def decision_schema(self, base):
+        schema = deepcopy(base)
+        schema['properties']['candidate_ref']['enum'] = self.selectable_refs()
+        alternatives = list(dict.fromkeys(ref for refs in self.alternative_allowlists().values() for ref in refs))
+        if alternatives:
+            schema['properties']['alternative_refs']['items']['enum'] = alternatives
+        else:
+            schema['properties']['alternative_refs']['maxItems'] = 0
+        return schema
 
     def annotate(self, value):
         """Copy outputs; never mutate deterministic tool results or their cache."""
@@ -41,7 +71,8 @@ class EvidenceRegistry:
                 self.references[identity] = f'cand_{len(self.references) + 1:04d}'
                 self.states[self.references[identity]] = 'search_candidate'
             result['candidate_ref'] = self.references[identity]
-        result.update({key: self.annotate(item) for key, item in value.items()})
+        result.update({key: self.annotate(item) for key, item in value.items()
+                       if not (key == 'byte_offset' and all(k in value for k in LAYOUT_KEYS))})
         if 'candidate_ref' in result:
             ref = result['candidate_ref']
             result['evidence_state'] = self.states[ref]
@@ -52,6 +83,14 @@ class EvidenceRegistry:
         if not output['ok']:
             return output
         result = self.annotate(output['result'])
+        if name == 'search_candidates':
+            for item in [*result.get('results', []), *result.get('hypotheses', [])]:
+                candidates = [item] if all(k in item for k in LAYOUT_KEYS) else []
+                group = item.get('equivalence') or item
+                if 'representative' in group:
+                    candidates += [group['representative'], *group.get('equivalent_candidates', [])]
+                for candidate in candidates:
+                    self.searched[candidate['candidate_ref']] = layout(candidate)
         if name == 'analyze_candidate':
             ref = result['candidate_ref']
             if result.get('fit') is not None:
@@ -94,6 +133,10 @@ class EvidenceRegistry:
                              'invalid ' + ', '.join(invalid) + '; selectable refs: ' + repr(allowed))
         if len(set(refs)) != len(refs):
             raise ValueError('selected and alternative references must be distinct')
+        allowed_alternatives = self.alternative_allowlists()[refs[0]]
+        if any(ref not in allowed_alternatives for ref in refs[1:]):
+            raise ValueError('alternative_refs must be fitted non-equivalent evidence; valid alternatives: '
+                             + repr(allowed_alternatives))
         selected = self.analyses[refs[0]]
         try:
             group = selected['equivalence']

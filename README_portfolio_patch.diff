@@ -1,0 +1,1039 @@
+diff --git a/README.md b/README.md
+index 89dbecf..ba8c807 100644
+--- a/README.md
++++ b/README.md
+@@ -1,880 +1,227 @@
+ # CANary
+ 
+-CANary contains a synthetic automotive CAN data generator and a generic CAN
+-observation/parsing layer with deterministic reference-based candidate ranking.
+-Requires Python 3.12 or newer; no third-party dependencies are needed.
++**An evidence-grounded AI agent for discovering hidden automotive CAN signals from raw vehicle-network traffic and external reference measurements.**
+ 
+-Run from the repository root:
++![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB)
++![Core dependencies: standard library](https://img.shields.io/badge/Core-standard_library-2E7D32)
++[![Tests: 210 passing](https://img.shields.io/badge/Tests-210_passing-2E7D32)](results/live_debug_tests.txt)
+ 
+-```sh
+-python -m unittest discover -v
+-python -m simulator.generate
+-python -m canary.inspect datasets/synthetic/can_log.csv
+-```
++> **Real public vehicle data:** CANary recovered the `0x0AA` wheel-speed signal family from a 2017 Toyota RAV4 capture, fitting an independent GNSS speed reference with **r ≈ 0.9987** and **RMSE ≈ 0.45 km/h**. Discovery used no DBC. The agent preserved layout ambiguity instead of claiming a uniquely identified encoding.
+ 
+-The generator overwrites `datasets/synthetic/can_log.csv` and
+-`datasets/synthetic/speed_reference.csv`. Optional settings:
++[Real-world result](#real-world-benchmark) · [Quick start](#quick-start) · [Architecture](#architecture) · [Tests](#tests-and-reliability)
+ 
+-```sh
+-python -m simulator.generate --speed-scale 0.02 --seed 42 --output-dir datasets/synthetic
+-```
++## Why this exists
+ 
+-The default drive has 6,000 samples at 100 Hz over [0, 60) seconds. A scripted
+-pedal schedule drives a simple longitudinal model with drag and braking.
+-Engine RPM follows speed and throttle with a lag, assuming a simplified fixed
+-gear. This is a plausible synthetic exercise, not a calibrated vehicle model.
+-
+-Six standard 11-bit CAN IDs each emit an 8-byte frame per sample (36,000 frames).
+-Timestamps are seconds since drive start; frames in a sample share a timestamp
+-and do not model bus arbitration or transmission delay. IDs use `0x1A4` notation
+-and payloads use eight space-separated uppercase hexadecimal bytes.
+-Three IDs carry physical signals, with random spare bytes; three unrelated IDs
+-carry random data and a rolling counter. Seed 42 makes output reproducible.
+-The reference contains unquantized simulated speed rounded to six decimals,
+-aligned to the same sample times, without sensor noise or delay.
+-
+-## Source layout and ground truth
+-
+-- `simulator/drive.py`: physical samples and pedal schedule.
+-- `simulator/ground_truth.py`: generator-only layout and unsigned field codec.
+-- `simulator/generate.py`: CAN frames, CSV writing, and command-line entry point.
+-- `tests/test_simulator.py`: standard-library unit and output tests.
+-
+-Ground truth is deliberately separate from observation CSVs. Future discovery
+-code must read the CSVs without importing generator ground truth. Changing the
+-scale requires retaining that generation setting separately; observations do
+-not contain layout metadata.
+-
+-Speed uses bytes 2–3 (zero-based) of ID `0x1A4`, unsigned 16-bit little-endian,
+-with `physical = raw * scale + offset`. Default scale is 0.01 km/h and offset
+-is zero, allowing 0–655.35 km/h. Encoding rounds to the nearest raw integer
+-(ties to even); decoding differs by at most half a scale unit. Out-of-range
+-values and invalid scales raise errors rather than wrap or silently saturate.
+-The field codec also supports nonzero offsets, covered by tests.
+-
+-Accelerator is byte 5 of `0x245` at 0.5 percent per unit; brake is bit 2 of
+-byte 1 on that ID. RPM occupies bytes 0–1 of `0x316` at 1 RPM per unit.
+-All multibyte fields are little-endian. No DBC, AI, or graphical user interface
+-is implemented.
+-
+-## CAN observations
+-
+-`canary/observation.py` reads CSVs into immutable frames with finite timestamps,
+-integer standard 11-bit IDs, and exactly eight payload bytes. IDs accept decimal
+-or `0x`-prefixed hexadecimal. Payloads accept contiguous hex or whitespace between
+-byte pairs. Required columns are `timestamp`, `can_id`, and `data`; extra named
+-columns are ignored. Missing/duplicate headers, ragged rows (including blank
+-rows), invalid values, and malformed CSV raise `ValueError` with row context
+-where applicable.
+-
+-Inspection provides sorted unique IDs, counts, timestamp bounds, per-ID frame
+-selection, and estimated frequency. Frequency is `(count - 1) / (latest - earliest)`
+-in Hz, including duplicate timestamps in the count. It describes observed average
+-traffic, not a guaranteed transmitter period. Singleton IDs or zero elapsed time
+-report unavailable. Unordered rows are accepted; selection and extraction retain
+-file order. Empty captures have no timestamp bounds or duration.
+-
+-`byte_aligned_candidates()` returns 44 configurations: signed/unsigned 8-bit
+-fields and signed/unsigned 16-bit fields in either byte order. For example:
+-
+-```python
+-from canary.observation import Candidate, extract_candidate, read_csv
+-
+-frames = read_csv("datasets/synthetic/can_log.csv")
+-series = extract_candidate(frames, frames[0].can_id, Candidate(0, 16))
+-# series contains (timestamp, decoded_integer) pairs; no physical interpretation.
+-```
++Raw CAN traffic carries many unknown packed signals. A changing payload byte might encode a physical measurement, part of a larger field, or unrelated data. Manually testing layouts, byte orders, signs, timing, and scaling is slow—and a convincing correlation can still point to several indistinguishable encodings.
+ 
+-The production `canary` package has no simulator dependency. It does not read
+-ground-truth layouts.
+-Tests for observations live in `tests/test_observation.py`.
++CANary searches the supported layout space deterministically, measures each candidate against a supplied reference, and gives an agent structured evidence to interpret. The model selects and explains evidence; it does not calculate or transcribe the final measurements.
+ 
+-## Reference-based discovery
++## Real-world benchmark
+ 
+-Run from the repository root. Windows CMD multiline invocation (the caret must
+-be the last character on each continued line):
++The public **comma2k19** example capture comes from a **2017 Toyota RAV4**. CANary analyzed raw CAN observations against independent u-blox GNSS speed. The blind runner reads only the observation and reference CSVs; comparison with a pinned public DBC happens separately, after discovery.
+ 
+-```bat
+-python -m canary.discover ^
+-  datasets/synthetic/can_log.csv ^
+-  datasets/synthetic/speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --top 10
+-```
++| Measurement | Observed result |
++| --- | --- |
++| Capture | Approximately 60 seconds; CAN source/bus tag 0 |
++| CAN traffic | **53,800 frames across 90 CAN IDs** |
++| Reference | **579 GNSS speed samples**, converted to km/h |
++| Recovered signal family | **CAN ID 170 / `0x0AA`**, wheel-speed-related values |
++| Pearson correlation | **0.998667442** |
++| Reconstruction RMSE | **0.447963 km/h** |
++| Reconstruction R² | **0.99733666** |
++| Live agent | Ollama `gpt-oss:120b-cloud`: **complete, 7 turns, 0 retries** |
++| Layout conclusion | **Ambiguous**, with 11 affine-equivalent alternatives to the selected layout |
+ 
+-For PowerShell or other shells, use one line:
++**CANary recovered the signal family and value behavior—not a uniquely identified exact DBC layout.** Multiple layouts reconstruct the reference equivalently after scale/offset fitting. The live conclusion reports high signal confidence and low layout confidence, and passes strict validation against collected deterministic evidence.
+ 
+-```sh
+-python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 10
+-```
++These are **in-sample reconstruction metrics on one public capture**, not a held-out accuracy estimate or a guarantee across vehicles. Wheel speed is not automatically the same physical quantity as fused vehicle speed.
+ 
+-`canary/reference.py` parses the named numeric column and finite timestamps.
+-Timestamps must strictly increase; duplicates, malformed rows, and missing or
+-duplicate headers raise clear errors. Extra named columns are ignored.
+-
+-`canary/discovery.py` exposes `discover_signal(frames, reference_series)` returning
+-ranked raw candidates. Reference series are lists of `(timestamp, value)` pairs.
+-All 820 supported configurations are searched for each observed ID. Candidate
+-samples are sorted by timestamp and matched exactly by default. `--tolerance`
+-sets an inclusive distance in seconds for greedy nearest matching, with earlier
+-reference timestamps winning ties. Matches are monotonic and one-to-one; no
+-interpolation or delay search occurs. Duplicate candidate times retain input
+-order, and a reference observation cannot be reused.
+-
+-Pearson correlation uses normalized, centered sums from the standard library.
+-`--min-samples` defaults to 3 and cannot be lower. Constant series and candidates
+-with insufficient matches are omitted from ranking and counted as skipped.
+-Empty inputs yield no ranked candidates. Scores sort by descending absolute
+-correlation, preserving the sign; exact ties sort by ID, start bit, then width.
+-Results include encoding and aligned sample count. For byte-aligned 8-bit fields the reported
+-little endianness is immaterial. Correlation measures tracking, not semantic
+-identity or statistical significance; overlapping fields can score similarly.
+-
+-`canary/discover.py` provides the CLI; `tests/test_discovery.py` validates it and
+-the engine. Production code uses only observation APIs and supplied reference
+-data; only tests consult the generator layout. This stage does not name signals
+-beyond the user-supplied reference column or detect counters.
+-
+-## Scale/offset fitting and reconstruction
+-
+-Add `--fit` to fit the top candidates in correlation order. Windows CMD:
++Evidence: [live result and tool trace](results/comma2k19/live_debug_run.json) · [selectable references and model decision](results/comma2k19/live_debug_events.json) · [blind deterministic results](results/comma2k19/blind_results.json) · [post-discovery validation](results/comma2k19/validation.json) · [source provenance](datasets/real/comma2k19/provenance.json)
+ 
+-```bat
+-python -m canary.discover ^
+-  datasets/synthetic/can_log.csv ^
+-  datasets/synthetic/speed_reference.csv ^
+-  --value-column speed_kph --top 10 --fit ^
+-  --output-reconstruction results/speed_reconstructed.csv
++## How it works
++
++```text
++Raw CAN + reference signal
++  → candidate bitfield search
++  → timestamp alignment
++  → correlation / ranking
++  → scale / offset fitting
++  → exact and affine equivalence analysis
++  → AI evidence reasoning
++  → deterministic conclusion hydration + strict validation
+ ```
+ 
+-PowerShell or other shells, as one line:
++The deterministic workflow runs without an LLM. The optional agent uses those same production APIs, chooses which evidence to inspect, and submits a small `AgentDecision` referencing fitted analyses. CANary assembles the full `AgentConclusion` from session evidence and rejects unsupported claims.
+ 
+-```sh
+-python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 10 --fit --output-reconstruction results/speed_reconstructed.csv
+-```
++## Architecture
+ 
+-`canary/fitting.py` provides `fit_linear(x, y)`, `reconstruct(raw, scale, offset)`,
+-`reconstruction_metrics(reference, reconstructed)`, and
+-`discover_and_fit(frames, reference_series, top_n=10)`. OLS fits
+-`scale = sum((x-mean(x))*(y-mean(y))) / sum((x-mean(x))**2)` and
+-`offset = mean(y) - scale*mean(x)`. Negative scales are supported.
+-The same timestamp alignment and minimum sample count as discovery apply.
+-Constant raw inputs or insufficient samples return no fit; non-finite inputs,
+-unequal lengths, and numeric overflow raise errors.
+-
+-Reconstruction is `raw*scale + offset`. RMSE is the square root of mean squared
+-residual, MAE is mean absolute residual, and R-squared is `1-SSE/SST`.
+-R-squared is unavailable for constant references (which discovery already skips).
+-Metrics describe the aligned samples used to fit, not held-out validation.
+-Correlation ranking is preserved; no semantic inference is performed.
+-
+-The optional export requires `--fit`, creates parent directories, and overwrites
+-the output CSV. It contains `timestamp,reference,reconstructed,raw` for the best
+-candidate's aligned samples, using candidate timestamps even when tolerance
+-matching is enabled. Unmatched samples are omitted. The CLI rejects input paths
+-as output destinations and fails clearly if there is no fitted candidate.
+-Production fitting uses only observation APIs and supplied reference values;
+-existing package-wide dependency tests also cover this module.
+-
+-## Static discovery report
+-
+-Fit mode prints a capture summary, the best candidate's encoding and equation,
+-then the existing ranked top-N results. Add `--report` to write a self-contained
+-HTML report with embedded CSS and SVG, requiring no server, scripts, network,
+-fonts, or plotting dependencies:
+-
+-```sh
+-python -m canary.discover datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --top 5 --fit --output-reconstruction results/speed_reconstructed.csv --report results/speed_report.html
+-```
++| Layer | Responsibilities | Boundary |
++| --- | --- | --- |
++| **Deterministic core** | Decoding, candidate generation, alignment, statistics, fitting, exact/affine equivalence, evidence validation | Python standard library; no model or ground-truth dependency |
++| **AI layer** | Chooses tools, compares evidence, selects candidate references, assigns confidence, writes rationale | Provider-independent interface; no arbitrary filesystem or shell tools |
++| **Evidence layer** | Stable session references, fitted-reference allowlists, exact metrics and equivalent-layout lists, deterministic hydration, strict conclusion validator | The model cannot supply replacement numeric evidence |
+ 
+-Open the HTML file directly in a browser. `--report` requires `--fit`, creates
+-parent directories, and overwrites the report destination. Its path must differ
+-from both input files and the reconstruction output. No fitted candidates means
+-a clear error. All user-controlled report text is HTML-escaped.
++References progress through `search_candidate`, `analyzed_unfitted`, and `analyzed_fitted`. **Only fitted references are selectable.** A search-only decision keeps the agent in exploration until fitted evidence exists. Finalization exposes no exploration tools and uses a separate bounded repair budget.
+ 
+-The report shows the capture summary, best candidate, fitted equation, metrics,
+-and the requested top candidates in unchanged correlation order. The SVG plots
+-every aligned reference/reconstruction sample at the candidate timestamp, with
+-axes and a legend. Near-identical lines may overlap. Start bits are zero-based
+-byte offsets multiplied by eight. Metrics remain in-sample measurements; the
+-report does not assert signal identity beyond the supplied reference name.
++Confidence and interpretation remain model judgments. Candidate identities, fit metrics, and equivalence lists come from collected tool results. A completed conclusion must match that evidence, including its ambiguity constraints.
+ 
+-## Structured engineering tools
++## Supported capabilities
+ 
+-`canary/tools.py` exposes model-independent functions accepting a parsed
+-`list[Frame]` and, where needed, a numeric reference series. Parse files using
+-`read_csv` and `read_reference` first. Tools return JSON-serializable dictionaries
+-with integer CAN IDs, numeric statistics, and `None` for unavailable values.
+-They invoke the existing extraction, alignment, discovery, and fitting APIs.
++- **Classic CAN CSV inspection:** standard 11-bit IDs, eight-byte payloads, counts, timing, observed frequencies, and changing-byte ranges.
++- **Generic bitfields:** widths **8, 12, 15, and 16 bits**, every valid start position, signed two's-complement and unsigned values, little-endian and normalized big-endian extraction. **820 configurations per CAN ID**, without duplicate byte-aligned 8-bit endian variants.
++- **Reference alignment:** exact matching or deterministic nearest matching within a tolerance, one-to-one matches, no extrapolation, and alignment diagnostics.
++- **Discovery and reconstruction:** Pearson ranking, ordinary least-squares scale/offset fitting, reconstructed values, RMSE, MAE, and R².
++- **Ambiguity analysis:** exact decoded-series equivalence and conservative affine-equivalence evidence; cached decoded series and safe constant-series pruning.
++- **Structured tools and agents:** capture inspection, search, candidate analysis, fitting, stable evidence references, and validated conclusion assembly.
++- **Evidence output:** reconstruction CSV, ranked JSON results, agent/tool diagnostics, and self-contained HTML reports with embedded SVG charts. No web server required.
+ 
+-| Function | Returned fields |
+-| --- | --- |
+-| `summarize_capture(frames)` | `total_frames`, `unique_can_id_count`, `first_timestamp`, `last_timestamp`, `duration_seconds` |
+-| `list_can_ids(frames)` | `can_ids`: records with `can_id`, `frame_count`, `update_frequency_hz` |
+-| `inspect_can_id(frames, can_id)` | ID, count, frequency, `changing_byte_positions`, `byte_ranges` containing offset/min/max |
+-| `list_candidate_fields(frames, can_id)` | ID and all 820 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
+-| `analyze_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `correlation`, `aligned_samples`, aligned `raw_min`/`raw_max`; optional `fit` with `include_fit=True` |
+-| `search_candidates(frames, reference, top_n=10)` | `candidates_searched`, `candidates_ranked`, ranked `results` using existing discovery result fields |
+-| `fit_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `aligned_samples`, `fit` containing `scale`, `offset`, `rmse`, `mae`, `r_squared` |
+-
+-Analysis, search, and fit accept keyword-only `tolerance=0.0` and `min_samples=3`.
+-Search's `top_n` and analysis's `include_fit` are also keyword-only. Invalid
+-arguments and absent selected IDs raise `ValueError`. Empty captures have null
+-timestamp bounds/duration; empty searches return no results. Insufficient or
+-constant raw observations produce a null fit, and undefined correlation is null.
+-Inspection ranges cover the whole selected capture; analysis ranges cover only
+-aligned samples. No tool mutates inputs or writes files.
+-
+-Run all seven tools deterministically, selecting the top-ranked field for the
+-candidate-specific calls, without a model:
+-
+-```sh
+-python -m canary.tool_demo datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph
+-```
++**Bit numbering:** little-endian bit 0 is the least-significant bit of byte 0. Normalized big-endian bit 0 is the most-significant bit of byte 0; indices advance MSB-to-LSB through consecutive bytes. This is **not DBC/Motorola sawtooth start-bit numbering**. Byte offsets are derived only for aligned starts.
+ 
+-The demo prints one JSON object. If no candidate ranks, it prints capture/search
+-outputs and a selection status. A future agent can call these ordinary functions
+-and consume their structured outputs without requiring a particular model,
+-provider SDK, or transport protocol. Package-wide dependency tests cover both
+-the tools and demo modules.
+-
+-## Engineering agent (optional Gemini provider)
+-
+-The bounded agent in `canary/agent.py` exposes only the seven structured tools.
+-It loads the two user-specified CSVs locally and binds them to the tool dispatcher;
+-the model cannot supply paths, execute a shell, or access arbitrary files.
+-Tool argument JSON schemas reject missing/extra properties, invalid types,
+-unsupported fields, and out-of-range values. Invalid calls return structured
+-errors to the model. No deterministic ranking or fitting algorithms change.
+-
+-`canary/llm/base.py` defines plain message, tool-call, response, and provider
+-contracts. `llm/fake.py` supplies an offline scripted provider. `llm/gemini.py`
+-alone imports the optional official `google-genai` SDK (lazily). Its SDK chat
+-retains conversation metadata, with automatic function execution disabled.
+-Use a new provider instance for each run. The default model is
+-`gemini-3.7-flash`; `--model` overrides it according to account availability.
+-
+-Offline test, requiring neither an SDK nor a key:
+-
+-```sh
+-python -m canary.agent_cli datasets/synthetic/can_log.csv datasets/synthetic/speed_reference.csv --value-column speed_kph --dry-run
+-python -m unittest discover -v
+-```
++## Quick start
+ 
+-For a real run, install the optional extra and set the key in the current
+-Windows CMD session. Replace the placeholder locally; never commit credentials:
++Use **Python 3.12+**. Run commands from the repository root. Multiline examples below use **Windows CMD** (`^` must be the last character on a continued line).
++
++### 1. Create an environment
+ 
+ ```bat
+-python -m pip install -e ".[gemini]"
+-set GEMINI_API_KEY=YOUR_API_KEY_HERE
+-python -m canary.agent_cli ^
+-  datasets/synthetic/can_log.csv ^
+-  datasets/synthetic/speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --provider gemini ^
+-  --model gemini-3.7-flash
++python -m venv .venv
++.venv\Scripts\activate
++python -m pip install -e .
+ ```
+ 
+-The adapter reads the key only from `GEMINI_API_KEY`; it does not load `.env`
+-files. Core requirements remain empty. Setuptools is build-time packaging only.
+-A real run sends the supplied reference name and deterministic tool results to
+-Google. It does not send source code or raw files; tool results contain capture
+-statistics and signal evidence. No real API calls occur in tests or dry-run.
+-
+-Output is JSON with `status`, `conclusion`, `trace`, and `turns`. A completed
+-`AgentConclusion` contains the reference name, selected encoding, correlation,
+-scale/offset, RMSE/MAE/R-squared, qualitative confidence, and rationale. Completion
+-requires search evidence and a matching `analyze_candidate(include_fit=true)`
+-result. Numeric claims are checked against that evidence; rationale/confidence
+-remain model judgments, not proof of semantic identity. Gemini submits this
+-object through an internal `submit_conclusion` declaration, which grants no
+-additional engineering capability.
+-
+-`--max-turns` defaults to 12 and `--max-tool-calls` to 30. Each Gemini request has
+-a 60-second HTTP timeout. Exhaustion, unavailable evidence, or provider failure
+-returns no conclusion and a nonzero CLI exit code. Malformed responses receive
+-bounded correction opportunities. Provider failures are sanitized to avoid
+-printing credential-bearing exceptions. The fake provider's fixed sequence is
+-summary/search, inspection/analysis, conclusion; it does not represent live model
+-quality. All agent and adapter tests are offline, including SDK-shaped stubs.
+-
+-### Transient provider retries
+-
+-Provider calls retry only structured HTTP 429, 500, 502, 503, and 504 errors
+-(or `RESOURCE_EXHAUSTED` / `UNAVAILABLE` status names when no HTTP code exists).
+-Authentication, request/model errors, validation failures, and other statuses
+-are not retried; arbitrary exception messages are not used for classification.
+-Retries repeat the same model turn and its pending tool results, preserving the
+-analysis trace. Gemini's internal retries are disabled to avoid nested attempts.
+-
+-Defaults are three retries per model turn, a one-second initial backoff cap, and
+-an eight-second maximum cap. The cap doubles after each failure; each delay is
+-uniformly jittered between half and all of the cap. Override with
+-`--max-retries`, `--base-delay-seconds`, and `--max-delay-seconds`, or the matching
+-`run_agent` keyword arguments. Zero retries disables retries. Tests inject
+-`retry_sleep` / `retry_jitter` and never wait in real time.
+-
+-Agent JSON includes cumulative `retry_count` and `provider_attempts` for the run.
+-Retries do not consume model-turn or tool-call budgets. On exhaustion, status
+-remains `provider_error` with sanitized diagnostics and the existing tool trace.
+-
+-## Controlled synthetic challenges
+-
+-Run the current deterministic engine against nine controlled fixtures:
+-
+-```sh
+-python -m simulator.evaluate_challenges
+-```
++The core has no third-party runtime dependencies. Optional extras support real-data preparation and Gemini.
+ 
+-The command creates the suite if all fixtures are absent, otherwise evaluates
+-existing files. It prints a full summary and writes `datasets/challenges/evaluation.json`
+-with top-five fit details, true-field rank, and distractor rank. Partial suites
+-raise an error. Explicitly regenerate with:
++### 2. Run the deterministic synthetic demo
+ 
+-```sh
+-python -m simulator.challenges --seed 42
+-python -m simulator.evaluate_challenges --regenerate --seed 42
++```bat
++python -m simulator.generate
++python -m canary.inspect datasets\synthetic\can_log.csv
++python -m canary.discover ^
++  datasets\synthetic\can_log.csv ^
++  datasets\synthetic\speed_reference.csv ^
++  --value-column speed_kph --top 5 --fit ^
++  --output-reconstruction results\speed_reconstructed.csv ^
++  --report results\speed_report.html
+ ```
+ 
+-Both commands accept a dataset directory (`--output-dir` for generation,
+-`--dataset-dir` for evaluation). Generation overwrites fixture files in that
+-directory. Each scenario contains `can_log.csv`, `reference.csv` (column `value`),
+-and separate `ground_truth.json` with seed, encoding, and perturbation settings.
+-Each has 6,000 samples over 60 seconds at 100 Hz, three standard CAN IDs and
+-18,000 eight-byte frames. The original synthetic dataset is unchanged.
++Open `results\speed_report.html` in a browser to compare reference and reconstructed values, inspect the ranked candidates, and see equivalence evidence. The generator creates a reproducible 60-second, 100 Hz drive with speed, pedal, brake, RPM, and unrelated traffic. Generation and report commands overwrite their output files.
+ 
+-| Scenario | Controlled difference | Expected support |
+-| --- | --- | --- |
+-| baseline_easy | Unsigned 16-bit LE target at bytes 2–3, scale 0.01, offset 0 | supported |
+-| noisy_reference | Gaussian reference noise, standard deviation 0.5, clipped to ±1.5 | supported |
+-| timestamp_jitter | Independent CAN/reference timestamp jitter, uniform ±2 ms | partially_supported |
+-| correlated_distractor | Second encoded field: `max(0, 1.02*target + 0.8*sin(t/3) + 0.3)` | supported |
+-| unusual_scale_offset | Scale 0.037, offset −12.5 | supported |
+-| long_constant_regions | 50 seconds of plateaus, 10 seconds of linear changes | supported |
+-| unsupported_big_endian | Target bytes stored big-endian | supported since Ticket #10 |
+-| unsupported_signed | Target shifted by −45, crossing zero; signed 16-bit representation | supported since Ticket #10 |
+-| unsupported_bit_offset | Unsigned 12-bit field at LSB0 bit 19, scale 0.025 | supported since Ticket #11 |
+-
+-Payload and perturbation RNG streams are separate and seeded; the baseline and
+-reference-only noise variant have identical CAN logs. Noise can make a near-zero
+-reference slightly negative. Jitter preserves per-ID/reference ordering but may
+-give a slightly negative first timestamp. Other payload bits/IDs are random.
+-The fixture-only encoder lives in `simulator`, not production decoding.
+-
+-Evaluation uses exact alignment except for timestamp_jitter, which uses nearest
+-alignment with a 4 ms tolerance derived from the two ±2 ms fixture clocks.
+-The minimum remains three matches. Metadata is read after engine execution and is never
+-provided to discovery. Recovery means the top candidate matches the entire
+-hidden field's ID, start bit, width, endianness, and signedness. A highly
+-correlated partial field or unsigned interpretation does not count as recovery.
+-Scale/offset metrics and alternative fits remain available in the JSON output.
+-Expected support describes capability, not a forced result. These challenges
+-measure current limitations without adding decoding or ranking improvements.
+-
+-## Timestamp alignment modes
+-
+-`canary/alignment.py` provides `AlignmentConfig(mode="exact", tolerance=0.0)`
+-and `align_series(candidate, reference, config)`. The result contains aligned
+-`(candidate_timestamp, raw, reference_value)` rows and structured diagnostics.
+-Both timestamps and reference values remain numeric; reference timestamps must
+-strictly increase. Candidate samples are stably sorted by time.
+-
+-Exact mode matches only equal timestamps, regardless of tolerance. Nearest mode
+-chooses the closest unused reference within the inclusive tolerance; equal-distance
+-ties choose the earlier reference. Accepted matches advance a reference cursor:
+-no reference is reused and matching never moves backward. Duplicate candidates
+-retain input order and may match distinct available references within tolerance.
+-This greedy rule is deterministic, not a globally optimal assignment. Candidates
+-outside the reference's first/last timestamps are rejected even within tolerance;
+-there is no endpoint extrapolation or interpolation. Complexity is
+-O(C log C + C log R + R), including sorting and reference validation.
+-
+-```sh
+-python -m canary.discover datasets/challenges/timestamp_jitter/can_log.csv datasets/challenges/timestamp_jitter/reference.csv --value-column value --alignment nearest --timestamp-tolerance 0.004 --fit --top 5
+-```
++For an offline agent walkthrough without credentials or API calls:
+ 
+-The default remains exact. For backward compatibility, omitting the mode with a
+-nonzero `tolerance` selects nearest; `--tolerance` remains a CLI alias for
+-`--timestamp-tolerance`. Explicit `--alignment exact` always requires equality.
+-Discovery, fitting, reconstruction, reports, and structured tools accept the
+-`alignment` keyword and use the same matcher. Agent schemas/reasoning are unchanged.
+-
+-Discovery/fitted results and candidate analysis/fit tools expose
+-`alignment_diagnostics`: candidate, matched, and unmatched sample counts;
+-match ratio; mean and maximum absolute timestamp error in seconds. No matches
+-means null error statistics; an empty candidate series has ratio zero. Search
+-still omits unrankable candidates, so use candidate analysis to inspect alignment
+-failures. The CLI prints diagnostics for its top candidate. The challenge JSON
+-records the mode, tolerance, and diagnostics. Matching may discard endpoint
+-samples, which is expected under the no-extrapolation rule.
+-
+-## Integer bit-field encodings
+-
+-`CandidateSpec(start_bit, width_bits, endian="little", signed=False, can_id=None)`
+-is the fundamental immutable representation. Widths are 8, 12, 15, or 16; starts
+-range from zero through `64 - width_bits`. An optional CAN ID binds the field.
+-The compatibility factory `Candidate(byte_offset, width_bits, ...)` preserves
+-existing calls; it also accepts `start_bit=` instead of a byte offset.
+-`byte_offset` is derived when the start is divisible by eight, otherwise null.
+-
+-Little-endian uses LSB0 numbering: bit 0 is the least-significant bit of byte 0,
+-and the start identifies the field's least-significant bit. Extraction is
+-`(int.from_bytes(payload, "little") >> start_bit) & ((1 << width_bits) - 1)`.
+-
+-Big-endian uses **normalized MSB0 numbering**, not DBC/Motorola sawtooth start
+-numbers: bit 0 is the most-significant bit of byte 0, bit 7 its least-significant
+-bit, and bit 8 the most-significant bit of byte 1. The start identifies the
+-field's most-significant bit. Extraction is
+-`(int.from_bytes(payload, "big") >> (64 - start_bit - width_bits)) & mask`.
+-Thus starts at byte boundaries reproduce the previous big-endian byte decoder
+-exactly. A DBC start number must not be passed directly as this normalized index.
+-
+-After extraction, signed values use two's complement: subtract `2**width_bits`
+-when the field's high bit is set. For 12 bits, 0x7FF is 2047, 0x800 is -2048,
+-and 0xFFF is -1. No other widths are supported.
+-
+-`candidate_fields()` enumerates every valid start and signedness in both byte
+-orders. Only byte-aligned eight-bit endian variants are equivalent; these are
+-canonicalized to little and emitted once. Nonaligned eight-bit endian variants
+-are distinct. Counts per ID are 212 eight-bit, 212 twelve-bit, and 196 sixteen-bit
+-configurations: **620 total**, versus 44 previously. Three-ID challenges search
+-1,860 candidates; the original six-ID capture searches 3,720.
+-`byte_aligned_candidates()` remains the legacy 44-configuration subset.
+-Signed and unsigned interpretations remain separate even when observed values
+-happen to be identical. Ranking criteria remain unchanged; positional ties use
+-start bit, then width, with stable enumeration resolving further ties.
+-
+-Discovery aligns frame indices once per CAN ID using the existing matcher,
+-then parses each matched payload once per byte order. Candidate extraction is
+-linear in sample count and uses shifts/masks on these cached words. Correlation,
+-fitting, and alignment formulas are unchanged.
+-
+-`analyze_candidate` and `fit_candidate` accept keyword `start_bit`, `width_bits`,
+-`endian`, `signed`, and `reference`, or their legacy byte-offset arguments.
+-Supply exactly one locator. Tool encoding records omit byte offset for unaligned
+-fields. CLI and reports always display the actual start bit. Agent schema and
+-fake/demo forwarding carry the new locator; reasoning and orchestration do not
+-change. Production modules remain independent of simulator layouts.
+-
+-Challenge names and fixtures remain unchanged for historical comparison. The
+-evaluator checks the complete encoding, including start bit, after discovery;
+-it never provides hidden metadata to the engine. It also retains the full-width
+-big-endian versus partial-byte comparison. Capability labels do not force a
+-particular ranking outcome when multiple encodings explain the same samples.
+-
+-With the default fixtures, the bit-offset target now ranks first. The
+-`unusual_scale_offset` and `long_constant_regions` captures have identical raw
+-series for the target's low 12 bits and its full 16 bits. The existing width
+-tie-break ranks 12 bits first and the true 16-bit layout second; strict layout
+-recovery remains false for those cases despite identical reconstructed values.
+-
+-## Run-scoped cache and observational equivalence
+-
+-`canary.analysis.AnalysisRun` snapshots one capture, reference, and alignment
+-configuration. Pass it through the optional `run=` argument to reuse decoding,
+-correlation, and fits across calls. Mismatching or mutated inputs are rejected.
+-The CLI, `discover_and_fit`, tool demo, and tool dispatcher already share a run
+-internally. The dispatcher keeps separate caches for requested tolerances; no
+-model schemas, prompts, or reasoning change. There is no global mutable cache.
+-
+-```python
+-from canary.analysis import AnalysisRun
+-from canary.discovery import discover_signal
+-from canary.fitting import fit_ranked
+-
+-run = AnalysisRun(frames, reference)
+-ranked = discover_signal(frames, reference, run=run)
+-fitted = fit_ranked(frames, reference, ranked[:5], run=run)
+-print(run.statistics())
++```bat
++python -m canary.agent_cli datasets\synthetic\can_log.csv datasets\synthetic\speed_reference.csv --value-column speed_kph --dry-run
+ ```
+ 
+-The cache stores compact immutable integer series, with full-capture values for
+-inspection and aligned values for analysis. Unsigned extraction is reused for
+-signed interpretation. Identical series share storage, scores, and fits; reference
+-normalization is computed once per aligned reference axis. Pearson arithmetic and
+-OLS formulas are unchanged. Cache memory grows with distinct series and capture
+-length; discard the run when finished. It is a local synchronous analysis object,
+-not a persistent or shared service.
+-
+-Each discovery/fitted result carries an `equivalence` object:
+-
+-- `representative`: a complete CandidateSpec.
+-- `equivalent_candidates`: all other layouts with exactly the same aligned series.
+-- `equivalence_count`: total layouts, including the representative.
+-- `evidence`: identical decoded time series on this aligned capture.
+-
+-Equality includes ordered timestamps and every raw integer; alignment/reference
+-axes must also agree. Complete byte-key equality verifies matches, so hash
+-collisions cannot merge different series. Equal correlation or affine-related
+-raw values alone never establishes equivalence. Equivalence is capture-specific;
+-unmatched samples may differ. All 820 layouts per ID remain enumerated, and every
+-rankable layout remains in the original ranked list, including equivalent members
+-outside the requested top N. Representatives use CAN ID, start bit, width, then
+-little-before-big and unsigned-before-signed, consistent with the existing stable
+-tie order. Representatives are display choices, not claims of unique layouts.
+-
+-Safe pruning skips Pearson work for constant series and reuses scores for exact
+-equivalents. Constants and insufficient samples remain unrankable as before.
+-The CLI and self-contained HTML report show equivalent layouts explicitly; tools
+-expose the same structured evidence. An explicit candidate analysis enumerates
+-layouts to establish its complete equivalence class, reusing a supplied run.
+-
+-Performance fields are `candidates_enumerated`, `unique_decoded_series`,
+-`equivalence_classes`, `equivalent_candidates_grouped`,
+-`constant_candidates_skipped`, `decoding_seconds`, `correlation_seconds`, and
+-`total_seconds`. Counts include all aligned series, including constant/empty
+-classes; grouping saves work without removing layouts. Unique-series and class
+-counts are equal. Timings are wall-clock measurements, not deterministic results.
+-Run total time includes its lifetime up to the snapshot; evaluator totals also
+-include parsing and fitting. Decoding time includes packing/aligned selection;
+-other overhead is included in total time.
+-
+-Challenge evaluation now distinguishes:
+-
+-- `signal_value_recovered`: the true field is in the winning equivalence class.
+-- `exact_layout_recovered`: the winner matches the true field and has no equivalent
+-  alternative in the supported space.
+-- `layout_ambiguous`: the winning class contains multiple layouts.
+-
+-The legacy `recovered` field remains a first-layout match for compatibility; use
+-the new fields to interpret outcomes. The two 12/16-bit ties are successful value
+-recoveries with ambiguous layouts. Positive 16-bit signed/unsigned ties are also
+-reported honestly. No fixture metadata is passed into production analysis.
+-
+-## Agent ambiguity and competing hypotheses
+-
+-Agent conclusions retain the original fields and add `signal_confidence`,
+-`layout_confidence`, `layout_ambiguous`, `equivalent_layouts`, and
+-`alternative_candidates`. Confidence values are qualitative high/medium/low,
+-not probabilities. Signal confidence describes tracking of the supplied reference;
+-layout confidence describes evidence for the exact encoding. Equivalent layouts
+-are every other member of the selected field's aligned equivalence class, excluding
+-the selected field. An ambiguous class cannot receive high layout confidence.
+-
+-`search_candidates` preserves its flat `results` and adds their one-based `rank`.
+-It also returns up to `top_n` distinct `hypotheses`, each with the representative,
+-original flat rank, correlation, equivalence count, equivalent specs, and identity
+-evidence. Consequently top-N equivalent entries do not hide competing hypotheses.
+-Ranks still use the unchanged deterministic search order. No new comparison tool
+-is necessary: repeated `analyze_candidate(include_fit=True)` calls reuse the same
+-run cache and expose fit metrics, raw ranges, coverage, and equivalence evidence.
+-
+-The system instruction asks the model to compare non-equivalent hypotheses, keep
+-signal evidence separate from layout evidence, and acknowledge when the capture
+-cannot distinguish layouts. It prohibits invented conventions and unsupported
+-claims about scales. Conclusions must cite search evidence and selected/alternative
+-analyses. Numeric fields are checked against those analyses; complete equivalent
+-lists and ambiguity flags are checked against deterministic equivalence evidence.
+-If search exposed a non-equivalent alternative, at least one must be analyzed and
+-reported before completion. Alternative records contain `candidate`, `correlation`,
+-`rmse`, `mae`, `r_squared`, and a concise `reason`; at most five are allowed.
+-The existing malformed-response correction loop handles invalid conclusions.
+-
+-The offline fake provider compares the first two distinct hypotheses and, when
+-visible among the first ten, the strongest additional hypothesis on another ID.
+-It selects the compared fit with lowest RMSE (then highest R-squared). This is an
+-explicit fixture policy, not a change to deterministic discovery ranking or a
+-prediction of live-model behavior. Its demonstration signal confidence is high
+-for absolute r >= 0.995 and R-squared >= 0.99, medium for absolute r >= 0.9 and
+-R-squared >= 0.8, otherwise low. Ambiguous layout confidence is low; uniquely
+-represented fields with comparably fitting rivals receive reduced layout confidence.
+-These thresholds are test/demo policy, not a calibrated production confidence rule.
+-
+-All automated runs remain offline. After configuring your existing Gemini key
+-locally, manually run these commands from the repository root (add `--model` with
+-your enabled model ID to override the existing CLI default):
+-
+-```powershell
+-python -m canary.agent_cli datasets/challenges/baseline_easy/can_log.csv datasets/challenges/baseline_easy/reference.csv --value-column value --provider gemini
+-python -m canary.agent_cli datasets/challenges/unusual_scale_offset/can_log.csv datasets/challenges/unusual_scale_offset/reference.csv --value-column value --provider gemini
+-python -m canary.agent_cli datasets/challenges/correlated_distractor/can_log.csv datasets/challenges/correlated_distractor/reference.csv --value-column value --provider gemini
++### 3. Reproduce the deterministic real-data workflow
++
++The source arrays and generated real-data CSVs are git-ignored. Download and prepare the pinned public example first:
++
++```bat
++python -m pip install -e ".[comma2k19]"
++python -m tools.prepare_comma2k19 --download --bus 0
++python -m tools.run_comma2k19
+ ```
+ 
+-For local evidence-only exercises use `--dry-run`. The reasoning regression tests
+-cover unique layout, width ambiguity, a correlated distractor, noisy reference,
+-signedness ambiguity, fabricated evidence, and malformed-conclusion correction.
+-
+-## Real-data blind experiment: comma2k19
+-
+-The reproducible real-data experiment is documented in
+-[datasets/real/comma2k19/README.md](datasets/real/comma2k19/README.md).
+-It uses only the official one-minute example's raw CAN and independent u-blox
+-speed arrays. NumPy is an optional preparation extra; core analysis is unchanged.
+-Preparation, blind discovery, and public-definition validation are separate stages.
+-The result recovers a rear-right wheel-speed proxy but not the exact 15-bit public
+-DBC layout. Source licenses, pinned hashes, limitations, results, and the manual
+-Gemini command are documented with the experiment.
+-
+-## Affine-equivalent raw encodings
+-
+-`canary.relationships.compare_raw_series(x, y)` measures `y = a*x+b` using the
+-existing ordinary least-squares API. It returns `relationship_type` (`exact`,
+-`affine`, or `distinct`), `scale_between_raw`, `offset_between_raw`,
+-`rmse_between_raw`, `max_abs_residual`, `sample_count`, and a reason.
+-At least three samples and variation in **both** series are required. Constants
+-and insufficient observations return `distinct` with undefined coefficients;
+-non-finite values and unequal lengths raise errors. Exact means equal raw values.
+-Affine requires a nonzero slope and **every** absolute residual <= `1e-8` raw units.
+-This fixed absolute tolerance admits arithmetic roundoff in the supported integer
+-domain, not quantization noise or exceptional samples. High Pearson correlation
+-alone does not establish affine equivalence. Evidence is capture-specific, not
+-proof that the layouts remain equivalent on a different drive.
+-
+-`AnalysisRun` maintains a separate lazy affine index. For each unique nonconstant
+-integer series, subtract its first value and divide all differences by their GCD,
+-with the first nonzero difference positive. Equal normalized integer vectors on
+-identical aligned timestamp/reference axes identify exact affine relationships,
+-including sign reversals and fractional ratios. OLS verifies and measures each
+-reported relation. This conservative index does not group approximately similar
+-integer vectors. It takes linear work per unique series, avoiding an all-pairs
+-search. Raw-series cache keys, exact classes, correlation, ranking, reference
+-fitting, alignment, and the 620 supported layouts per CAN ID remain unchanged.
+-
+-Tools expose `exact_raw_equivalents`, `affine_equivalents` (each other layout plus
+-raw-to-raw evidence, with `other_raw = a*selected_raw+b`), and
+-`distinct_alternatives`. Equivalent lists cover the full supported space, not just
+-top-N. Distinct alternatives are limited to supplied comparison hypotheses; an
+-empty list in explicit analysis means no distinct comparisons were requested.
+-Candidates with different aligned axes are marked `uncompared`, never resampled.
+-Search hypotheses remain representatives of **exact** classes, and their order
+-does not change. `AnalysisRun.raw_relationship(first, second)` exposes direct
+-comparison using cached decoding; it rejects different aligned axes.
+-
+-Conclusions keep `equivalent_layouts` for exact raw equality and additionally
+-require `affine_equivalent_layouts` and `ambiguity_reason`. Affine alternatives
+-set `layout_ambiguous=true` and `ambiguity_reason="affine_equivalent_layouts"`;
+-high layout confidence is rejected. Exact-only ambiguity uses
+-`exact_raw_equivalent_layouts`; unambiguous evidence uses `none`. Reconstruction
+-metrics cannot uniquely identify layouts related by an affine transformation.
+-CLI and HTML output state this explicitly. The fake provider also compares a
+-visible non-affine hypothesis when its first two hypotheses are affine-related.
+-
+-Challenge value recovery now includes exact or affine alternatives; exact layout
+-recovery requires neither ambiguity. The real blind report contains the same
+-production evidence; public definitions are consulted only in the later isolated
+-validation stage.
+-
+-
+-## Generic 15-bit fields (Ticket #16)
+-
+-The supported widths are now 8, 12, 15, and 16 only. Fifteen-bit fields use the
+-same normalized LSB0 little-endian and MSB0 big-endian conventions. All starts
+-0 through 49 are supported, unsigned or signed. For signed fields, extracted
+-values with bit 14 set subtract 32768: 0x3FFF = 16383, 0x4000 = -16384,
+-0x7FFF = -1. The generic extraction algorithm is unchanged.
+-
+-This adds 200 configurations per ID: 620 -> 820 (+32.26%). Six IDs now search
+-4,920 layouts; 90 IDs search 73,800. Historical Ticket #11�15 counts above describe
+-the earlier space. The legacy 44 byte-aligned configurations remain unchanged.
+-Tool schema accepts 15 bits; reasoning, ranking, fitting, alignment and affine
+-criteria are unchanged. Existing layouts may move down as equivalent 15-bit
+-layouts enter the original width tie-break; this does not establish unique truth.
+-
+-The blind experiment saves all ranked encodings before isolated validation reads
+-any public definition. Validation reports signal_value_recovered,
+-true_layout_present, exact_layout_rank, exact_layout_uniquely_identified, and
+-layout_ambiguous. The real public layout is now ranked #6, within an ambiguous
+-12-layout group. See the real-data README for measured results.
+-
+-
+-## Agent session analysis configuration (Ticket #17)
+-
+-`AnalysisConfig` in `canary.analysis_config` is immutable. Its fields are
+-`alignment`, `timestamp_tolerance`, and `min_samples`. Defaults are exact, 0.0,
+-and 3. Tolerance must be finite and nonnegative; minimum samples must be an
+-integer of at least 3, as required by the existing analysis APIs.
+-
+-Pass it once as `run_agent(..., analysis_config=AnalysisConfig("nearest", 0.02, 300))`.
+-The dispatcher injects these settings into search_candidates, analyze_candidate,
+-and fit_candidate and shares one AnalysisRun. Alignment-independent tools retain
+-their behavior. Direct non-agent tool APIs are unchanged.
+-
+-The model-facing tool declarations omit per-call tolerance and min_samples.
+-Legacy valid tool arguments are accepted by the dispatcher but session settings
+-always replace them; malformed arguments still produce validation errors.
+-An alignment argument in a model call is rejected as an unknown property.
+-The model cannot switch analysis configuration during the session. Explicit
+-exact mode remains exact even with a positive tolerance; there is no implicit
+-nearest-mode switch in the agent path.
+-
+-Final JSON includes one analysis_config object, including on unsuccessful runs.
+-Relevant trace events use `"analysis_config": "session"`, referring to that object.
+-The original requested arguments remain visible in the trace. The initial model
+-context also states the active configuration, but the model does not supply it.
+-Conclusion validation and reasoning strategy are unchanged.
+-
+-Windows CMD, from the repository root, with existing Gemini credentials:
+-
+-Synthetic baseline:
++NumPy is used only for source-array preparation. Downloads are pinned and checksum-verified. The blind runner uses **nearest alignment, 0.02-second tolerance, and 300 minimum aligned samples**. It writes `blind_results.json`, `reconstructed.csv`, and `report.html` under `results\comma2k19`.
++
++Only **after** blind discovery, compare the saved result against isolated public definitions:
+ 
+ ```bat
+-python -m canary.agent_cli ^
+-  datasets\synthetic\can_log.csv ^
+-  datasets\synthetic\speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --provider gemini ^
+-  --alignment exact ^
+-  --timestamp-tolerance 0 ^
+-  --min-samples 3
++python -m validation.validate_comma2k19
+ ```
+ 
+-Real capture:
++The validator does not feed definitions back into discovery. [Dataset provenance and preparation details](datasets/real/comma2k19/README.md) document source selection and limitations; [validation results](results/comma2k19/validation.json) distinguish recovered values from exact-layout identification.
++
++### 4. Run the Ollama agent on real data
++
++Install Ollama separately. Start `ollama serve` in another CMD window if the desktop app is not already serving. For a cloud-backed model, authenticate through Ollama:
+ 
+ ```bat
++ollama signin
++ollama pull gpt-oss:120b-cloud
++set "OLLAMA_BASE_URL=http://localhost:11434"
+ python -m canary.agent_cli ^
+   datasets\real\comma2k19\real_can_log.csv ^
+   datasets\real\comma2k19\real_speed_reference.csv ^
+   --value-column speed_kph ^
+-  --provider gemini ^
+-  --alignment nearest ^
+-  --timestamp-tolerance 0.02 ^
+-  --min-samples 300
++  --provider ollama --model gpt-oss:120b-cloud ^
++  --alignment nearest --timestamp-tolerance 0.02 --min-samples 300 ^
++  --max-finalization-attempts 3
+ ```
+ 
+-These commands retain the existing model default. Add --model with an enabled
+-model ID if needed. No live model calls were made for this ticket. For offline
+-execution, use --provider fake or --dry-run.
+-
++For local inference, pull a suitable tool-capable model, such as `ollama pull gpt-oss:20b`, and change `--model` accordingly. Local inference needs sufficient hardware. Ollama cloud models use the daemon's signed-in session; CANary does not manage its credentials.
+ 
+-## OpenRouter provider (Ticket #18)
++The agent prints JSON containing the conclusion, tool trace, per-attempt diagnostics, active analysis configuration, and retry counts. Alignment settings belong to the session; model tool arguments cannot override them. Defaults remain 12 exploration turns, 30 tool calls, and three finalization repair attempts. Ollama output limits are omitted by default; `--ollama-max-tokens` is optional.
+ 
+-The agent also accepts --provider openrouter. An explicit --model is required;
+-CANary does not choose an OpenRouter model or fall back to another provider.
+-Choose a model that supports function/tool calling. Gemini retains its existing
+-model default, and fake/--dry-run remains entirely offline.
++## Providers
+ 
+-The adapter uses Python standard-library HTTPSConnection and JSON. The optional
+-extra `openrouter = []` adds no dependency or SDK:
++All adapters implement the same message/tool interface and use the same analysis tools, evidence registry, and conclusion validator. There is no automatic provider fallback.
+ 
+-```bat
+-python -m pip install -e ".[openrouter]"
+-```
++| Provider | Setup | Selection |
++| --- | --- | --- |
++| **Gemini** | `python -m pip install -e ".[gemini]"`; set `GEMINI_API_KEY` | `--provider gemini --model YOUR_MODEL_ID` |
++| **OpenRouter** | Set `OPENROUTER_API_KEY`; standard-library adapter | `--provider openrouter --model YOUR_MODEL_ID` |
++| **Ollama** | Running local daemon; sign in through Ollama for cloud models | `--provider ollama --model YOUR_MODEL_NAME` |
+ 
+-Windows CMD setup and real-data command, from the repository root. Replace both
+-placeholder values before running; do not put credentials in tracked files:
++Windows CMD credential syntax is `set "GEMINI_API_KEY=YOUR_KEY"` or `set "OPENROUTER_API_KEY=YOUR_KEY"`. Keep credentials out of files and commits. Remote providers receive the reference label and structured tool evidence. Local Ollama requires no API key.
+ 
+-```bat
+-set "OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY"
+-set "OPENROUTER_MODEL=YOUR_TOOL_CAPABLE_MODEL_ID"
+-python -m canary.agent_cli ^
+-  datasets\real\comma2k19\real_can_log.csv ^
+-  datasets\real\comma2k19\real_speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --provider openrouter ^
+-  --model "%OPENROUTER_MODEL%" ^
+-  --alignment nearest ^
+-  --timestamp-tolerance 0.02 ^
+-  --min-samples 300
+-```
++## Tests and reliability
+ 
+-Only OPENROUTER_API_KEY supplies the adapter credential. Credentials are sent
+-only in the authorization header to the fixed HTTPS endpoint
+-https://openrouter.ai/api/v1/chat/completions. There is no redirect handling,
+-streaming, SDK retry, automatic model selection, or CANary provider fallback.
+-Each HTTP request has a 60-second timeout and closes its connection.
+-
+-System/user/assistant/tool messages and function definitions use OpenRouter's
+-chat-completions format. Calls preserve IDs and JSON object arguments; results
+-return with matching tool_call_id. Tool execution and validation stay in the
+-existing dispatcher. A submit_conclusion function carries the unchanged shared
+-AgentConclusion schema, following the same approach as the Gemini adapter.
+-No separate provider-specific conclusion format is introduced. Plain assistant
+-text is forwarded as text; a final conclusion must use submit_conclusion.
+-
+-The adapter retains assistant messages (including opaque reasoning_details when
+-supplied) and only commits conversation state after successful response parsing.
+-Rejected conclusions receive tool-result feedback through the existing correction
+-loop. Existing RetryingProvider handles transient HTTP statuses without resetting
+-the turn. Permanent errors are not retried. Error JSON and malformed responses
+-become the existing sanitized provider_error result; raw headers/error bodies are
+-never returned as diagnostics. Existing numeric evidence and conclusion validation
+-remain unchanged. All adapter tests use mocked HTTP, never live requests.
+-
+-API wire-format reference:
+-https://openrouter.ai/docs/guides/features/tool-calling
+-
+-
+-## Ollama provider (Ticket #19)
+-
+-Use --provider ollama with an explicit --model. No Python dependency, SDK, or
+-API key is required. The standard-library adapter calls /v1/chat/completions
+-on http://localhost:11434 by default. Set OLLAMA_BASE_URL to override the daemon
+-address (HTTP or HTTPS; an optional /v1 suffix is accepted). URL credentials,
+-queries and fragments are rejected. CANary sends no authorization header.
+-
+-Local and cloud names are passed unchanged. For cloud models, use a signed-in
+-Ollama installation; the local daemon owns authentication and cloud offloading.
+-This adapter does not implement direct ollama.com API-key authentication.
+-There is no provider/model fallback and no automatic model download or sign-in.
+-
+-The extracted chat_completions helper reuses the existing OpenRouter message,
+-tool-call, and conclusion mapping. The agent, numeric evidence validation,
+-analysis configuration, retry criteria and deterministic algorithms are unchanged.
+-HTTP transient statuses reuse RetryingProvider; connection failures become
+-sanitized provider_error results. Each connection closes after the response.
+-The transport timeout is 300 seconds to allow model loading and generation.
+-
+-Output is not capped by CANary by default: max_tokens is omitted. Set
+---ollama-max-tokens 16384 (or another positive limit suitable for your model),
+-or construct OllamaProvider(model, max_tokens=...), to send an explicit limit.
+-The flag applies only to --provider ollama. Context size is managed in Ollama;
+-this API does not set num_ctx and CANary does not truncate conversation history.
+-If a model needs more context for a large capture, configure it in Ollama first.
+-
+-Windows CMD setup: install Ollama and ensure it is running. If the Ollama desktop
+-app is not already serving, keep this running in a separate CMD window:
++**210 tests passed** in the [recorded full-suite run](results/live_debug_tests.txt). This is a recorded result, not a live CI badge. The full count includes optional NumPy preparation tests.
+ 
+ ```bat
+-ollama serve
++python -m pip install -e ".[comma2k19]"
++python -m unittest discover -s tests -v
++python -m simulator.evaluate_challenges
+ ```
+ 
+-A. Local model test, in another CMD window:
++The synthetic challenge suite covers noisy references, timestamp jitter, correlated distractors, unusual scale/offset, constant regions, endian/sign variants, and non-byte-aligned fields. Evaluation distinguishes signal recovery, exact-layout recovery, and ambiguity.
+ 
+-```bat
+-ollama pull gpt-oss:20b
+-ollama run gpt-oss:20b "Reply with OK."
+-```
++Provider tests use mocks and stubs: **no API calls in tests**. Regression coverage includes retry state preservation, sanitized errors, schema repair, fitted-reference promotion, exact evidence hydration, ambiguity constraints, and production isolation from truth sources. Live provider success is recorded separately from offline tests.
+ 
+-From the CANary repository root, test the local agent on synthetic data:
++## Repository structure
+ 
+-```bat
+-set "OLLAMA_BASE_URL=http://localhost:11434"
+-python -m canary.agent_cli ^
+-  datasets\synthetic\can_log.csv ^
+-  datasets\synthetic\speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --provider ollama ^
+-  --model gpt-oss:20b
++```text
++canary/                  Production analysis and agent package
++  observation.py         CAN parsing and generic extraction
++  analysis.py            Per-run cache, alignment, and equivalence evidence
++  discovery.py           Deterministic candidate ranking
++  fitting.py             Scale/offset fitting and reconstruction
++  relationships.py       Affine-equivalence analysis
++  tools.py               Structured engineering tool interface
++  agent.py               Bounded orchestration and strict conclusion validation
++  agent_evidence.py      Stable references, eligibility, and hydration
++  llm/                   Gemini, OpenRouter, Ollama, fake provider, retries
++simulator/               Synthetic generation and challenge evaluation
++tools/                   Public comma2k19 preparation and blind runner
++validation/              Isolated post-discovery public-definition checks
++tests/                   Deterministic, agent, and provider regressions
++datasets/                Synthetic fixtures and real-data provenance
++results/                 Reports, reconstructions, and saved evidence
+ ```
+ 
+-B. Cloud model test, with the same daemon running:
++## Design principles
+ 
+-```bat
+-ollama signin
+-ollama pull qwen3-coder:480b-cloud
+-ollama run qwen3-coder:480b-cloud "Reply with OK."
+-```
++- **Deterministic math, probabilistic reasoning.** Models interpret tool evidence; production APIs compute the numbers.
++- **No DBC leakage during blind discovery.** Public definitions belong to post-discovery validation, and synthetic truth stays outside production analysis.
++- **Ambiguity is a valid result.** Exact and affine-equivalent encodings can remain indistinguishable on a capture.
++- **Evidence before confidence.** Select fitted references, hydrate exact measurements, then validate the assembled conclusion.
++- **Model-provider independence.** Switching providers does not change analysis algorithms or evidence rules.
+ 
+-To use that cloud model on the synthetic CANary test above, replace the --model
+-value with qwen3-coder:480b-cloud. No credential is placed in CANary.
++## Limitations
+ 
+-C. Real comma2k19 CANary run, from the repository root:
++- Discovery requires an external reference signal; this is supervised candidate search, not arbitrary semantic decoding from CAN alone.
++- Observational ambiguity can prevent exact-layout identification even with excellent reconstruction. Confidence is qualitative, not calibrated probability.
++- Search cost grows with IDs, samples, and layout space. Supported widths are currently 8/12/15/16 bits; arbitrary widths are not implemented.
++- Live agent behavior depends on provider/model quality, latency, quota, and tool-calling reliability. A successful recorded run does not guarantee every run completes.
++- Current input is classic CAN CSV with eight stored payload bytes. The comma2k19 source arrays omit original DLC, so source padding cannot be distinguished from genuine trailing zeros.
++- No live capture, BLF/ASC ingestion, DBC export, or general DBC import is implemented. The isolated validation reader is not a production decoder.
+ 
+-```bat
+-set "OLLAMA_BASE_URL=http://localhost:11434"
+-python -m canary.agent_cli ^
+-  datasets\real\comma2k19\real_can_log.csv ^
+-  datasets\real\comma2k19\real_speed_reference.csv ^
+-  --value-column speed_kph ^
+-  --provider ollama ^
+-  --model qwen3-coder:480b-cloud ^
+-  --alignment nearest ^
+-  --timestamp-tolerance 0.02 ^
+-  --min-samples 300
+-```
++## Roadmap
++
++Possible next steps, **not current capabilities**:
+ 
+-Other installed tool-capable models can be supplied with --model; no name is
+-mandatory. All automated verification uses HTTP mocks, not local or cloud calls.
+-Official workflow and compatibility references:
+-https://docs.ollama.com/cloud
+-https://docs.ollama.com/api/openai-compatibility
++- Lightweight UI for reviewing evidence and ambiguity.
++- Multi-signal discovery workflows.
++- DBC export from validated hypotheses.
++- Live vehicle capture support.

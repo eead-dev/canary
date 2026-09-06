@@ -20,7 +20,9 @@ class DecisionProvider:
         self.decisions, self.evidence = [], []
 
     def respond(self, system, messages, tools, schema):
-        assert schema == DECISION_SCHEMA
+        assert schema['required'] == DECISION_SCHEMA['required']
+        if not tools:
+            assert 'enum' in schema['properties']['candidate_ref']
         if tools:
             return self.fake.respond(system, messages, tools, schema)
         self.evidence = messages[-1].content['allowed_evidence']

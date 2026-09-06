@@ -52,7 +52,7 @@ class FinalizationTests(unittest.TestCase):
         self.assertEqual(result.status, 'complete')
         self.assertEqual(result.turn_trace[-2]['error']['message'], 'decision is missing required properties')
         feedback = provider.final_calls[-1][-1].content
-        self.assertEqual(feedback['instruction'], FINALIZATION)
+        self.assertTrue(feedback['instruction'].startswith(FINALIZATION))
         self.assertEqual(feedback['error']['message'], 'decision is missing required properties')
 
     def test_finalization_exhaustion(self):
