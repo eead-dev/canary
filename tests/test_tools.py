@@ -59,7 +59,7 @@ class ToolTests(unittest.TestCase):
         self.assertEqual(result["candidates_searched"], 620)
         expected = discover_signal(self.frames, self.reference)
         self.assertEqual(result["candidates_ranked"], len(expected))
-        self.assertEqual(result["results"], [asdict(r) for r in expected[:2]])
+        self.assertEqual(result["results"], [{"rank": i, **asdict(r)} for i, r in enumerate(expected[:2], 1)])
 
     def test_fit_consistency(self):
         result = fit_candidate(self.frames, 291, 0, 8, self.reference)

@@ -120,6 +120,12 @@ class BitFieldTests(unittest.TestCase):
         conclusion = {"reference_name": "measurement", "selected_candidate": {"can_id": 1, **args},
                       "correlation": analysis["correlation"], **analysis["fit"],
                       "confidence": "medium", "rationale": "Collected fit evidence."}
+        group = analysis["equivalence"]
+        equivalents = [c for c in [group["representative"], *group["equivalent_candidates"]]
+                       if (c["start_bit"], c["width_bits"], c["endian"], c["signed"]) != (5, 12, "big", True)]
+        conclusion.update(signal_confidence="high", layout_confidence="low" if equivalents else "high",
+                          layout_ambiguous=bool(equivalents), equivalent_layouts=equivalents,
+                          alternative_candidates=[])
         trace = [{"name": "search_candidates", "output": {"ok": True, "result": {"results": [asdict(selected)]}}},
                  {"name": "analyze_candidate", "output": {"ok": True, "result": analysis}}]
         self.assertEqual(checked_conclusion(conclusion, "measurement", trace).selected_candidate["start_bit"], 5)

@@ -123,10 +123,25 @@ def search_candidates(frames: list[Frame], reference: Series, *, top_n: int = 10
         raise ValueError("tolerance must be a finite nonnegative number")
     run = analysis_run(frames, reference, tolerance, alignment, run)
     ranked = discover_signal(frames, reference, tolerance=tolerance, min_samples=min_samples, alignment=alignment, run=run)
+    # Keep flat ranking intact, while making distinct hypotheses visible even
+    # when the first several layouts belong to the same equivalence class.
+    hypotheses, seen = [], set()
+    for rank, result in enumerate(ranked, 1):
+        group = result.equivalence
+        if group.representative in seen:
+            continue
+        seen.add(group.representative)
+        hypotheses.append({"rank": rank, "representative": asdict(group.representative),
+                           "correlation": result.correlation,
+                           "equivalence_count": group.equivalence_count,
+                           "equivalent_candidates": [asdict(c) for c in group.equivalent_candidates],
+                           "evidence": group.evidence})
+        if len(hypotheses) == top_n:
+            break
     return {"candidates_searched": len(unique_ids(frames)) * len(candidate_fields()),
             "candidates_ranked": len(ranked), "performance": run.statistics(),
-            "results": [{k: v for k, v in asdict(r).items() if k != "byte_offset" or v is not None}
-                        for r in ranked[:top_n]]}
+            "results": [{"rank": rank, **{k: v for k, v in asdict(r).items() if k != "byte_offset" or v is not None}}
+                        for rank, r in enumerate(ranked[:top_n], 1)], "hypotheses": hypotheses}
 
 
 def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = None, width_bits: int | None = None,

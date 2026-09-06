@@ -540,3 +540,56 @@ The legacy `recovered` field remains a first-layout match for compatibility; use
 the new fields to interpret outcomes. The two 12/16-bit ties are successful value
 recoveries with ambiguous layouts. Positive 16-bit signed/unsigned ties are also
 reported honestly. No fixture metadata is passed into production analysis.
+
+## Agent ambiguity and competing hypotheses
+
+Agent conclusions retain the original fields and add `signal_confidence`,
+`layout_confidence`, `layout_ambiguous`, `equivalent_layouts`, and
+`alternative_candidates`. Confidence values are qualitative high/medium/low,
+not probabilities. Signal confidence describes tracking of the supplied reference;
+layout confidence describes evidence for the exact encoding. Equivalent layouts
+are every other member of the selected field's aligned equivalence class, excluding
+the selected field. An ambiguous class cannot receive high layout confidence.
+
+`search_candidates` preserves its flat `results` and adds their one-based `rank`.
+It also returns up to `top_n` distinct `hypotheses`, each with the representative,
+original flat rank, correlation, equivalence count, equivalent specs, and identity
+evidence. Consequently top-N equivalent entries do not hide competing hypotheses.
+Ranks still use the unchanged deterministic search order. No new comparison tool
+is necessary: repeated `analyze_candidate(include_fit=True)` calls reuse the same
+run cache and expose fit metrics, raw ranges, coverage, and equivalence evidence.
+
+The system instruction asks the model to compare non-equivalent hypotheses, keep
+signal evidence separate from layout evidence, and acknowledge when the capture
+cannot distinguish layouts. It prohibits invented conventions and unsupported
+claims about scales. Conclusions must cite search evidence and selected/alternative
+analyses. Numeric fields are checked against those analyses; complete equivalent
+lists and ambiguity flags are checked against deterministic equivalence evidence.
+If search exposed a non-equivalent alternative, at least one must be analyzed and
+reported before completion. Alternative records contain `candidate`, `correlation`,
+`rmse`, `mae`, `r_squared`, and a concise `reason`; at most five are allowed.
+The existing malformed-response correction loop handles invalid conclusions.
+
+The offline fake provider compares the first two distinct hypotheses and, when
+visible among the first ten, the strongest additional hypothesis on another ID.
+It selects the compared fit with lowest RMSE (then highest R-squared). This is an
+explicit fixture policy, not a change to deterministic discovery ranking or a
+prediction of live-model behavior. Its demonstration signal confidence is high
+for absolute r >= 0.995 and R-squared >= 0.99, medium for absolute r >= 0.9 and
+R-squared >= 0.8, otherwise low. Ambiguous layout confidence is low; uniquely
+represented fields with comparably fitting rivals receive reduced layout confidence.
+These thresholds are test/demo policy, not a calibrated production confidence rule.
+
+All automated runs remain offline. After configuring your existing Gemini key
+locally, manually run these commands from the repository root (add `--model` with
+your enabled model ID to override the existing CLI default):
+
+```powershell
+python -m canary.agent_cli datasets/challenges/baseline_easy/can_log.csv datasets/challenges/baseline_easy/reference.csv --value-column value --provider gemini
+python -m canary.agent_cli datasets/challenges/unusual_scale_offset/can_log.csv datasets/challenges/unusual_scale_offset/reference.csv --value-column value --provider gemini
+python -m canary.agent_cli datasets/challenges/correlated_distractor/can_log.csv datasets/challenges/correlated_distractor/reference.csv --value-column value --provider gemini
+```
+
+For local evidence-only exercises use `--dry-run`. The reasoning regression tests
+cover unique layout, width ambiguity, a correlated distractor, noisy reference,
+signedness ambiguity, fabricated evidence, and malformed-conclusion correction.

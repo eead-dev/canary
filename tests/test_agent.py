@@ -43,7 +43,7 @@ class AgentTests(unittest.TestCase):
         self.assertEqual(result.status, "complete")
         self.assertEqual(result.turns, 3)
         self.assertEqual([e["name"] for e in result.trace],
-                         ["summarize_capture", "search_candidates", "inspect_can_id", "analyze_candidate"])
+                         ["summarize_capture", "search_candidates", "inspect_can_id", "analyze_candidate", "analyze_candidate"])
         self.assertEqual(result.conclusion.scale, 2)
         self.assertEqual(result.conclusion.offset, 5)
         self.assertEqual(result.conclusion.selected_candidate["can_id"], 291)
@@ -228,7 +228,7 @@ class AgentTests(unittest.TestCase):
         self.assertEqual((result.turns, result.retry_count, result.provider_attempts), (3, 1, 4))
         self.assertEqual(snapshots[1], snapshots[2])
         self.assertEqual([e["name"] for e in result.trace],
-                         ["summarize_capture", "search_candidates", "inspect_can_id", "analyze_candidate"])
+                         ["summarize_capture", "search_candidates", "inspect_can_id", "analyze_candidate", "analyze_candidate"])
         sleep.assert_called_once_with(1.0)
 
     def test_retry_exhaustion_is_sanitized(self):
