@@ -48,7 +48,7 @@ def evaluate_scenario(directory: Path) -> dict:
         reason = "signal values recovered; observationally equivalent layouts, exact layout unresolved"
     elif recovered:
         reason = "correct complete field ranked #1"
-    elif field["width_bits"] not in (8, 12, 16) or not 0 <= field["start_bit"] <= 64-field["width_bits"]:
+    elif field["width_bits"] not in (8, 12, 15, 16) or not 0 <= field["start_bit"] <= 64-field["width_bits"]:
         reason = "target outside supported bit-field search space"
     elif top is None:
         reason = "no ranked candidates: insufficient exact matches or undefined correlation"
@@ -70,7 +70,7 @@ def evaluate_scenario(directory: Path) -> dict:
                 fit = fit_ranked(frames, reference, [candidate], alignment=mode, tolerance=tolerance, run=run)[0]
                 comparison[label] = {"rank": rank, **asdict(fit)}
     expected = metadata["expected_support"]
-    if field["width_bits"] in (8, 12, 16) and 0 <= field["start_bit"] <= 64-field["width_bits"] and expected == "unsupported":
+    if field["width_bits"] in (8, 12, 15, 16) and 0 <= field["start_bit"] <= 64-field["width_bits"] and expected == "unsupported":
         expected = "supported"
     performance = run.statistics()
     performance["total_seconds"] = perf_counter() - started

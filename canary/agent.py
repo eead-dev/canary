@@ -21,7 +21,7 @@ def obj(properties: dict, required: list[str] | None = None) -> dict:
 ID = {"type": "integer", "minimum": 0, "maximum": 2047}
 FIELD = {"can_id": ID, "byte_offset": {"type": "integer", "minimum": 0, "maximum": 7},
          "start_bit": {"type": "integer", "minimum": 0, "maximum": 56},
-         "width_bits": {"type": "integer", "enum": [8, 12, 16]}}
+         "width_bits": {"type": "integer", "enum": [8, 12, 15, 16]}}
 ENCODING = {"endian": {"type": "string", "enum": ["little", "big"]}, "signed": {"type": "boolean"}}
 LAYOUT = obj({**FIELD, **ENCODING}, ["can_id", "start_bit", "width_bits", "endian", "signed"])
 CONFIDENCE = {"type": "string", "enum": ["high", "medium", "low"]}

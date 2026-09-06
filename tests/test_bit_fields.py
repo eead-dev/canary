@@ -50,10 +50,10 @@ class BitFieldTests(unittest.TestCase):
 
     def test_enumeration_uniqueness_and_bit_oracle(self):
         candidates = candidate_fields(1)
-        self.assertEqual(len(candidates), 620)
-        self.assertEqual(len(set(candidates)), 620)
-        self.assertEqual({w: sum(c.width_bits == w for c in candidates) for w in (8, 12, 16)},
-                         {8: 212, 12: 212, 16: 196})
+        self.assertEqual(len(candidates), 820)
+        self.assertEqual(len(set(candidates)), 820)
+        self.assertEqual({w: sum(c.width_bits == w for c in candidates) for w in (8, 12, 15, 16)},
+                         {8: 212, 12: 212, 15: 200, 16: 196})
         # One-hot payloads identify the exact source bits and their signed weights.
         frames = [Frame(i, 1, (1 << i).to_bytes(8, "little")) for i in range(64)]
         signatures = set()

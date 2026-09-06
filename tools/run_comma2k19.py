@@ -10,7 +10,7 @@ from pathlib import Path
 from canary.analysis import AnalysisRun
 from canary.discovery import discover_signal
 from canary.fitting import fit_ranked, write_reconstruction
-from canary.observation import CandidateSpec, read_csv, timestamp_bounds, unique_ids
+from canary.observation import CandidateSpec, candidate_fields, read_csv, timestamp_bounds, unique_ids
 from canary.reference import read_reference
 from canary.reporting import write_report
 
@@ -48,7 +48,11 @@ def experiment(can_path, reference_path, output, tolerance=0.02, min_samples=300
               'frame_count': len(frames), 'unique_can_ids': unique_ids(frames),
               'capture_duration_seconds': last-first, 'reference_samples': len(reference),
               'candidates_ranked': len(ranked), 'performance': run.statistics(),
+              'supported_widths': sorted({c.width_bits for c in candidate_fields()}),
               'top_fitted': [asdict(r) for r in top],
+              'ranked_candidates': [{'rank': i, 'can_id': r.can_id, 'start_bit': r.start_bit,
+                                     'width_bits': r.width_bits, 'endian': r.endian, 'signed': r.signed,
+                                     'correlation': r.correlation} for i, r in enumerate(ranked, 1)],
               'distinct_hypotheses': hypotheses}
     output.mkdir(parents=True, exist_ok=True)
     (output/'blind_results.json').write_text(json.dumps(result, indent=2, allow_nan=False)+'\n', encoding='utf-8')

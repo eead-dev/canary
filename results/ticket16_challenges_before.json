@@ -3,139 +3,25 @@
     "scenario": "baseline_easy",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
-    "width_bits": 15,
+    "width_bits": 16,
     "endian": "little",
     "signed": false,
     "correlation": 0.999999995674275,
     "r_squared": 0.9999999913485499,
     "aligned_samples": 6000,
-    "recovered": false,
-    "true_field_rank": 3,
+    "recovered": true,
+    "true_field_rank": 1,
     "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": false,
@@ -158,26 +44,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -186,7 +58,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -215,26 +87,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -243,14 +101,14 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
       {
         "can_id": 420,
         "byte_offset": null,
-        "width_bits": 15,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
         "correlation": 0.9999999920962886,
@@ -272,7 +130,7 @@
         "equivalence": {
           "representative": {
             "start_bit": 15,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
@@ -282,9 +140,45 @@
               "start_bit": 15,
               "width_bits": 16,
               "endian": "little",
-              "signed": false,
+              "signed": true,
               "can_id": 420
-            },
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
             {
               "start_bit": 15,
               "width_bits": 16,
@@ -293,311 +187,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 3,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      }
-    ],
-    "alignment_tolerance": 0.0,
-    "alignment_mode": "exact",
-    "alignment_diagnostics": {
-      "candidate_sample_count": 6000,
-      "matched_sample_count": 6000,
-      "unmatched_sample_count": 0,
-      "match_ratio": 1.0,
-      "mean_absolute_timestamp_error": 0.0,
-      "max_absolute_timestamp_error": 0.0
-    },
-    "encoding_comparison": null,
-    "signal_value_recovered": true,
-    "exact_layout_recovered": false,
-    "layout_ambiguous": true,
-    "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2441,
-      "equivalence_classes": 2441,
-      "equivalent_candidates_grouped": 19,
-      "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.47936659953848,
-      "correlation_seconds": 7.10051940025005,
-      "total_seconds": 15.928711500004283
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
-    }
-  },
-  {
-    "scenario": "noisy_reference",
-    "seed": 42,
-    "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
-    "top_can_id": 420,
-    "byte_offset": 2,
-    "start_bit": 16,
-    "width_bits": 15,
-    "endian": "little",
-    "signed": false,
-    "correlation": 0.9998557532168062,
-    "r_squared": 0.9997115272407463,
-    "aligned_samples": 6000,
-    "recovered": false,
-    "true_field_rank": 3,
-    "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
-    "distractor_rank": null,
-    "top_fitted": [
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9998557532168062,
-        "scale": 0.00999680686490824,
-        "offset": 0.007354299180725832,
-        "rmse": 0.4999171657238375,
-        "mae": 0.40243485363877496,
-        "r_squared": 0.9997115272407463,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9998557532168062,
-        "scale": 0.00999680686490824,
-        "offset": 0.007354299180725832,
-        "rmse": 0.4999171657238375,
-        "mae": 0.40243485363877496,
-        "r_squared": 0.9997115272407463,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 16,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9998557532168062,
-        "scale": 0.00999680686490824,
-        "offset": 0.007354299180725832,
-        "rmse": 0.4999171657238375,
-        "mae": 0.40243485363877496,
-        "r_squared": 0.9997115272407463,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 16,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9998557532168062,
-        "scale": 0.00999680686490824,
-        "offset": 0.007354299180725832,
-        "rmse": 0.4999171657238375,
-        "mae": 0.40243485363877496,
-        "r_squared": 0.9997115272407463,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -607,12 +197,12 @@
         "width_bits": 16,
         "endian": "little",
         "signed": false,
-        "correlation": 0.9998557484657276,
-        "scale": 0.002499195515448692,
-        "offset": 0.003666336827187422,
-        "rmse": 0.49992539798652497,
-        "mae": 0.40246223897338396,
-        "r_squared": 0.99971151773996,
+        "correlation": 0.9999999912690277,
+        "scale": 0.0024999910238327205,
+        "offset": -0.003695355746238249,
+        "rmse": 0.0038901604661270702,
+        "mae": 0.0031832355409008974,
+        "r_squared": 0.9999999825380554,
         "aligned_samples": 6000,
         "alignment_diagnostics": {
           "candidate_sample_count": 6000,
@@ -652,31 +242,286 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2441,
-      "equivalence_classes": 2441,
-      "equivalent_candidates_grouped": 19,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1849,
+      "equivalence_classes": 1849,
+      "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.466687299485784,
-      "correlation_seconds": 7.168685800104868,
-      "total_seconds": 16.085624100000132
+      "decoding_seconds": 2.6282939998054644,
+      "correlation_seconds": 6.80133629986085,
+      "total_seconds": 14.447655800002394
     },
     "ambiguity": {
       "exact_raw_equivalents": [
         {
           "start_bit": 16,
-          "width_bits": 15,
+          "width_bits": 16,
           "endian": "little",
           "signed": true,
           "can_id": 420
+        }
+      ],
+      "affine_equivalents": [],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "exact_raw_equivalent_layouts"
+    }
+  },
+  {
+    "scenario": "noisy_reference",
+    "seed": 42,
+    "expected_support": "supported",
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
+    "top_can_id": 420,
+    "byte_offset": 2,
+    "start_bit": 16,
+    "width_bits": 16,
+    "endian": "little",
+    "signed": false,
+    "correlation": 0.9998557532168062,
+    "r_squared": 0.9997115272407463,
+    "aligned_samples": 6000,
+    "recovered": true,
+    "true_field_rank": 1,
+    "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
+    "distractor_rank": null,
+    "top_fitted": [
+      {
+        "can_id": 420,
+        "byte_offset": 2,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9998557532168062,
+        "scale": 0.00999680686490824,
+        "offset": 0.007354299180725832,
+        "rmse": 0.4999171657238375,
+        "mae": 0.40243485363877496,
+        "r_squared": 0.9997115272407463,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
         },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
+        "start_bit": 16,
+        "equivalence": {
+          "representative": {
+            "start_bit": 16,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": 2,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9998557532168062,
+        "scale": 0.00999680686490824,
+        "offset": 0.007354299180725832,
+        "rmse": 0.4999171657238375,
+        "mae": 0.40243485363877496,
+        "r_squared": 0.9997115272407463,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
         },
+        "start_bit": 16,
+        "equivalence": {
+          "representative": {
+            "start_bit": 16,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9998557484657276,
+        "scale": 0.002499195515448692,
+        "offset": 0.003666336827187422,
+        "rmse": 0.49992539798652497,
+        "mae": 0.40246223897338396,
+        "r_squared": 0.99971151773996,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 14,
+        "equivalence": {
+          "representative": {
+            "start_bit": 14,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9998557447377681,
+        "scale": 0.004998391249263171,
+        "offset": 0.004935087064559696,
+        "rmse": 0.4999318573812803,
+        "mae": 0.40245257523417427,
+        "r_squared": 0.9997115102851164,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9998557447377681,
+        "scale": 0.004998391249263171,
+        "offset": 0.004935087064559696,
+        "rmse": 0.4999318573812803,
+        "mae": 0.40245257523417427,
+        "r_squared": 0.9997115102851164,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      }
+    ],
+    "alignment_tolerance": 0.0,
+    "alignment_mode": "exact",
+    "alignment_diagnostics": {
+      "candidate_sample_count": 6000,
+      "matched_sample_count": 6000,
+      "unmatched_sample_count": 0,
+      "match_ratio": 1.0,
+      "mean_absolute_timestamp_error": 0.0,
+      "max_absolute_timestamp_error": 0.0
+    },
+    "encoding_comparison": null,
+    "signal_value_recovered": true,
+    "exact_layout_recovered": false,
+    "layout_ambiguous": true,
+    "performance": {
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1849,
+      "equivalence_classes": 1849,
+      "equivalent_candidates_grouped": 11,
+      "constant_candidates_skipped": 0,
+      "decoding_seconds": 3.4343928001908353,
+      "correlation_seconds": 7.235957800323376,
+      "total_seconds": 17.179455699995742
+    },
+    "ambiguity": {
+      "exact_raw_equivalents": [
         {
           "start_bit": 16,
           "width_bits": 16,
@@ -696,139 +541,25 @@
     "scenario": "timestamp_jitter",
     "seed": 42,
     "expected_support": "partially_supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
-    "width_bits": 15,
+    "width_bits": 16,
     "endian": "little",
     "signed": false,
     "correlation": 0.9999999956723675,
     "r_squared": 0.9999999913447352,
     "aligned_samples": 5999,
-    "recovered": false,
-    "true_field_rank": 3,
+    "recovered": true,
+    "true_field_rank": 1,
     "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9999999956723675,
-        "scale": 0.009999988903445532,
-        "offset": -6.206675209341483e-06,
-        "rmse": 0.0027384313690000653,
-        "mae": 0.0022495625791349146,
-        "r_squared": 0.9999999913447352,
-        "aligned_samples": 5999,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 5999,
-          "unmatched_sample_count": 1,
-          "match_ratio": 0.9998333333333334,
-          "mean_absolute_timestamp_error": 0.0013481648488081585,
-          "max_absolute_timestamp_error": 0.003964764999999204
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9999999956723675,
-        "scale": 0.009999988903445532,
-        "offset": -6.206675209341483e-06,
-        "rmse": 0.0027384313690000653,
-        "mae": 0.0022495625791349146,
-        "r_squared": 0.9999999913447352,
-        "aligned_samples": 5999,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 5999,
-          "unmatched_sample_count": 1,
-          "match_ratio": 0.9998333333333334,
-          "mean_absolute_timestamp_error": 0.0013481648488081585,
-          "max_absolute_timestamp_error": 0.003964764999999204
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": false,
@@ -851,26 +582,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -879,7 +596,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -908,26 +625,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -936,14 +639,14 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
       {
         "can_id": 420,
         "byte_offset": null,
-        "width_bits": 15,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
         "correlation": 0.9999999920933702,
@@ -965,7 +668,7 @@
         "equivalence": {
           "representative": {
             "start_bit": 15,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
@@ -975,9 +678,45 @@
               "start_bit": 15,
               "width_bits": 16,
               "endian": "little",
-              "signed": false,
+              "signed": true,
               "can_id": 420
-            },
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999920933702,
+        "scale": 0.004999982400636896,
+        "offset": -0.002427894386279661,
+        "rmse": 0.0037014542106888304,
+        "mae": 0.003058317073293466,
+        "r_squared": 0.9999999841867404,
+        "aligned_samples": 5999,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 5999,
+          "unmatched_sample_count": 1,
+          "match_ratio": 0.9998333333333334,
+          "mean_absolute_timestamp_error": 0.0013481648488081585,
+          "max_absolute_timestamp_error": 0.003964764999999204
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
             {
               "start_bit": 15,
               "width_bits": 16,
@@ -986,7 +725,42 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 3,
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999912664922,
+        "scale": 0.002499991108936395,
+        "offset": -0.003697601659169436,
+        "rmse": 0.003890191947988355,
+        "mae": 0.003183151524899904,
+        "r_squared": 0.9999999825329848,
+        "aligned_samples": 5999,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 5999,
+          "unmatched_sample_count": 1,
+          "match_ratio": 0.9998333333333334,
+          "mean_absolute_timestamp_error": 0.0013481648488081585,
+          "max_absolute_timestamp_error": 0.003964764999999204
+        },
+        "start_bit": 14,
+        "equivalence": {
+          "representative": {
+            "start_bit": 14,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
       }
@@ -1006,31 +780,17 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2441,
-      "equivalence_classes": 2441,
-      "equivalent_candidates_grouped": 19,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1849,
+      "equivalence_classes": 1849,
+      "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 5.820969600055832,
-      "correlation_seconds": 7.35691720014438,
-      "total_seconds": 18.601444999992964
+      "decoding_seconds": 6.999642099486664,
+      "correlation_seconds": 7.260327100069844,
+      "total_seconds": 19.891251000008197
     },
     "ambiguity": {
       "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
         {
           "start_bit": 16,
           "width_bits": 16,
@@ -1050,139 +810,25 @@
     "scenario": "correlated_distractor",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
-    "width_bits": 15,
+    "width_bits": 16,
     "endian": "little",
     "signed": false,
     "correlation": 0.999999995674275,
     "r_squared": 0.9999999913485499,
     "aligned_samples": 6000,
-    "recovered": false,
-    "true_field_rank": 3,
+    "recovered": true,
+    "true_field_rank": 1,
     "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
-    "distractor_rank": 21,
+    "distractor_rank": 14,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": false,
@@ -1205,26 +851,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -1233,7 +865,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -1262,26 +894,12 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
           },
           "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
             {
               "start_bit": 16,
               "width_bits": 16,
@@ -1290,14 +908,14 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
       {
         "can_id": 420,
         "byte_offset": null,
-        "width_bits": 15,
+        "width_bits": 16,
         "endian": "little",
         "signed": false,
         "correlation": 0.9999999920962886,
@@ -1319,7 +937,7 @@
         "equivalence": {
           "representative": {
             "start_bit": 15,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": false,
             "can_id": 420
@@ -1329,9 +947,45 @@
               "start_bit": 15,
               "width_bits": 16,
               "endian": "little",
-              "signed": false,
+              "signed": true,
               "can_id": 420
-            },
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999920962886,
+        "scale": 0.004999982288879446,
+        "offset": -0.002426419746726083,
+        "rmse": 0.003701278382094462,
+        "mae": 0.003058209584712323,
+        "r_squared": 0.999999984192577,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
             {
               "start_bit": 15,
               "width_bits": 16,
@@ -1340,7 +994,42 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 3,
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999912690277,
+        "scale": 0.0024999910238327205,
+        "offset": -0.003695355746238249,
+        "rmse": 0.0038901604661270702,
+        "mae": 0.0031832355409008974,
+        "r_squared": 0.9999999825380554,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 14,
+        "equivalence": {
+          "representative": {
+            "start_bit": 14,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
       }
@@ -1360,31 +1049,17 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2424,
-      "equivalence_classes": 2424,
-      "equivalent_candidates_grouped": 36,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1839,
+      "equivalence_classes": 1839,
+      "equivalent_candidates_grouped": 21,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.584183899438358,
-      "correlation_seconds": 7.193952799949329,
-      "total_seconds": 16.109039700007997
+      "decoding_seconds": 3.509303499944508,
+      "correlation_seconds": 8.681234200121253,
+      "total_seconds": 17.484595799993258
     },
     "ambiguity": {
       "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
         {
           "start_bit": 16,
           "width_bits": 16,
@@ -1404,8 +1079,8 @@
     "scenario": "unusual_scale_offset",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
@@ -1416,7 +1091,7 @@
     "r_squared": 0.99999987835197,
     "aligned_samples": 6000,
     "recovered": false,
-    "true_field_rank": 4,
+    "true_field_rank": 2,
     "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
     "distractor_rank": null,
     "top_fitted": [
@@ -1453,20 +1128,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -1480,135 +1141,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9999999391759833,
-        "scale": 0.037001233020336394,
-        "offset": -12.502655117593335,
-        "rmse": 0.010267713764602353,
-        "mae": 0.008754911756274103,
-        "r_squared": 0.99999987835197,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 12,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 5,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9999999391759833,
-        "scale": 0.037001233020336394,
-        "offset": -12.502655117593335,
-        "rmse": 0.010267713764602353,
-        "mae": 0.008754911756274103,
-        "r_squared": 0.99999987835197,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 12,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -1645,20 +1178,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -1672,7 +1191,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -1709,20 +1228,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -1736,7 +1241,93 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.999999889468759,
+        "scale": 0.01850044864500155,
+        "offset": -12.511493234708404,
+        "rmse": 0.013841358657459883,
+        "mae": 0.011359555027955777,
+        "r_squared": 0.9999997789375301,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.999999889468759,
+        "scale": 0.01850044864500155,
+        "offset": -12.511493234708404,
+        "rmse": 0.013841358657459883,
+        "mae": 0.011359555027955777,
+        "r_squared": 0.9999997789375301,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 15,
+        "equivalence": {
+          "representative": {
+            "start_bit": 15,
+            "width_bits": 16,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       }
@@ -1756,31 +1347,17 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2415,
-      "equivalence_classes": 2415,
-      "equivalent_candidates_grouped": 45,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1833,
+      "equivalence_classes": 1833,
+      "equivalent_candidates_grouped": 27,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.492073801375227,
-      "correlation_seconds": 7.153919299889822,
-      "total_seconds": 16.062649900006363
+      "decoding_seconds": 3.2234985008544754,
+      "correlation_seconds": 7.336962800065521,
+      "total_seconds": 15.764374100006535
     },
     "ambiguity": {
       "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        },
         {
           "start_bit": 16,
           "width_bits": 16,
@@ -1807,8 +1384,8 @@
     "scenario": "long_constant_regions",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
@@ -1819,7 +1396,7 @@
     "r_squared": 1.0,
     "aligned_samples": 6000,
     "recovered": false,
-    "true_field_rank": 4,
+    "true_field_rank": 2,
     "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
     "distractor_rank": null,
     "top_fitted": [
@@ -1856,20 +1433,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -1883,135 +1446,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9999999999999998,
-        "scale": 0.01,
-        "offset": 0.0,
-        "rmse": 6.925276609421396e-16,
-        "mae": 9.836575998178887e-17,
-        "r_squared": 1.0,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 12,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 5,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9999999999999998,
-        "scale": 0.01,
-        "offset": 0.0,
-        "rmse": 6.925276609421396e-16,
-        "mae": 9.836575998178887e-17,
-        "r_squared": 1.0,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 12,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2048,20 +1483,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -2075,7 +1496,7 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2112,20 +1533,6 @@
           "equivalent_candidates": [
             {
               "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
-              "width_bits": 15,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 16,
               "width_bits": 16,
               "endian": "little",
               "signed": false,
@@ -2139,7 +1546,93 @@
               "can_id": 420
             }
           ],
-          "equivalence_count": 5,
+          "equivalence_count": 3,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": false,
+        "correlation": 0.9999999929220538,
+        "scale": 0.020000129386332475,
+        "offset": 0.00026707450194152216,
+        "rmse": 0.001995315762821688,
+        "mae": 0.0007962569986770503,
+        "r_squared": 0.9999999858441078,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 17,
+        "equivalence": {
+          "representative": {
+            "start_bit": 17,
+            "width_bits": 12,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999929220538,
+        "scale": 0.020000129386332475,
+        "offset": 0.00026707450194152216,
+        "rmse": 0.001995315762821688,
+        "mae": 0.0007962569986770503,
+        "r_squared": 0.9999999858441078,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 17,
+        "equivalence": {
+          "representative": {
+            "start_bit": 17,
+            "width_bits": 12,
+            "endian": "little",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
+            {
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "can_id": 420
+            }
+          ],
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       }
@@ -2159,31 +1652,17 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2415,
-      "equivalence_classes": 2415,
-      "equivalent_candidates_grouped": 45,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1833,
+      "equivalence_classes": 1833,
+      "equivalent_candidates_grouped": 27,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.5190090996038634,
-      "correlation_seconds": 7.128295699818409,
-      "total_seconds": 15.902889600009075
+      "decoding_seconds": 3.3442747000808595,
+      "correlation_seconds": 7.071450000046752,
+      "total_seconds": 15.736885899998015
     },
     "ambiguity": {
       "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 15,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        },
         {
           "start_bit": 16,
           "width_bits": 16,
@@ -2210,8 +1689,8 @@
     "scenario": "unsupported_big_endian",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
@@ -2263,23 +1742,9 @@
               "endian": "big",
               "signed": true,
               "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2320,137 +1785,9 @@
               "endian": "big",
               "signed": true,
               "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
             }
           ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": null,
-        "width_bits": 15,
-        "endian": "big",
-        "signed": false,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 17,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": null,
-        "width_bits": 15,
-        "endian": "big",
-        "signed": true,
-        "correlation": 0.999999995674275,
-        "scale": 0.009999988902874166,
-        "offset": -6.20290571617943e-06,
-        "rmse": 0.0027382031580483073,
-        "mae": 0.0022491883184297943,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 17,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2491,16 +1828,87 @@
               "endian": "big",
               "signed": true,
               "can_id": 420
-            },
+            }
+          ],
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": true,
+        "correlation": 0.9999999920660394,
+        "scale": 0.004999990322845649,
+        "offset": -0.002437505506065918,
+        "rmse": 0.003708354380705314,
+        "mae": 0.0030609967112718997,
+        "r_squared": 0.9999999841320789,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 17,
+        "equivalence": {
+          "representative": {
+            "start_bit": 17,
+            "width_bits": 16,
+            "endian": "big",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [
             {
-              "start_bit": 18,
-              "width_bits": 15,
+              "start_bit": 17,
+              "width_bits": 16,
               "endian": "big",
-              "signed": false,
+              "signed": true,
               "can_id": 420
             }
           ],
-          "equivalence_count": 3,
+          "equivalence_count": 2,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 16,
+        "endian": "big",
+        "signed": false,
+        "correlation": 0.9999999912252764,
+        "scale": 0.0024999959176888894,
+        "offset": -0.0037115680790549277,
+        "rmse": 0.0038998952095459873,
+        "mae": 0.0031796666263043255,
+        "r_squared": 0.9999999824505524,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 18,
+        "equivalence": {
+          "representative": {
+            "start_bit": 18,
+            "width_bits": 16,
+            "endian": "big",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
       }
@@ -2554,28 +1962,14 @@
               "endian": "big",
               "signed": true,
               "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": false,
-              "can_id": 420
-            },
-            {
-              "start_bit": 17,
-              "width_bits": 15,
-              "endian": "big",
-              "signed": true,
-              "can_id": 420
             }
           ],
-          "equivalence_count": 4,
+          "equivalence_count": 2,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
       "partial_byte": {
-        "rank": 19,
+        "rank": 14,
         "can_id": 420,
         "byte_offset": 2,
         "width_bits": 8,
@@ -2623,34 +2017,20 @@
     "exact_layout_recovered": false,
     "layout_ambiguous": true,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2441,
-      "equivalence_classes": 2441,
-      "equivalent_candidates_grouped": 19,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1849,
+      "equivalence_classes": 1849,
+      "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.3987680005811853,
-      "correlation_seconds": 12.963009999424685,
-      "total_seconds": 25.411045200002263
+      "decoding_seconds": 3.471110100945225,
+      "correlation_seconds": 6.8910235998773715,
+      "total_seconds": 15.586599300004309
     },
     "ambiguity": {
       "exact_raw_equivalents": [
         {
           "start_bit": 16,
           "width_bits": 16,
-          "endian": "big",
-          "signed": true,
-          "can_id": 420
-        },
-        {
-          "start_bit": 17,
-          "width_bits": 15,
-          "endian": "big",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 17,
-          "width_bits": 15,
           "endian": "big",
           "signed": true,
           "can_id": 420
@@ -2667,68 +2047,25 @@
     "scenario": "unsupported_signed",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": 2,
     "start_bit": 16,
-    "width_bits": 15,
+    "width_bits": 16,
     "endian": "little",
     "signed": true,
     "correlation": 0.9999999956742749,
     "r_squared": 0.9999999913485499,
     "aligned_samples": 6000,
-    "recovered": false,
-    "true_field_rank": 2,
-    "reason": "signal values recovered; observationally equivalent layouts, exact layout unresolved",
+    "recovered": true,
+    "true_field_rank": 1,
+    "reason": "correct complete field ranked #1",
     "distractor_rank": null,
     "top_fitted": [
       {
         "can_id": 420,
         "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9999999956742749,
-        "scale": 0.009999988902874166,
-        "offset": -5.613997197384535e-05,
-        "rmse": 0.0027382031580484457,
-        "mae": 0.002249188318429856,
-        "r_squared": 0.9999999913485499,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": true,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 2,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
         "width_bits": 16,
         "endian": "little",
         "signed": true,
@@ -2751,64 +2088,13 @@
         "equivalence": {
           "representative": {
             "start_bit": 16,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": true,
             "can_id": 420
           },
-          "equivalent_candidates": [
-            {
-              "start_bit": 16,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 2,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": null,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": true,
-        "correlation": 0.9999999920962885,
-        "scale": 0.004999982288879446,
-        "offset": -0.0025858198317147973,
-        "rmse": 0.0037012783820945592,
-        "mae": 0.003058209584712432,
-        "r_squared": 0.999999984192577,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 15,
-        "equivalence": {
-          "representative": {
-            "start_bit": 15,
-            "width_bits": 15,
-            "endian": "little",
-            "signed": true,
-            "can_id": 420
-          },
-          "equivalent_candidates": [
-            {
-              "start_bit": 15,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 2,
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2837,21 +2123,13 @@
         "equivalence": {
           "representative": {
             "start_bit": 15,
-            "width_bits": 15,
+            "width_bits": 16,
             "endian": "little",
             "signed": true,
             "can_id": 420
           },
-          "equivalent_candidates": [
-            {
-              "start_bit": 15,
-              "width_bits": 16,
-              "endian": "little",
-              "signed": true,
-              "can_id": 420
-            }
-          ],
-          "equivalence_count": 2,
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
       },
@@ -2889,6 +2167,76 @@
           "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.9999999234215932,
+        "scale": 0.040003266022727704,
+        "offset": 0.013267563826972584,
+        "rmse": 0.011520978498930563,
+        "mae": 0.01002622448053876,
+        "r_squared": 0.9999998468431922,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 18,
+        "equivalence": {
+          "representative": {
+            "start_bit": 18,
+            "width_bits": 12,
+            "endian": "little",
+            "signed": true,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "little",
+        "signed": true,
+        "correlation": 0.999999718933408,
+        "scale": 0.07999846979156806,
+        "offset": 0.03518820572390213,
+        "rmse": 0.022071954615064983,
+        "mae": 0.018576834843639502,
+        "r_squared": 0.9999994378668948,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 19,
+        "equivalence": {
+          "representative": {
+            "start_bit": 19,
+            "width_bits": 12,
+            "endian": "little",
+            "signed": true,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
       }
     ],
     "alignment_tolerance": 0.0,
@@ -2903,41 +2251,33 @@
     },
     "encoding_comparison": null,
     "signal_value_recovered": true,
-    "exact_layout_recovered": false,
-    "layout_ambiguous": true,
+    "exact_layout_recovered": true,
+    "layout_ambiguous": false,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2456,
-      "equivalence_classes": 2456,
-      "equivalent_candidates_grouped": 4,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1860,
+      "equivalence_classes": 1860,
+      "equivalent_candidates_grouped": 0,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 4.468260499474127,
-      "correlation_seconds": 10.32822360015416,
-      "total_seconds": 21.647254700001213
+      "decoding_seconds": 3.450738299303339,
+      "correlation_seconds": 7.18606420008291,
+      "total_seconds": 15.950454599995282
     },
     "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
+      "exact_raw_equivalents": [],
       "affine_equivalents": [],
       "distinct_alternatives": [],
       "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "layout_ambiguous": false,
+      "ambiguity_reason": "none"
     }
   },
   {
     "scenario": "unsupported_bit_offset",
     "seed": 42,
     "expected_support": "supported",
-    "candidates_searched": 2460,
-    "candidates_ranked": 2460,
+    "candidates_searched": 1860,
+    "candidates_ranked": 1860,
     "top_can_id": 420,
     "byte_offset": null,
     "start_bit": 19,
@@ -2978,41 +2318,6 @@
           "representative": {
             "start_bit": 19,
             "width_bits": 12,
-            "endian": "little",
-            "signed": false,
-            "can_id": 420
-          },
-          "equivalent_candidates": [],
-          "equivalence_count": 1,
-          "evidence": "identical decoded time series on this aligned capture"
-        }
-      },
-      {
-        "can_id": 420,
-        "byte_offset": 2,
-        "width_bits": 15,
-        "endian": "little",
-        "signed": false,
-        "correlation": 0.9999999423009208,
-        "scale": 0.0031249952460451493,
-        "offset": -0.0110073190227169,
-        "rmse": 0.010000475396645891,
-        "mae": 0.008124296724262835,
-        "r_squared": 0.9999998846018451,
-        "aligned_samples": 6000,
-        "alignment_diagnostics": {
-          "candidate_sample_count": 6000,
-          "matched_sample_count": 6000,
-          "unmatched_sample_count": 0,
-          "match_ratio": 1.0,
-          "mean_absolute_timestamp_error": 0.0,
-          "max_absolute_timestamp_error": 0.0
-        },
-        "start_bit": 16,
-        "equivalence": {
-          "representative": {
-            "start_bit": 16,
-            "width_bits": 15,
             "endian": "little",
             "signed": false,
             "can_id": 420
@@ -3126,6 +2431,41 @@
           "equivalence_count": 1,
           "evidence": "identical decoded time series on this aligned capture"
         }
+      },
+      {
+        "can_id": 420,
+        "byte_offset": null,
+        "width_bits": 12,
+        "endian": "big",
+        "signed": false,
+        "correlation": 0.9999359474059656,
+        "scale": 0.025047235198580604,
+        "offset": -0.126558068415612,
+        "rmse": 0.33319434189330777,
+        "mae": 0.2720625136729983,
+        "r_squared": 0.9998718989146655,
+        "aligned_samples": 6000,
+        "alignment_diagnostics": {
+          "candidate_sample_count": 6000,
+          "matched_sample_count": 6000,
+          "unmatched_sample_count": 0,
+          "match_ratio": 1.0,
+          "mean_absolute_timestamp_error": 0.0,
+          "max_absolute_timestamp_error": 0.0
+        },
+        "start_bit": 25,
+        "equivalence": {
+          "representative": {
+            "start_bit": 25,
+            "width_bits": 12,
+            "endian": "big",
+            "signed": false,
+            "can_id": 420
+          },
+          "equivalent_candidates": [],
+          "equivalence_count": 1,
+          "evidence": "identical decoded time series on this aligned capture"
+        }
       }
     ],
     "alignment_tolerance": 0.0,
@@ -3143,14 +2483,14 @@
     "exact_layout_recovered": true,
     "layout_ambiguous": false,
     "performance": {
-      "candidates_enumerated": 2460,
-      "unique_decoded_series": 2460,
-      "equivalence_classes": 2460,
+      "candidates_enumerated": 1860,
+      "unique_decoded_series": 1860,
+      "equivalence_classes": 1860,
       "equivalent_candidates_grouped": 0,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 4.717300500080455,
-      "correlation_seconds": 9.518295399364433,
-      "total_seconds": 21.49871169999824
+      "decoding_seconds": 3.4354965003876714,
+      "correlation_seconds": 7.028596299831406,
+      "total_seconds": 15.781526399994618
     },
     "ambiguity": {
       "exact_raw_equivalents": [],

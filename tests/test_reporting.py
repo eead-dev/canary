@@ -76,7 +76,7 @@ class ReportingTests(unittest.TestCase):
             with patch("sys.argv", args + ["--fit", "--report", str(report)]), redirect_stdout(text):
                 main()
             self.assertTrue(report.exists())
-            for value in ("CAN frames: 3", "Unique CAN IDs: 1", "Candidates searched: 620",
+            for value in ("CAN frames: 3", "Unique CAN IDs: 1", "Candidates searched: 820",
                           "Aligned samples (best): 3", "BEST CANDIDATE", "Start bit:",
                           "physical = raw * 2 + (5)", "RANKED TOP CANDIDATES", "#1", "#2", "Report written:"):
                 self.assertIn(value, text.getvalue())

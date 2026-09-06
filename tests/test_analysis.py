@@ -73,8 +73,8 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(group.representative, self.short)
         identities = {(r.can_id, r.start_bit, r.width_bits, r.endian, r.signed) for r in ranked}
         self.assertIn((420, 16, 16, 'little', False), identities)
-        self.assertEqual(self.run.statistics()['candidates_enumerated'], 620)
-        self.assertEqual(sum(g.equivalence_count for g in {id(v): v for v in self.run._classes.values()}.values()), 620)
+        self.assertEqual(self.run.statistics()['candidates_enumerated'], 820)
+        self.assertEqual(sum(g.equivalence_count for g in {id(v): v for v in self.run._classes.values()}.values()), 820)
 
     def test_equal_correlation_is_not_equivalence(self):
         # A shifted field can have exactly proportional values, but distinct raws.
@@ -88,9 +88,9 @@ class AnalysisTests(unittest.TestCase):
         with patch('canary.discovery._prepare', side_effect=AssertionError('constant needs no Pearson')):
             self.assertEqual(discover_signal(frames, list(enumerate([1, 2, 4, 8])), run=run), [])
         stats = run.statistics()
-        self.assertEqual(stats['constant_candidates_skipped'], 620)
+        self.assertEqual(stats['constant_candidates_skipped'], 820)
         self.assertEqual(stats['unique_decoded_series'], 1)
-        self.assertEqual(stats['equivalent_candidates_grouped'], 619)
+        self.assertEqual(stats['equivalent_candidates_grouped'], 819)
 
     def test_original_correlation_and_coverage(self):
         rng = random.Random(74)

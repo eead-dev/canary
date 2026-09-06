@@ -1,0 +1,13 @@
+Candidates per CAN ID: 820
+Scenario | Searched | Unique series/classes | Grouped | Constants | Decode s | Correlation s | Total s | Signal value recovered | Exact layout recovered | Layout ambiguous | Notes
+baseline_easy | 2460 | 2441 | 19 | 0 | 3.479 | 7.101 | 15.929 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+noisy_reference | 2460 | 2441 | 19 | 0 | 3.467 | 7.169 | 16.086 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+timestamp_jitter | 2460 | 2441 | 19 | 0 | 5.821 | 7.357 | 18.601 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+correlated_distractor | 2460 | 2424 | 36 | 0 | 3.584 | 7.194 | 16.109 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+unusual_scale_offset | 2460 | 2415 | 45 | 0 | 3.492 | 7.154 | 16.063 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+long_constant_regions | 2460 | 2415 | 45 | 0 | 3.519 | 7.128 | 15.903 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+unsupported_big_endian | 2460 | 2441 | 19 | 0 | 3.399 | 12.963 | 25.411 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+unsupported_signed | 2460 | 2456 | 4 | 0 | 4.468 | 10.328 | 21.647 | True | False | True | signal values recovered; observationally equivalent layouts, exact layout unresolved
+unsupported_bit_offset | 2460 | 2460 | 0 | 0 | 4.717 | 9.518 | 21.499 | True | True | False | correct complete field ranked #1
+Total scenario runtime: 167.247 s
+Detailed results: C:\Users\eeada\OneDrive\Desktop\canary\datasets\challenges\evaluation.json

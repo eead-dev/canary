@@ -114,7 +114,7 @@ duplicate headers raise clear errors. Extra named columns are ignored.
 
 `canary/discovery.py` exposes `discover_signal(frames, reference_series)` returning
 ranked raw candidates. Reference series are lists of `(timestamp, value)` pairs.
-All 620 supported configurations are searched for each observed ID. Candidate
+All 820 supported configurations are searched for each observed ID. Candidate
 samples are sorted by timestamp and matched exactly by default. `--tolerance`
 sets an inclusive distance in seconds for greedy nearest matching, with earlier
 reference timestamps winning ties. Matches are monotonic and one-to-one; no
@@ -212,7 +212,7 @@ They invoke the existing extraction, alignment, discovery, and fitting APIs.
 | `summarize_capture(frames)` | `total_frames`, `unique_can_id_count`, `first_timestamp`, `last_timestamp`, `duration_seconds` |
 | `list_can_ids(frames)` | `can_ids`: records with `can_id`, `frame_count`, `update_frequency_hz` |
 | `inspect_can_id(frames, can_id)` | ID, count, frequency, `changing_byte_positions`, `byte_ranges` containing offset/min/max |
-| `list_candidate_fields(frames, can_id)` | ID and all 620 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
+| `list_candidate_fields(frames, can_id)` | ID and all 820 `candidates`, each with `can_id`, `byte_offset`, `start_bit`, `width_bits`, `endian`, `signed` |
 | `analyze_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `correlation`, `aligned_samples`, aligned `raw_min`/`raw_max`; optional `fit` with `include_fit=True` |
 | `search_candidates(frames, reference, top_n=10)` | `candidates_searched`, `candidates_ranked`, ranked `results` using existing discovery result fields |
 | `fit_candidate(frames, can_id, byte_offset, width_bits, reference)` | Encoding, `aligned_samples`, `fit` containing `scale`, `offset`, `rmse`, `mae`, `r_squared` |
@@ -411,7 +411,7 @@ samples, which is expected under the no-extrapolation rule.
 ## Integer bit-field encodings
 
 `CandidateSpec(start_bit, width_bits, endian="little", signed=False, can_id=None)`
-is the fundamental immutable representation. Widths are 8, 12, or 16; starts
+is the fundamental immutable representation. Widths are 8, 12, 15, or 16; starts
 range from zero through `64 - width_bits`. An optional CAN ID binds the field.
 The compatibility factory `Candidate(byte_offset, width_bits, ...)` preserves
 existing calls; it also accepts `start_bit=` instead of a byte offset.
@@ -507,7 +507,7 @@ Equality includes ordered timestamps and every raw integer; alignment/reference
 axes must also agree. Complete byte-key equality verifies matches, so hash
 collisions cannot merge different series. Equal correlation or affine-related
 raw values alone never establishes equivalence. Equivalence is capture-specific;
-unmatched samples may differ. All 620 layouts per ID remain enumerated, and every
+unmatched samples may differ. All 820 layouts per ID remain enumerated, and every
 rankable layout remains in the original ranked list, including equivalent members
 outside the requested top N. Representatives use CAN ID, start bit, width, then
 little-before-big and unsigned-before-signed, consistent with the existing stable
@@ -653,3 +653,25 @@ Challenge value recovery now includes exact or affine alternatives; exact layout
 recovery requires neither ambiguity. The real blind report contains the same
 production evidence; public definitions are consulted only in the later isolated
 validation stage.
+
+
+## Generic 15-bit fields (Ticket #16)
+
+The supported widths are now 8, 12, 15, and 16 only. Fifteen-bit fields use the
+same normalized LSB0 little-endian and MSB0 big-endian conventions. All starts
+0 through 49 are supported, unsigned or signed. For signed fields, extracted
+values with bit 14 set subtract 32768: 0x3FFF = 16383, 0x4000 = -16384,
+0x7FFF = -1. The generic extraction algorithm is unchanged.
+
+This adds 200 configurations per ID: 620 -> 820 (+32.26%). Six IDs now search
+4,920 layouts; 90 IDs search 73,800. Historical Ticket #11–15 counts above describe
+the earlier space. The legacy 44 byte-aligned configurations remain unchanged.
+Tool schema accepts 15 bits; reasoning, ranking, fitting, alignment and affine
+criteria are unchanged. Existing layouts may move down as equivalent 15-bit
+layouts enter the original width tie-break; this does not establish unique truth.
+
+The blind experiment saves all ranked encodings before isolated validation reads
+any public definition. Validation reports signal_value_recovered,
+true_layout_present, exact_layout_rank, exact_layout_uniquely_identified, and
+layout_ambiguous. The real public layout is now ranked #6, within an ambiguous
+12-layout group. See the real-data README for measured results.

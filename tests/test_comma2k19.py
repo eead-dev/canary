@@ -71,7 +71,7 @@ class ConversionTests(unittest.TestCase):
             with patch('tools.prepare_comma2k19.load_arrays', side_effect=AssertionError('blind stage must not read source arrays')):
                 result = experiment(can, reference, root/'results', min_samples=3)
             self.assertEqual(result['frame_count'], 6)
-            self.assertEqual(result['performance']['candidates_enumerated'], 620)
+            self.assertEqual(result['performance']['candidates_enumerated'], 820)
             self.assertEqual(result['inputs'][str(can)], hashlib.sha256(can.read_bytes()).hexdigest())
             self.assertTrue((root/'results/blind_results.json').exists())
             self.assertTrue((root/'results/report.html').exists())

@@ -94,7 +94,9 @@ class FittingTests(unittest.TestCase):
         self.assertEqual(len(results), 10)
         top = results[0]
         self.assertEqual((top.can_id, top.byte_offset, top.width_bits),
-                         (SPEED.can_id, SPEED.start_byte, SPEED.width * 8))
+                         (SPEED.can_id, SPEED.start_byte, 15))
+        self.assertTrue(any(c.width_bits == 16 and c.can_id == SPEED.can_id
+                            for c in [top.equivalence.representative, *top.equivalence.equivalent_candidates]))
         self.assertAlmostEqual(top.scale, SPEED.scale, delta=1e-7)
         self.assertAlmostEqual(top.offset, SPEED.offset, delta=0.001)
         self.assertLess(top.rmse, SPEED.scale / 2)

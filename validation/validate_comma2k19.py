@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 
 from canary.relationships import compare_raw_series
-from canary.observation import CandidateSpec, extract_candidate, frames_for_id, read_csv
+from canary.observation import CandidateSpec, candidate_fields, extract_candidate, frames_for_id, read_csv
 
 COMMIT = '3e92d112129507debe45364891954db70238997a'
 SOURCE = f'https://github.com/commaai/opendbc/blob/{COMMIT}/opendbc/dbc/generator/toyota/_toyota_2017.dbc'
@@ -91,11 +91,29 @@ def validate_saved(blind_path, can_path, dbc_path, signal='WHEEL_SPEED_RR'):
         mapped_offset = best['offset']+best['scale']*relationship['intercept']
         comparison['mapped_scale_error'] = mapped_scale-truth['scale']
         comparison['mapped_offset_error'] = mapped_offset-truth['offset']
+    same_layout = lambda row: all(row[k] == truth[k] for k in fields[:5])
+    saved_ranked = blind.get('ranked_candidates', [dict(rank=i, **r) for i, r in enumerate(blind['top_fitted'], 1)])
+    true_entry = next((r for r in saved_ranked if same_layout(r)), None)
+    present = true_entry is not None or (truth['width_bits'] in blind.get('supported_widths', [])
+              and truth['can_id'] in blind.get('unique_can_ids', [])
+              and any(all(getattr(c, k) == truth[k] for k in fields[:5]) for c in candidate_fields(truth['can_id'])))
+    true_fit = next((r for r in blind['top_fitted'] if same_layout(r)), None)
+    leading = blind.get('distinct_hypotheses', [])
+    ambiguous = bool(leading and leading[0].get('layout_ambiguous'))
+    comparison.update(signal_value_recovered=proxy, true_layout_present=present,
+                      exact_layout_rank=true_entry['rank'] if true_entry else None,
+                      exact_layout_uniquely_identified=bool(true_entry and true_entry['rank'] == 1 and leading and not ambiguous),
+                      layout_ambiguous=ambiguous)
+    true_group = next((h for h in leading if same_layout(h) or any(same_layout(e['candidate'])
+                      for e in h.get('affine_equivalents', [])) or
+                      any(same_layout(c) for c in h.get('exact_raw_equivalents', []))), None)
     return {'schema_version': 1, 'validated_utc': datetime.now(timezone.utc).isoformat(),
             'blind_results_sha256': hashlib.sha256(blind_path.read_bytes()).hexdigest(),
             'status': 'public_definition_proxy_confirmed' if proxy else 'not_confirmed',
             'discovered': discovered, 'ground_truth': truth, 'comparison': comparison,
             'raw_relationship': relationship,
+            'true_layout_result': true_fit,
+            'true_layout_group': true_group,
             'blind_affine_hypotheses': [{k: h[k] for k in ('rank', 'layout_ambiguous', 'ambiguity_reason', 'affine_equivalents')}
                                        for h in blind.get('distinct_hypotheses', []) if h.get('affine_equivalents')],
             'vehicle_evidence': ['https://arxiv.org/html/1812.05752v1#S4.SS1',

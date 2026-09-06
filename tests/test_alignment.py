@@ -77,7 +77,9 @@ class AlignmentTests(unittest.TestCase):
             truth = json.loads((path / "ground_truth.json").read_text())["target"]
             best = results[0]
             self.assertEqual((best.can_id, best.byte_offset * 8, best.width_bits),
-                             (truth["can_id"], truth["start_bit"], truth["width_bits"]))
+                             (truth["can_id"], truth["start_bit"], 15))
+            self.assertTrue(any(c.width_bits == truth["width_bits"] and c.start_bit == truth["start_bit"]
+                                for c in [best.equivalence.representative, *best.equivalence.equivalent_candidates]))
             self.assertGreater(best.correlation, 0.999999)
             diagnostic = best.alignment_diagnostics
             self.assertGreaterEqual(diagnostic.matched_sample_count, 5998)

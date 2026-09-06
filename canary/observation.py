@@ -129,8 +129,8 @@ class CandidateSpec:
             raise ValueError("signed must be boolean")
         if self.can_id is not None:
             _validate_id(self.can_id)
-        if type(self.width_bits) is not int or self.width_bits not in (8, 12, 16):
-            raise ValueError("candidate width must be 8, 12 or 16 bits")
+        if type(self.width_bits) is not int or self.width_bits not in (8, 12, 15, 16):
+            raise ValueError("candidate width must be 8, 12, 15 or 16 bits")
         if (type(self.start_bit) is not int
                 or not 0 <= self.start_bit <= 64 - self.width_bits):
             raise ValueError("candidate must fit within the 8-byte payload")
@@ -161,7 +161,7 @@ def byte_aligned_candidates(can_id: int | None = None) -> list[CandidateSpec]:
 
 def candidate_fields(can_id: int | None = None) -> list[CandidateSpec]:
     return [CandidateSpec(start, width, endian, signed, can_id)
-            for width in (8, 12, 16) for start in range(65 - width)
+            for width in (8, 12, 15, 16) for start in range(65 - width)
             for endian in (("little",) if width == 8 and start % 8 == 0 else ("little", "big"))
             for signed in (False, True)]
 

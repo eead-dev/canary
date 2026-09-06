@@ -17,8 +17,9 @@ class RealValidationTests(unittest.TestCase):
         self.assertEqual((field['can_id'], field['start_bit'], field['width_bits'], field['endian'], field['signed']),
                          (170, 33, 15, 'big', False))
         self.assertEqual(truth_raw((10000 << 16).to_bytes(8, 'big'), field), 10000)
+        self.assertEqual(CandidateSpec(33, 15, 'big').width_bits, 15)
         with self.assertRaises(ValueError):
-            CandidateSpec(33, 15, 'big')
+            CandidateSpec(33, 14, 'big')
         with self.assertRaises(ValueError):
             parse_signal(self.DBC, 'UNKNOWN')
 
@@ -52,6 +53,22 @@ class RealValidationTests(unittest.TestCase):
             self.assertEqual(validated['raw_relationship']['intercept'], -65536)
             self.assertAlmostEqual(validated['comparison']['mapped_scale_error'], 0)
             self.assertAlmostEqual(validated['comparison']['mapped_offset_error'], 0)
+            self.assertFalse(validated['comparison']['true_layout_present'])
+            target = dict(result['top_fitted'][0], start_bit=33, width_bits=15, signed=False)
+            result['top_fitted'].append(target)
+            result['ranked_candidates'] = [dict(rank=1, **result['top_fitted'][0]), dict(rank=6, **target)]
+            result['distinct_hypotheses'] = [dict(result['top_fitted'][0], rank=1,
+                layout_ambiguous=True, ambiguity_reason='affine_equivalent_layouts',
+                affine_equivalents=[{'candidate': {k: target[k] for k in ('can_id','start_bit','width_bits','endian','signed')}}])]
+            blind.write_text(json.dumps(result), encoding='utf-8')
+            with patch('validation.validate_comma2k19.DBC_SHA256', checksum):
+                recognized = validate_saved(blind, can, dbc)
+            self.assertTrue(recognized['comparison']['true_layout_present'])
+            self.assertTrue(recognized['comparison']['signal_value_recovered'])
+            self.assertEqual(recognized['comparison']['exact_layout_rank'], 6)
+            self.assertFalse(recognized['comparison']['exact_layout_uniquely_identified'])
+            self.assertTrue(recognized['comparison']['layout_ambiguous'])
+            self.assertEqual(recognized['true_layout_result'], target)
             self.assertEqual(set(validated['discovered']), {'can_id', 'start_bit', 'width_bits', 'endian', 'signed', 'scale', 'offset'})
             json.dumps(validated, allow_nan=False)
             with self.assertRaisesRegex(ValueError, 'DBC checksum'):

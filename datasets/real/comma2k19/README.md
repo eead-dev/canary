@@ -162,6 +162,48 @@ Timing, GNSS error and wheel-speed calibration are possible contributors, not
 causes established by this experiment. No synthetic-style quantization guarantee
 applies to these independent real sensors.
 
+## Ticket #16: generic 15-bit search
+
+The preceding Ticket #14–15 results describe the previous candidate space. With
+generic 15-bit support, the blind search now enumerates 73,800 layouts across 90
+IDs (820 per ID, previously 620). No public definition enters discovery.
+
+The public unsigned big-endian start-33 width-15 layout is **rank #6**:
+correlation 0.9986674420646725, fitted scale 0.010200090617480912,
+offset -69.66469113659188, RMSE 0.44796295043175166 km/h,
+MAE 0.32880526956485495 km/h, R-squared 0.9973366598399963, 579 aligned samples.
+These are fits against independent GNSS measurements, not copied public coefficients.
+
+All leading layouts are on 0x0AA and big-endian. Let T be the true layout's raw
+series. The following relationships hold with zero residual on the aligned capture:
+
+| Ranks | Start | Width | Signedness | Raw relationship to T |
+| --- | ---: | ---: | --- | --- |
+| 1 | 34 | 15 | signed | `2*T - 32768` |
+| 2 | 34 | 16 | signed | `4*T - 65536` |
+| 3 | 35 | 16 | unsigned | `8*T - 65535` |
+| 4, 5 | 32 | 16 | unsigned, signed | `T` |
+| 6, 7 | 33 | 15 | unsigned, signed | `T` |
+| 8, 9 | 33 | 16 | unsigned, signed | `2*T` |
+| 10 | 34 | 15 | unsigned | `2*T` |
+| 11 | 34 | 16 | unsigned | `4*T` |
+| 12 | 35 | 15 | unsigned | `4*T - 32768` |
+
+There are **12 layouts in one affine group**, spanning seven exact-series classes.
+The public layout's exact class contains four layouts. The previous 16-bit winner
+is now #2, while a 15-bit signed encoding is #1. The last-bit Pearson differences
+and existing tie-breaks remain untouched; reconstruction does not distinguish them.
+
+Post-discovery validation reports `signal_value_recovered=true`,
+`true_layout_present=true`, `exact_layout_rank=6`,
+`exact_layout_uniquely_identified=false`, `layout_ambiguous=true`.
+The HTML report shows generic ranked/affine evidence; public-layout identification
+is confined to this validation discussion and the separate validation JSON.
+
+Measured blind-analysis runtime: 12.5883 s before, 16.8313 s after. Wall-clock
+measurements vary with machine load; this is not a controlled benchmark.
+No ranking, fitting, alignment, affine criteria, or agent reasoning changed.
+
 ## Manual agent run (not executed automatically)
 
 ```powershell
