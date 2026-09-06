@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "source_snapshot_commit": "1c816e86a1e46b88c541dc129dbb829fb15097fd",
+  "commit_note": "Commit of source artifacts at curation; not an assertion of the commit used to execute each run. Original artifact bytes are preserved.",
+  "dataset": {
+    "name": "comma.ai comma2k19",
+    "repository": "https://github.com/commaai/comma2k19",
+    "commit": "4c7f1a6e1957745beadc1def0e7225f559b09a2a",
+    "capture": "Example_1/b0c9d2329ad1606b|2018-08-02--08-34-47/40",
+    "vehicle": "2017 Toyota RAV4 Platinum (model year established in post-discovery validation)",
+    "provenance": "../../../datasets/real/comma2k19/provenance.json"
+  },
+  "analysis_config": {
+    "alignment": "nearest",
+    "timestamp_tolerance": 0.02,
+    "min_samples": 300,
+    "value_column": "speed_kph",
+    "bus": 0
+  },
+  "reproduction_commands": {
+    "blind": "python -m tools.run_comma2k19",
+    "validation": "python -m validation.validate_comma2k19",
+    "agent": "python -m canary.agent_cli datasets/real/comma2k19/real_can_log.csv datasets/real/comma2k19/real_speed_reference.csv --value-column speed_kph --provider ollama --model gpt-oss:120b-cloud --alignment nearest --timestamp-tolerance 0.02 --min-samples 300",
+    "tests": "python -m unittest discover -s tests -v"
+  },
+  "command_note": "Reproduction commands using the recorded configuration; shell invocation history is not embedded in the original JSON.",
+  "agent": {
+    "provider": "ollama",
+    "model": "gpt-oss:120b-cloud",
+    "runs": [
+      "agent_run_01.json",
+      "agent_run_02.json"
+    ],
+    "status": "complete",
+    "turns_per_run": 5,
+    "retries_per_run": 0
+  },
+  "tests": {
+    "passing": 217,
+    "artifact": "tests.txt"
+  },
+  "validation_status": "public_definition_proxy_confirmed",
+  "discovery_boundary": "Blind discovery reads CAN and GNSS observations only. Pinned public DBC definitions are accessed separately after discovery for validation; affine ambiguity prevents a unique exact-layout claim.",
+  "artifacts": [
+    {
+      "filename": "blind_results.json",
+      "source_path_at_snapshot": "results/comma2k19/blind_results.json",
+      "bytes": 2134040,
+      "sha256": "3b9fc4fd0aaffa032e02d483c859555d7f5c88bef16786e5b0724625a9fddf1f"
+    },
+    {
+      "filename": "validation.json",
+      "source_path_at_snapshot": "results/comma2k19/validation.json",
+      "bytes": 36610,
+      "sha256": "cacae2a569f13e1b51c485251422eb32962167dc1aacc899cfeaee1c68556cdf"
+    },
+    {
+      "filename": "reconstructed.csv",
+      "source_path_at_snapshot": "results/comma2k19/reconstructed.csv",
+      "bytes": 34904,
+      "sha256": "55a410e5fe6644160b8bf69ded2f19a938f1abfcc326b60a93f4ca6d3fa7cdb2"
+    },
+    {
+      "filename": "report.html",
+      "source_path_at_snapshot": "results/comma2k19/report.html",
+      "bytes": 27597,
+      "sha256": "036487c12d54b86771edda0c6fdd01f594f7c79fa908987592e63577e10adf94"
+    },
+    {
+      "filename": "agent_run_01.json",
+      "source_path_at_snapshot": "results/comma2k19/public_cli_6.json",
+      "bytes": 87120,
+      "sha256": "92df42e84bc6dadd8bb3742ea9dca1c35d160a5d8222041953d59dda253465d3"
+    },
+    {
+      "filename": "agent_run_02.json",
+      "source_path_at_snapshot": "results/comma2k19/public_cli_7.json",
+      "bytes": 425735,
+      "sha256": "db84c3c9b8cec0a081cb9bfe00ef33a73e368d577e1dac89e4155b2b1d0d9fb6"
+    },
+    {
+      "filename": "tests.txt",
+      "source_path_at_snapshot": "results/public_cli_tests_verified.txt",
+      "bytes": 24886,
+      "sha256": "4d1b67e9091c40a1c4c442a868cbc6e9e480acb8e15cc97f71ff6ee277261a26"
+    }
+  ]
+}

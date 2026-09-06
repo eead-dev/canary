@@ -1,0 +1,2 @@
+# Preserve curated evidence bytes and SHA-256 checksums across operating systems.
+examples/comma2k19/evidence/* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

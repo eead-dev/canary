@@ -18,10 +18,12 @@ The dataset's dongle-to-RAV4 mapping and its paper's section IV-A identify the
 no OEM-authenticated or VIN-specific claim is made.
 
 The current definition separates a fault bit from a 15-bit wheel-speed value.
-CANary does not enumerate that width. The post-discovery reader is a deliberately
+CANary supports 8-, 12-, 15-, and 16-bit fields. The public 15-bit layout appears at rank 6 in the curated blind result, but affine-equivalent layouts prevent unique identification. The post-discovery reader is a deliberately
 limited, isolated parser for simple SG_ declarations, not a core DBC importer.
 
 `python -m validation.validate_comma2k19` verifies the saved blind CAN input hash,
 reads the definition, and checks a full-capture affine raw-value relationship.
 It does not rerank candidates or write observation files. The result distinguishes
 a wheel-speed proxy from an exact layout match.
+
+See the [curated validation](../../examples/comma2k19/evidence/validation.json) and [reproduction steps](../../docs/reproducibility.md).

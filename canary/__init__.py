@@ -1,1 +1,1 @@
-"""Generic CAN observations and byte-aligned raw candidates."""
+"""Deterministic CAN bitfield analysis and evidence-grounded agent tools."""

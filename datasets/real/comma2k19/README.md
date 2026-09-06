@@ -22,8 +22,8 @@ The six files total 4,368,168 bytes. Exact source URLs, SHA-256 hashes, input si
 output hashes, counts, timestamp basis, and exclusions are in `provenance.json`.
 No decoded CAN speed, wheel-speed array, pose estimate, video, or raw Cap'n Proto
 log was downloaded for discovery. Source downloads and the larger regenerated
-observation CSVs are git-ignored; the scripts, license, provenance, and small result
-artifacts are retained. Local source filenames avoid Windows' forbidden pipe character.
+observation CSVs are git-ignored; the scripts, license, provenance, and curated demo
+evidence are retained. Local source filenames avoid Windows' forbidden pipe character.
 
 CAN source tag **0 only** is selected explicitly. Counts are 53,800 (0), 45,000 (1),
 12,434 (128), and 24,234 (129); the latter three groups are excluded, not mixed.
@@ -41,178 +41,17 @@ GNSS timestamps must strictly increase. Do not use GNSS UTC column 3 for alignme
 Speed is the independent u-blox navigation speed in column 2, converted from m/s
 to km/h by multiplying by 3.6. Latitude/longitude are not written to observations.
 
-## Reproduce, in order
+## Current capability and evidence
 
-From the repository root, using Python 3.12+:
+CANary enumerates arbitrary-start 8-, 12-, 15-, and 16-bit signed/unsigned fields
+using little-endian and normalized big-endian numbering: 820 candidates per CAN ID.
+Blind analysis uses nearest alignment, 0.02-second tolerance, and at least 300 samples.
+The recovered 0x0AA signal family has r approximately 0.998667, RMSE 0.448 km/h,
+and R² 0.997337. Multiple raw layouts remain affine-equivalent on this capture.
+The true public 15-bit layout is present; it is not uniquely identified.
 
-```powershell
-python -m pip install -e ".[comma2k19]"
-python -m tools.prepare_comma2k19 --download --bus 0
-python -m tools.run_comma2k19
-# Only after blind_results.json exists:
-python -m validation.validate_comma2k19
-python -m unittest discover -v
-```
-
-NumPy is optional and used only for preparation (this run used NumPy 2.5.2).
-Core dependencies remain empty. Downloads are whitelisted, size-limited, pinned,
-and SHA-256 checked. Tests create tiny official-format arrays locally; there are
-no network calls. Preparation tests needing NumPy skip when the optional extra
-is absent; all tests ran with it installed for this experiment.
-
-The blind runner reads only `real_can_log.csv` and `real_speed_reference.csv`.
-It does not import preparation or validation code, read provenance, or load DBCs.
-Core `canary` files are unchanged. Dependency tests prohibit imports from the
-preparation/validation packages. The truth files are isolated under
-`validation/comma2k19/`; the validator checks the saved blind input hash before
-reading its pinned DBC. Blind completion time and a hash of the blind result are
-retained for the phase ordering audit.
-
-Analysis settings were declared before discovery: existing nearest alignment,
-20 ms tolerance, and 300 minimum matched samples. The latter rejects tiny-sample
-perfect correlations when searching many real IDs, and requires more than half
-of the 579 reference observations. No ranking, fitting, or alignment formula was
-changed. All times remain in seconds; no lag fitting or interpolation was added.
-
-## Observed results
-
-- 53,800 CAN frames, 90 unique IDs, duration 59.992699426 s.
-- 579 GNSS samples, 28.1628 to 72.2088 km/h.
-- 55,800 layouts enumerated, 7,856 rankable, 14,895 unique aligned series/classes.
-- 40,905 equivalent layouts grouped; 35,236 constant candidates skipped.
-- Blind analysis wall time about 11.77 s, including about 8.01 s decoding and 1.99 s correlation.
-- Winner: 0x0AA, normalized MSB0 start 34, signed 16-bit big-endian.
-- Pearson r 0.998667442065; scale 0.00255002265437; offset 97.4535935402.
-- RMSE 0.447962950432 km/h; MAE 0.328805269565 km/h; R-squared 0.997336659840.
-- All 579 GNSS observations matched. The selected ID has 4,974 frames, so the
-  candidate-side match ratio is 0.116405. Mean/max absolute timestamp error:
-  14.4371/19.9606 ms. Low CAN-side ratio reflects unequal sampling rates.
-
-Top distinct hypotheses (all on 0x0AA, 16-bit big-endian, with essentially identical
-RMSE/R-squared):
-
-| Flat rank | Start | Signed | Scale | Offset | Exact-raw class size |
-| --- | ---: | --- | ---: | ---: | ---: |
-| 1 | 34 | yes | 0.00255002265437 | 97.4535935402 | 1 |
-| 2 | 35 | no | 0.00127501132719 | 13.8931761905 | 1 |
-| 3 | 32 | no | 0.0102000906175 | -69.6646911366 | 2 |
-| 5 | 33 | no | 0.00510004530874 | -69.6646911366 | 2 |
-| 7 | 34 | no | 0.00255002265437 | -69.6646911366 | 1 |
-
-The first two have r 0.9986674420646726; the following entries have
-0.9986674420646725. These last-bit numerical differences are retained, not used
-to claim superior physical meaning. Exact-raw equivalence does not group different
-raw values that become identical after affine fitting. A singleton class therefore
-is not proof of a uniquely identifiable physical layout.
-
-See `results/comma2k19/blind_results.json`, `report.html`, and `reconstructed.csv`.
-
-### Affine ambiguity (Ticket #15)
-
-Blind production analysis now establishes that these five exact-raw hypotheses
-form **one affine-equivalence group with seven layouts**, without consulting any
-public definition. Let `A` be the winning start-34 signed 16-bit big-endian raw
-series. All alternatives below are on ID 0x0AA and are 16-bit big-endian:
-
-| Start | Signedness | Raw relationship to A |
-| ---: | --- | --- |
-| 32 | unsigned or signed (exactly equal) | `0.25*A + 16384` |
-| 33 | unsigned or signed (exactly equal) | `0.5*A + 32768` |
-| 34 | unsigned | `A + 65536` |
-| 35 | unsigned | `2*A + 65537` |
-
-All six other-layout comparisons have RMSE **0** and maximum absolute residual
-**0** across all **579 aligned samples**. In particular, if B is the supported
-start-32 unsigned field, `A = 4*B - 65536`. This comparison needs no 15-bit decoder.
-The supported layouts remain distinct raw-series cache entries. Their original
-correlations, ranks, reference-fit coefficients, and metrics are unchanged.
-
-These layouts produce different raw values but are related by an exact affine
-transformation on this capture. The external reference therefore cannot
-distinguish their physical reconstruction after scale/offset fitting. Structured
-hypotheses mark `layout_ambiguous=true` and
-`ambiguity_reason="affine_equivalent_layouts"`; the HTML report includes these
-relationships explicitly. Production evidence here covers the aligned samples;
-the separate public-definition validation below checks all 4,974 selected-ID frames.
-
-## Post-discovery public-definition validation
-
-The pinned opendbc definition identifies `WHEEL_SPEED_RR` at ID 170, DBC sawtooth
-start 38 = normalized MSB0 start 33, **15-bit unsigned big-endian**, scale 0.01,
-offset -67.67 km/h. Vehicle mapping and DBC composition are retained separately.
-CANary's supported widths remain 8/12/16; 15-bit truth is read only by the isolated
-validator. It is not added to discovery or CandidateSpec.
-
-For all 4,974 frames on this ID, with zero raw residual:
-
-```
-discovered_raw = 4 * defined_wheel_speed_raw - 65536
-```
-
-Thus `signal_match=true` means a confirmed *capture-specific affine wheel-speed
-proxy*, while `layout_match=false`. It is not an exact vehicle-speed DBC recovery,
-and a wheel speed is not automatically a fused vehicle-speed signal. Public
-vehicle definitions establish this comparison, not an OEM/VIN-specific certification.
-
-On the DBC raw basis, the fitted scale/offset are 0.0102000906175/-69.6646911366;
-the errors versus the public coefficients are +0.0002000906175/-1.9946911366.
-The raw winning coefficients cannot be directly compared as though they used the
-same encoding; the structured validation contains both direct and mapped errors.
-Timing, GNSS error and wheel-speed calibration are possible contributors, not
-causes established by this experiment. No synthetic-style quantization guarantee
-applies to these independent real sensors.
-
-## Ticket #16: generic 15-bit search
-
-The preceding Ticket #14–15 results describe the previous candidate space. With
-generic 15-bit support, the blind search now enumerates 73,800 layouts across 90
-IDs (820 per ID, previously 620). No public definition enters discovery.
-
-The public unsigned big-endian start-33 width-15 layout is **rank #6**:
-correlation 0.9986674420646725, fitted scale 0.010200090617480912,
-offset -69.66469113659188, RMSE 0.44796295043175166 km/h,
-MAE 0.32880526956485495 km/h, R-squared 0.9973366598399963, 579 aligned samples.
-These are fits against independent GNSS measurements, not copied public coefficients.
-
-All leading layouts are on 0x0AA and big-endian. Let T be the true layout's raw
-series. The following relationships hold with zero residual on the aligned capture:
-
-| Ranks | Start | Width | Signedness | Raw relationship to T |
-| --- | ---: | ---: | --- | --- |
-| 1 | 34 | 15 | signed | `2*T - 32768` |
-| 2 | 34 | 16 | signed | `4*T - 65536` |
-| 3 | 35 | 16 | unsigned | `8*T - 65535` |
-| 4, 5 | 32 | 16 | unsigned, signed | `T` |
-| 6, 7 | 33 | 15 | unsigned, signed | `T` |
-| 8, 9 | 33 | 16 | unsigned, signed | `2*T` |
-| 10 | 34 | 15 | unsigned | `2*T` |
-| 11 | 34 | 16 | unsigned | `4*T` |
-| 12 | 35 | 15 | unsigned | `4*T - 32768` |
-
-There are **12 layouts in one affine group**, spanning seven exact-series classes.
-The public layout's exact class contains four layouts. The previous 16-bit winner
-is now #2, while a 15-bit signed encoding is #1. The last-bit Pearson differences
-and existing tie-breaks remain untouched; reconstruction does not distinguish them.
-
-Post-discovery validation reports `signal_value_recovered=true`,
-`true_layout_present=true`, `exact_layout_rank=6`,
-`exact_layout_uniquely_identified=false`, `layout_ambiguous=true`.
-The HTML report shows generic ranked/affine evidence; public-layout identification
-is confined to this validation discussion and the separate validation JSON.
-
-Measured blind-analysis runtime: 12.5883 s before, 16.8313 s after. Wall-clock
-measurements vary with machine load; this is not a controlled benchmark.
-No ranking, fitting, alignment, affine criteria, or agent reasoning changed.
-
-## Manual agent run (not executed automatically)
-
-```powershell
-python -m canary.agent_cli datasets/real/comma2k19/real_can_log.csv datasets/real/comma2k19/real_speed_reference.csv --value-column speed_kph --provider gemini
-```
-
-Use your existing credentials and add `--model YOUR_ENABLED_MODEL_ID` if needed.
-The agent CLI now accepts global --alignment, --timestamp-tolerance and --min-samples options. For comparison
-with this experiment, use `--alignment nearest --timestamp-tolerance 0.02 --min-samples 300`;
-inspect the trace to verify that. Default exact matching will not align these
-independent timestamps. Ticket #15 adds affine ambiguity evidence and conclusion
-checks; provider behavior and the underlying discovery algorithms are unchanged.
+See the [curated demo](../../../examples/comma2k19/README.md),
+[reproduction commands](../../../docs/reproducibility.md),
+[provenance](provenance.json), and [source license](SOURCE_LICENSE).
+Generated CSVs and downloaded arrays remain ignored. Generated analysis output goes
+to ignored `results/`; selected historical evidence is preserved under `examples/`.

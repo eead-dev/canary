@@ -4,7 +4,7 @@
 
 ![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-3776AB)
 ![Core dependencies: standard library](https://img.shields.io/badge/Core-standard_library-2E7D32)
-[![Tests: 210 passing](https://img.shields.io/badge/Tests-210_passing-2E7D32)](results/live_debug_tests.txt)
+[![Tests: 217 passing](https://img.shields.io/badge/Tests-217_passing-2E7D32)](examples/comma2k19/evidence/tests.txt)
 
 > **Real public vehicle data:** CANary recovered the `0x0AA` wheel-speed signal family from a 2017 Toyota RAV4 capture, fitting an independent GNSS speed reference with **r ≈ 0.9987** and **RMSE ≈ 0.45 km/h**. Discovery used no DBC. The agent preserved layout ambiguity instead of claiming a uniquely identified encoding.
 
@@ -29,14 +29,14 @@ The public **comma2k19** example capture comes from a **2017 Toyota RAV4**. CANa
 | Pearson correlation | **0.998667442** |
 | Reconstruction RMSE | **0.447963 km/h** |
 | Reconstruction R² | **0.99733666** |
-| Live agent | Ollama `gpt-oss:120b-cloud`: **complete, 7 turns, 0 retries** |
+| Live agent | Ollama `gpt-oss:120b-cloud`: **complete in two consecutive public CLI runs, 5 turns each, 0 retries** |
 | Layout conclusion | **Ambiguous**, with 11 affine-equivalent alternatives to the selected layout |
 
 **CANary recovered the signal family and value behavior—not a uniquely identified exact DBC layout.** Multiple layouts reconstruct the reference equivalently after scale/offset fitting. The live conclusion reports high signal confidence and low layout confidence, and passes strict validation against collected deterministic evidence.
 
 These are **in-sample reconstruction metrics on one public capture**, not a held-out accuracy estimate or a guarantee across vehicles. Wheel speed is not automatically the same physical quantity as fused vehicle speed.
 
-Evidence: [live result and tool trace](results/comma2k19/live_debug_run.json) · [selectable references and model decision](results/comma2k19/live_debug_events.json) · [blind deterministic results](results/comma2k19/blind_results.json) · [post-discovery validation](results/comma2k19/validation.json) · [source provenance](datasets/real/comma2k19/provenance.json)
+Evidence: [public CLI run 1](examples/comma2k19/evidence/agent_run_01.json) · [public CLI run 2](examples/comma2k19/evidence/agent_run_02.json) · [blind results](examples/comma2k19/evidence/blind_results.json) · [post-discovery validation](examples/comma2k19/evidence/validation.json) · [demo and checksums](examples/comma2k19/README.md) · [source provenance](datasets/real/comma2k19/provenance.json)
 
 ## How it works
 
@@ -130,7 +130,7 @@ Only **after** blind discovery, compare the saved result against isolated public
 python -m validation.validate_comma2k19
 ```
 
-The validator does not feed definitions back into discovery. [Dataset provenance and preparation details](datasets/real/comma2k19/README.md) document source selection and limitations; [validation results](results/comma2k19/validation.json) distinguish recovered values from exact-layout identification.
+The validator does not feed definitions back into discovery. [Dataset provenance and preparation details](datasets/real/comma2k19/README.md) document source selection and limitations; [validation results](examples/comma2k19/evidence/validation.json) distinguish recovered values from exact-layout identification.
 
 ### 4. Run the Ollama agent on real data
 
@@ -167,12 +167,12 @@ Windows CMD credential syntax is `set "GEMINI_API_KEY=YOUR_KEY"` or `set "OPENRO
 
 ## Tests and reliability
 
-**210 tests passed** in the [recorded full-suite run](results/live_debug_tests.txt). This is a recorded result, not a live CI badge. The full count includes optional NumPy preparation tests.
+**217 tests passed** in the [recorded full-suite run](examples/comma2k19/evidence/tests.txt). This is a recorded result, not a live CI badge. The full count includes optional NumPy preparation tests.
 
 ```bat
 python -m pip install -e ".[comma2k19]"
 python -m unittest discover -s tests -v
-python -m simulator.evaluate_challenges
+python -m simulator.evaluate_challenges --regenerate
 ```
 
 The synthetic challenge suite covers noisy references, timestamp jitter, correlated distractors, unusual scale/offset, constant regions, endian/sign variants, and non-byte-aligned fields. Evaluation distinguishes signal recovery, exact-layout recovery, and ambiguity.
@@ -197,7 +197,9 @@ tools/                   Public comma2k19 preparation and blind runner
 validation/              Isolated post-discovery public-definition checks
 tests/                   Deterministic, agent, and provider regressions
 datasets/                Synthetic fixtures and real-data provenance
-results/                 Reports, reconstructions, and saved evidence
+examples/comma2k19/      Curated public demo and immutable evidence copies
+docs/                    Architecture, reproduction, and asset placeholders
+results/                 Ignored generated working output
 ```
 
 ## Design principles
@@ -225,3 +227,5 @@ Possible next steps, **not current capabilities**:
 - Multi-signal discovery workflows.
 - DBC export from validated hypotheses.
 - Live vehicle capture support.
+
+See [architecture](docs/architecture.md) and [reproducibility](docs/reproducibility.md) for boundaries and complete reproduction steps. `results/` is ignored working output; the curated public evidence lives in `examples/comma2k19/evidence/`.

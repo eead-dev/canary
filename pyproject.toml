@@ -1,7 +1,7 @@
 [project]
 name = "canary"
 version = "0.1.0"
-description = "Synthetic automotive CAN generation and observation parsing"
+description = "Deterministic CAN signal discovery and evidence-grounded agent analysis"
 requires-python = ">=3.12"
 dependencies = []
 
