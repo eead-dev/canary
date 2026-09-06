@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "validated_utc": "2026-09-06T00:55:26.294769+00:00",
+  "blind_results_sha256": "4cd850fe1267e813cefc507acf3497f4d266f5fd5de8b2450105d220350d7340",
+  "status": "public_definition_proxy_confirmed",
+  "discovered": {
+    "can_id": 170,
+    "start_bit": 34,
+    "width_bits": 16,
+    "endian": "big",
+    "signed": true,
+    "scale": 0.002550022654370228,
+    "offset": 97.4535935402154
+  },
+  "ground_truth": {
+    "source": "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/_toyota_2017.dbc",
+    "can_id": 170,
+    "start_bit": 33,
+    "dbc_start_bit": 38,
+    "width_bits": 15,
+    "endian": "big",
+    "signed": false,
+    "scale": 0.01,
+    "offset": -67.67,
+    "signal_name": "WHEEL_SPEED_RR",
+    "dbc_sha256": "818872b1c1034983f61a51460a9b175b4bfe01f3d34f537c3d21f420991a8a48"
+  },
+  "comparison": {
+    "signal_match": true,
+    "signal_match_basis": "exact nonconstant affine proxy of the public wheel-speed field on the complete selected-ID capture",
+    "layout_match": false,
+    "scale_error": -0.007449977345629772,
+    "offset_error": 165.12359354021538,
+    "notes": [
+      "Vehicle identity: dataset dongle mapping plus paper IV-A identify a 2017 Toyota RAV4 Platinum.",
+      "Pinned opendbc Toyota RAV4 2017-18 platform uses toyota_new_mc_pt_generated, which imports this definition.",
+      "This is a rear-right wheel-speed signal, not an independently established fused vehicle-speed signal.",
+      "The selected window is not the declared signal layout. Affine identity is evidence only on this capture.",
+      "Raw coefficient differences below compare different encodings; mapped coefficients put them on the defined raw basis.",
+      "No OEM/VIN-specific certification is claimed; public definitions establish the comparison."
+    ],
+    "mapped_scale_error": 0.00020009061748091188,
+    "mapped_offset_error": -1.994691136591868
+  },
+  "raw_relationship": {
+    "equation": "discovered_raw = multiplier * defined_raw + intercept",
+    "multiplier": 4.0,
+    "intercept": -65536.0,
+    "max_absolute_residual_raw": 0.0,
+    "frames_checked": 4974
+  },
+  "vehicle_evidence": [
+    "https://arxiv.org/html/1812.05752v1#S4.SS1",
+    "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/car/toyota/values.py",
+    "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/toyota_new_mc_pt.dbc"
+  ]
+}

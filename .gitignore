@@ -202,6 +202,9 @@ cython_debug/
 # .vscode/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
+datasets/real/comma2k19/source/
+datasets/real/comma2k19/real_can_log.csv
+datasets/real/comma2k19/real_speed_reference.csv
 
 # Ruff stuff:
 .ruff_cache/

@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "file": "dbc_composition.txt",
+      "bytes": 739,
+      "source_url": "https://raw.githubusercontent.com/commaai/opendbc/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/toyota_new_mc_pt.dbc",
+      "sha256": "1071a58c8a7fe70f70914c99073f5ef25dc2145256d66862cf81deac3e96a522"
+    },
+    {
+      "file": "SOURCE_LICENSE",
+      "bytes": 1059,
+      "source_url": "https://raw.githubusercontent.com/commaai/opendbc/3e92d112129507debe45364891954db70238997a/LICENSE",
+      "sha256": "6543c4a66b46affddae1b9ae1e1992687f0b7191e74ba3a7235388b9f42a6d13"
+    },
+    {
+      "file": "toyota_2017.dbc",
+      "bytes": 27735,
+      "source_url": "https://raw.githubusercontent.com/commaai/opendbc/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/_toyota_2017.dbc",
+      "sha256": "818872b1c1034983f61a51460a9b175b4bfe01f3d34f537c3d21f420991a8a48"
+    },
+    {
+      "file": "vehicle_definitions.txt",
+      "bytes": 25692,
+      "source_url": "https://raw.githubusercontent.com/commaai/opendbc/3e92d112129507debe45364891954db70238997a/opendbc/car/toyota/values.py",
+      "sha256": "4ff30309d61ef4c9848bb9c5e2fb34f96ba576f5b87a20c9eb1f8f5412a56d9b"
+    }
+  ],
+  "commit": "3e92d112129507debe45364891954db70238997a",
+  "purpose": "Retrieved only after saved blind discovery; public vehicle-definition validation"
+}

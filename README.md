@@ -593,3 +593,14 @@ python -m canary.agent_cli datasets/challenges/correlated_distractor/can_log.csv
 For local evidence-only exercises use `--dry-run`. The reasoning regression tests
 cover unique layout, width ambiguity, a correlated distractor, noisy reference,
 signedness ambiguity, fabricated evidence, and malformed-conclusion correction.
+
+## Real-data blind experiment: comma2k19
+
+The reproducible real-data experiment is documented in
+[datasets/real/comma2k19/README.md](datasets/real/comma2k19/README.md).
+It uses only the official one-minute example's raw CAN and independent u-blox
+speed arrays. NumPy is an optional preparation extra; core analysis is unchanged.
+Preparation, blind discovery, and public-definition validation are separate stages.
+The result recovers a rear-right wheel-speed proxy but not the exact 15-bit public
+DBC layout. Source licenses, pinned hashes, limitations, results, and the manual
+Gemini command are documented with the experiment.
