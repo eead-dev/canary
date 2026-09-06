@@ -5,6 +5,7 @@ from dataclasses import asdict
 import json
 
 from .agent import run_agent
+from .analysis_config import AnalysisConfig
 from .llm.fake import FakeProvider
 
 
@@ -21,9 +22,13 @@ def main() -> None:
     parser.add_argument("--max-retries", type=int, default=3)
     parser.add_argument("--base-delay-seconds", type=float, default=1.0)
     parser.add_argument("--max-delay-seconds", type=float, default=8.0)
+    parser.add_argument('--alignment', choices=('exact', 'nearest'), default='exact')
+    parser.add_argument('--timestamp-tolerance', type=float, default=0.0)
+    parser.add_argument('--min-samples', type=int, default=3)
     args = parser.parse_args()
     provider = None
     try:
+        analysis_config = AnalysisConfig(args.alignment, args.timestamp_tolerance, args.min_samples)
         if args.dry_run or args.provider == "fake":
             provider = FakeProvider()
         else:
@@ -32,7 +37,7 @@ def main() -> None:
         result = run_agent(args.can_log, args.reference, args.value_column, provider,
                            max_turns=args.max_turns, max_tool_calls=args.max_tool_calls,
                            max_retries=args.max_retries, base_delay_seconds=args.base_delay_seconds,
-                           max_delay_seconds=args.max_delay_seconds)
+                           max_delay_seconds=args.max_delay_seconds, analysis_config=analysis_config)
         print(json.dumps(asdict(result), indent=2, allow_nan=False))
         if result.status != "complete":
             raise SystemExit(1)

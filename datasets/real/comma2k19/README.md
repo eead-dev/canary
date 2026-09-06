@@ -211,8 +211,8 @@ python -m canary.agent_cli datasets/real/comma2k19/real_can_log.csv datasets/rea
 ```
 
 Use your existing credentials and add `--model YOUR_ENABLED_MODEL_ID` if needed.
-The existing agent CLI has no global alignment/min-sample options. For comparison
-with this experiment, its tool calls must use `tolerance=0.02, min_samples=300`;
+The agent CLI now accepts global --alignment, --timestamp-tolerance and --min-samples options. For comparison
+with this experiment, use `--alignment nearest --timestamp-tolerance 0.02 --min-samples 300`;
 inspect the trace to verify that. Default exact matching will not align these
 independent timestamps. Ticket #15 adds affine ambiguity evidence and conclusion
 checks; provider behavior and the underlying discovery algorithms are unchanged.

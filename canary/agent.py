@@ -10,6 +10,7 @@ from .llm.errors import provider_error
 from .llm.retry import RetryingProvider
 from .observation import Candidate, CandidateSpec, read_csv
 from .analysis import AnalysisRun
+from .analysis_config import AnalysisConfig
 from .reference import read_reference
 
 
@@ -149,12 +150,16 @@ class AgentRun:
     error: dict | None = None
     retry_count: int = 0
     provider_attempts: int = 0
+    analysis_config: AnalysisConfig = AnalysisConfig()
 
 
 class ToolDispatcher:
-    def __init__(self, frames, reference):
+    def __init__(self, frames, reference, analysis_config=None):
         self.frames, self.reference = frames, reference
-        self.runs = {}
+        self.analysis_config = AnalysisConfig() if analysis_config is None else analysis_config
+        if not isinstance(self.analysis_config, AnalysisConfig):
+            raise ValueError('analysis_config must be an AnalysisConfig')
+        self.run = None
         self.functions = {name: getattr(tools, name) for name in TOOL_SCHEMAS}
 
     def dispatch(self, call: ToolCall) -> dict:
@@ -169,11 +174,14 @@ class ToolDispatcher:
             kwargs = dict(call.arguments)
             if call.name in ("search_candidates", "analyze_candidate", "fit_candidate"):
                 kwargs["reference"] = self.reference
+                # Legacy valid tool options are accepted but session settings win.
+                kwargs.update(self.analysis_config.tool_arguments())
             if call.name in ("search_candidates", "analyze_candidate", "fit_candidate", "inspect_can_id"):
-                tolerance = kwargs.get("tolerance", 0.0)
-                if tolerance not in self.runs:
-                    self.runs[tolerance] = AnalysisRun(self.frames, self.reference, tolerance=tolerance)
-                kwargs["run"] = self.runs[tolerance]
+                if self.run is None:
+                    self.run = AnalysisRun(self.frames, self.reference,
+                                           alignment=self.analysis_config.alignment,
+                                           tolerance=self.analysis_config.timestamp_tolerance)
+                kwargs["run"] = self.run
             result = self.functions[call.name](self.frames, **kwargs)
             json.dumps(result, allow_nan=False)
             return {"ok": True, "result": result}
@@ -252,7 +260,10 @@ def checked_conclusion(data: dict, name: str, trace: list[dict]) -> AgentConclus
 def run_agent(can_log, reference_path, value_column: str, provider: ModelProvider, *,
               max_turns: int = 12, max_tool_calls: int = 30, max_retries: int = 3,
               base_delay_seconds: float = 1.0, max_delay_seconds: float = 8.0,
-              retry_sleep=None, retry_jitter=None) -> AgentRun:
+              retry_sleep=None, retry_jitter=None, analysis_config=None) -> AgentRun:
+    analysis_config = AnalysisConfig() if analysis_config is None else analysis_config
+    if not isinstance(analysis_config, AnalysisConfig):
+        raise ValueError('analysis_config must be an AnalysisConfig')
     if any(type(v) is not int or v < 1 for v in (max_turns, max_tool_calls)):
         raise ValueError("agent limits must be positive integers")
     provider = RetryingProvider(provider, max_retries=max_retries,
@@ -261,12 +272,15 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
 
     def outcome(status, conclusion, trace, turns, error=None):
         return AgentRun(status, conclusion, trace, turns, error,
-                        provider.retry_count, provider.provider_attempts)
+                        provider.retry_count, provider.provider_attempts, analysis_config)
     validate(value_column, CONCLUSION_SCHEMA["properties"]["reference_name"], "reference_name")
-    dispatcher = ToolDispatcher(read_csv(can_log), read_reference(reference_path, value_column))
+    dispatcher = ToolDispatcher(read_csv(can_log), read_reference(reference_path, value_column), analysis_config)
     declarations = [{"name": name, "description": getattr(tools, name).__doc__ or name,
-                     "parameters": schema} for name, schema in TOOL_SCHEMAS.items()]
-    messages = [Message("user", {"reference_name": value_column, "task": "Investigate the supplied capture using tools."})]
+                     "parameters": {**schema, 'properties': {k: v for k, v in schema['properties'].items()
+                                                              if k not in OPTIONS}}}
+                    for name, schema in TOOL_SCHEMAS.items()]
+    messages = [Message("user", {"reference_name": value_column, "task": "Investigate the supplied capture using tools.",
+                                 'analysis_config': asdict(analysis_config)})]
     trace, seen = [], set()
     for turn in range(1, max_turns + 1):
         try:
@@ -296,6 +310,8 @@ def run_agent(can_log, reference_path, value_column: str, provider: ModelProvide
                     seen.add(call.id)
                     output = dispatcher.dispatch(call)
                 event = {"id": call.id, "name": call.name, "arguments": call.arguments, "output": output}
+                if call.name in ('search_candidates', 'analyze_candidate', 'fit_candidate'):
+                    event['analysis_config'] = 'session'
                 trace.append(event)
                 messages.append(Message("tool", event))
         except (ValueError, TypeError, KeyError, OverflowError) as exc:

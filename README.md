@@ -675,3 +675,62 @@ any public definition. Validation reports signal_value_recovered,
 true_layout_present, exact_layout_rank, exact_layout_uniquely_identified, and
 layout_ambiguous. The real public layout is now ranked #6, within an ambiguous
 12-layout group. See the real-data README for measured results.
+
+
+## Agent session analysis configuration (Ticket #17)
+
+`AnalysisConfig` in `canary.analysis_config` is immutable. Its fields are
+`alignment`, `timestamp_tolerance`, and `min_samples`. Defaults are exact, 0.0,
+and 3. Tolerance must be finite and nonnegative; minimum samples must be an
+integer of at least 3, as required by the existing analysis APIs.
+
+Pass it once as `run_agent(..., analysis_config=AnalysisConfig("nearest", 0.02, 300))`.
+The dispatcher injects these settings into search_candidates, analyze_candidate,
+and fit_candidate and shares one AnalysisRun. Alignment-independent tools retain
+their behavior. Direct non-agent tool APIs are unchanged.
+
+The model-facing tool declarations omit per-call tolerance and min_samples.
+Legacy valid tool arguments are accepted by the dispatcher but session settings
+always replace them; malformed arguments still produce validation errors.
+An alignment argument in a model call is rejected as an unknown property.
+The model cannot switch analysis configuration during the session. Explicit
+exact mode remains exact even with a positive tolerance; there is no implicit
+nearest-mode switch in the agent path.
+
+Final JSON includes one analysis_config object, including on unsuccessful runs.
+Relevant trace events use `"analysis_config": "session"`, referring to that object.
+The original requested arguments remain visible in the trace. The initial model
+context also states the active configuration, but the model does not supply it.
+Conclusion validation and reasoning strategy are unchanged.
+
+Windows CMD, from the repository root, with existing Gemini credentials:
+
+Synthetic baseline:
+
+```bat
+python -m canary.agent_cli ^
+  datasets\synthetic\can_log.csv ^
+  datasets\synthetic\speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider gemini ^
+  --alignment exact ^
+  --timestamp-tolerance 0 ^
+  --min-samples 3
+```
+
+Real capture:
+
+```bat
+python -m canary.agent_cli ^
+  datasets\real\comma2k19\real_can_log.csv ^
+  datasets\real\comma2k19\real_speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider gemini ^
+  --alignment nearest ^
+  --timestamp-tolerance 0.02 ^
+  --min-samples 300
+```
+
+These commands retain the existing model default. Add --model with an enabled
+model ID if needed. No live model calls were made for this ticket. For offline
+execution, use --provider fake or --dry-run.
