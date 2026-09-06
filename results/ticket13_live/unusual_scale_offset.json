@@ -1,0 +1,6296 @@
+{
+  "status": "complete",
+  "conclusion": {
+    "reference_name": "value",
+    "selected_candidate": {
+      "can_id": 420,
+      "byte_offset": 2,
+      "signed": false,
+      "endian": "little",
+      "width_bits": 12,
+      "start_bit": 16
+    },
+    "correlation": 0.999999939175983,
+    "scale": 0.0370012330203364,
+    "offset": -12.5026551175933,
+    "rmse": 0.0102677137646024,
+    "mae": 0.0087549117562741,
+    "r_squared": 0.99999987835197,
+    "confidence": "high",
+    "rationale": "CAN ID 420 starting at bit 16 strongly correlates with the reference 'value' (r = 0.99999994, R\u00b2 = 0.99999988, RMSE = 0.0103, MAE = 0.0088, scale \u2248 0.037001, offset \u2248 -12.5027) across all 6000 aligned samples. Because the raw data values range from 338 to 2771 (fitting completely within 12 bits without setting sign or upper bits), this capture cannot distinguish the exact layouts between 12-bit unsigned, 16-bit unsigned, and 16-bit signed little-endian formats at bit 16. Layout ambiguity is noted accordingly.",
+    "signal_confidence": "high",
+    "layout_confidence": "low",
+    "layout_ambiguous": true,
+    "equivalent_layouts": [
+      {
+        "can_id": 420,
+        "start_bit": 16,
+        "endian": "little",
+        "signed": false,
+        "width_bits": 16,
+        "byte_offset": 2
+      },
+      {
+        "signed": true,
+        "endian": "little",
+        "can_id": 420,
+        "start_bit": 16,
+        "byte_offset": 2,
+        "width_bits": 16
+      }
+    ],
+    "alternative_candidates": [
+      {
+        "r_squared": 0.99999977893753,
+        "reason": "1-bit shifted candidate with slightly inferior correlation and reconstruction error.",
+        "candidate": {
+          "start_bit": 15,
+          "width_bits": 16,
+          "can_id": 420,
+          "endian": "little",
+          "signed": false
+        },
+        "rmse": 0.0138413586574599,
+        "mae": 0.0113595550279558,
+        "correlation": 0.999999889468759
+      },
+      {
+        "candidate": {
+          "width_bits": 8,
+          "signed": false,
+          "endian": "little",
+          "start_bit": 20,
+          "can_id": 420
+        },
+        "rmse": 0.171111956254597,
+        "mae": 0.148965154667606,
+        "correlation": 0.999983107576573,
+        "reason": "8-bit candidate exhibiting noticeable quantization error and higher RMSE/MAE.",
+        "r_squared": 0.999966215438501
+      }
+    ]
+  },
+  "trace": [
+    {
+      "id": "1",
+      "name": "summarize_capture",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "total_frames": 18000,
+          "unique_can_id_count": 3,
+          "first_timestamp": 0.0,
+          "last_timestamp": 59.99,
+          "duration_seconds": 59.99
+        }
+      }
+    },
+    {
+      "id": "2",
+      "name": "list_can_ids",
+      "arguments": {},
+      "output": {
+        "ok": true,
+        "result": {
+          "can_ids": [
+            {
+              "can_id": 420,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 790,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            },
+            {
+              "can_id": 1063,
+              "frame_count": 6000,
+              "update_frequency_hz": 100.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "3",
+      "name": "search_candidates",
+      "arguments": {
+        "top_n": 20
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "candidates_searched": 1860,
+          "candidates_ranked": 1860,
+          "performance": {
+            "candidates_enumerated": 1860,
+            "unique_decoded_series": 1833,
+            "equivalence_classes": 1833,
+            "equivalent_candidates_grouped": 27,
+            "constant_candidates_skipped": 0,
+            "decoding_seconds": 3.2805280999600654,
+            "correlation_seconds": 6.543880099663511,
+            "total_seconds": 10.036704500002088
+          },
+          "results": [
+            {
+              "rank": 1,
+              "can_id": 420,
+              "byte_offset": 2,
+              "width_bits": 12,
+              "correlation": 0.9999999391759833,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 16,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 16,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 2,
+              "can_id": 420,
+              "byte_offset": 2,
+              "width_bits": 16,
+              "correlation": 0.9999999391759833,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 16,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 16,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 3,
+              "can_id": 420,
+              "byte_offset": 2,
+              "width_bits": 16,
+              "correlation": 0.9999999391759833,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 16,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 16,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 16,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 4,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.999999889468759,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 15,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 15,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 15,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 5,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.999999889468759,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 15,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 15,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 15,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 6,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.9999998762673354,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 14,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 14,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 14,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 7,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.9999998762673354,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 14,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 14,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 14,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 8,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.9999998732642363,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 13,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 13,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 13,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 9,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.9999998732642363,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 13,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 13,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 13,
+                    "width_bits": 16,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 10,
+              "can_id": 420,
+              "width_bits": 16,
+              "correlation": 0.9999998726056061,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 12,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 12,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [],
+                "equivalence_count": 1,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 11,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.999999735983696,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 17,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 17,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 17,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 12,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.999999735983696,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 17,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 17,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 17,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 13,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999990504766443,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 18,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 18,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 18,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 14,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999990504766443,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 18,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 18,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 18,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 15,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999960489581352,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 19,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 19,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 19,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 16,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999960489581352,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 19,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 19,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 19,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 17,
+              "can_id": 420,
+              "width_bits": 8,
+              "correlation": 0.9999831075765735,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 20,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 20,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 18,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999831075765735,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 20,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 20,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 19,
+              "can_id": 420,
+              "width_bits": 12,
+              "correlation": 0.9999831075765735,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": true,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 20,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 20,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": false,
+                    "can_id": 420
+                  },
+                  {
+                    "start_bit": 20,
+                    "width_bits": 12,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 3,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            },
+            {
+              "rank": 20,
+              "can_id": 420,
+              "width_bits": 8,
+              "correlation": 0.9999389322782448,
+              "aligned_samples": 6000,
+              "endian": "little",
+              "signed": false,
+              "alignment_diagnostics": {
+                "candidate_sample_count": 6000,
+                "matched_sample_count": 6000,
+                "unmatched_sample_count": 0,
+                "match_ratio": 1.0,
+                "mean_absolute_timestamp_error": 0.0,
+                "max_absolute_timestamp_error": 0.0
+              },
+              "start_bit": 21,
+              "equivalence": {
+                "representative": {
+                  "start_bit": 21,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                "equivalent_candidates": [
+                  {
+                    "start_bit": 21,
+                    "width_bits": 8,
+                    "endian": "little",
+                    "signed": true,
+                    "can_id": 420
+                  }
+                ],
+                "equivalence_count": 2,
+                "evidence": "identical decoded time series on this aligned capture"
+              }
+            }
+          ],
+          "hypotheses": [
+            {
+              "rank": 1,
+              "representative": {
+                "start_bit": 16,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999999391759833,
+              "equivalence_count": 3,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 16,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                {
+                  "start_bit": 16,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 4,
+              "representative": {
+                "start_bit": 15,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.999999889468759,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 15,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 6,
+              "representative": {
+                "start_bit": 14,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999998762673354,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 14,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 8,
+              "representative": {
+                "start_bit": 13,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999998732642363,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 13,
+                  "width_bits": 16,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 10,
+              "representative": {
+                "start_bit": 12,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999998726056061,
+              "equivalence_count": 1,
+              "equivalent_candidates": [],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 11,
+              "representative": {
+                "start_bit": 17,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.999999735983696,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 17,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 13,
+              "representative": {
+                "start_bit": 18,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999990504766443,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 18,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 15,
+              "representative": {
+                "start_bit": 19,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999960489581352,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 19,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 17,
+              "representative": {
+                "start_bit": 20,
+                "width_bits": 8,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999831075765735,
+              "equivalence_count": 3,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 20,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": false,
+                  "can_id": 420
+                },
+                {
+                  "start_bit": 20,
+                  "width_bits": 12,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 20,
+              "representative": {
+                "start_bit": 21,
+                "width_bits": 8,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9999389322782448,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 21,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 22,
+              "representative": {
+                "start_bit": 22,
+                "width_bits": 8,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9997454098552467,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 22,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 24,
+              "representative": {
+                "start_bit": 23,
+                "width_bits": 8,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9990589458776735,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 23,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 26,
+              "representative": {
+                "start_bit": 24,
+                "width_bits": 8,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9963802148739888,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 24,
+                  "width_bits": 8,
+                  "endian": "little",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 28,
+              "representative": {
+                "start_bit": 25,
+                "width_bits": 8,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9933549331137116,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 25,
+                  "width_bits": 8,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 30,
+              "representative": {
+                "start_bit": 26,
+                "width_bits": 8,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.992644909425919,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 26,
+                  "width_bits": 8,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 32,
+              "representative": {
+                "start_bit": 27,
+                "width_bits": 8,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9924313499058038,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 27,
+                  "width_bits": 8,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 34,
+              "representative": {
+                "start_bit": 24,
+                "width_bits": 12,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9923954645173069,
+              "equivalence_count": 3,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 24,
+                  "width_bits": 12,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                },
+                {
+                  "start_bit": 28,
+                  "width_bits": 8,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 37,
+              "representative": {
+                "start_bit": 25,
+                "width_bits": 12,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9923744005068417,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 25,
+                  "width_bits": 12,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 39,
+              "representative": {
+                "start_bit": 26,
+                "width_bits": 12,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9923730677071101,
+              "equivalence_count": 2,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 26,
+                  "width_bits": 12,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            },
+            {
+              "rank": 41,
+              "representative": {
+                "start_bit": 24,
+                "width_bits": 16,
+                "endian": "big",
+                "signed": false,
+                "can_id": 420
+              },
+              "correlation": 0.9923718438070024,
+              "equivalence_count": 3,
+              "equivalent_candidates": [
+                {
+                  "start_bit": 24,
+                  "width_bits": 16,
+                  "endian": "big",
+                  "signed": true,
+                  "can_id": 420
+                },
+                {
+                  "start_bit": 28,
+                  "width_bits": 12,
+                  "endian": "big",
+                  "signed": false,
+                  "can_id": 420
+                }
+              ],
+              "evidence": "identical decoded time series on this aligned capture"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "name": "inspect_can_id",
+      "arguments": {
+        "can_id": 420
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "frame_count": 6000,
+          "update_frequency_hz": 100.0,
+          "changing_byte_positions": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "byte_ranges": [
+            {
+              "byte_offset": 0,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 1,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 2,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 3,
+              "raw_min": 1,
+              "raw_max": 10
+            },
+            {
+              "byte_offset": 4,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 5,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 6,
+              "raw_min": 0,
+              "raw_max": 255
+            },
+            {
+              "byte_offset": 7,
+              "raw_min": 0,
+              "raw_max": 255
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5",
+      "name": "list_candidate_fields",
+      "arguments": {
+        "can_id": 420
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "candidates": [
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 53,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 53,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 53,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 53,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 54,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 54,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 54,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 54,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 55,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 55,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 55,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 55,
+              "width_bits": 8,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 56,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 7
+            },
+            {
+              "can_id": 420,
+              "start_bit": 56,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 7
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 49,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 50,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 51,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 52,
+              "width_bits": 12,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 0,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 0
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 1,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 2,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 3,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 4,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 5,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 6,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 7,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 8,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 1
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 9,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 10,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 11,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 12,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 13,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 14,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 16,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 2
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 17,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 18,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 19,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 20,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 21,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 22,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 23,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 24,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 3
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 25,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 26,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 27,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 28,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 29,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 30,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 31,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 32,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 4
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 33,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 34,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 35,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 36,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 37,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 38,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 39,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 40,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 5
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 41,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 42,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 43,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 44,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 45,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 46,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false
+            },
+            {
+              "can_id": 420,
+              "start_bit": 47,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": true,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": false,
+              "byte_offset": 6
+            },
+            {
+              "can_id": 420,
+              "start_bit": 48,
+              "width_bits": 16,
+              "endian": "big",
+              "signed": true,
+              "byte_offset": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6",
+      "name": "analyze_candidate",
+      "arguments": {
+        "byte_offset": 2,
+        "signed": false,
+        "endian": "little",
+        "start_bit": 16,
+        "can_id": 420,
+        "width_bits": 12,
+        "include_fit": true
+      },
+      "output": {
+        "ok": false,
+        "error": {
+          "code": "invalid_arguments",
+          "message": "provide start_bit or byte_offset, not both"
+        }
+      }
+    },
+    {
+      "id": "7",
+      "name": "analyze_candidate",
+      "arguments": {
+        "include_fit": true,
+        "width_bits": 16,
+        "start_bit": 16,
+        "signed": false,
+        "endian": "little",
+        "byte_offset": 2,
+        "can_id": 420
+      },
+      "output": {
+        "ok": false,
+        "error": {
+          "code": "invalid_arguments",
+          "message": "provide start_bit or byte_offset, not both"
+        }
+      }
+    },
+    {
+      "id": "8",
+      "name": "analyze_candidate",
+      "arguments": {
+        "endian": "little",
+        "width_bits": 16,
+        "byte_offset": 2,
+        "can_id": 420,
+        "include_fit": true,
+        "start_bit": 16,
+        "signed": true
+      },
+      "output": {
+        "ok": false,
+        "error": {
+          "code": "invalid_arguments",
+          "message": "provide start_bit or byte_offset, not both"
+        }
+      }
+    },
+    {
+      "id": "9",
+      "name": "analyze_candidate",
+      "arguments": {
+        "include_fit": true,
+        "width_bits": 12,
+        "start_bit": 16,
+        "can_id": 420,
+        "endian": "little",
+        "signed": false
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "start_bit": 16,
+          "width_bits": 12,
+          "endian": "little",
+          "signed": false,
+          "byte_offset": 2,
+          "correlation": 0.9999999391759833,
+          "aligned_samples": 6000,
+          "raw_min": 338,
+          "raw_max": 2771,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 6000,
+            "matched_sample_count": 6000,
+            "unmatched_sample_count": 0,
+            "match_ratio": 1.0,
+            "mean_absolute_timestamp_error": 0.0,
+            "max_absolute_timestamp_error": 0.0
+          },
+          "equivalence": {
+            "representative": {
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "can_id": 420
+            },
+            "equivalent_candidates": [
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": true,
+                "can_id": 420
+              }
+            ],
+            "equivalence_count": 3,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.037001233020336394,
+            "offset": -12.502655117593335,
+            "rmse": 0.010267713764602353,
+            "mae": 0.008754911756274103,
+            "r_squared": 0.99999987835197
+          }
+        }
+      }
+    },
+    {
+      "id": "10",
+      "name": "analyze_candidate",
+      "arguments": {
+        "start_bit": 16,
+        "endian": "little",
+        "signed": false,
+        "width_bits": 16,
+        "include_fit": true,
+        "can_id": 420
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "start_bit": 16,
+          "width_bits": 16,
+          "endian": "little",
+          "signed": false,
+          "byte_offset": 2,
+          "correlation": 0.9999999391759833,
+          "aligned_samples": 6000,
+          "raw_min": 338,
+          "raw_max": 2771,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 6000,
+            "matched_sample_count": 6000,
+            "unmatched_sample_count": 0,
+            "match_ratio": 1.0,
+            "mean_absolute_timestamp_error": 0.0,
+            "max_absolute_timestamp_error": 0.0
+          },
+          "equivalence": {
+            "representative": {
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "can_id": 420
+            },
+            "equivalent_candidates": [
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": true,
+                "can_id": 420
+              }
+            ],
+            "equivalence_count": 3,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.037001233020336394,
+            "offset": -12.502655117593335,
+            "rmse": 0.010267713764602353,
+            "mae": 0.008754911756274103,
+            "r_squared": 0.99999987835197
+          }
+        }
+      }
+    },
+    {
+      "id": "11",
+      "name": "analyze_candidate",
+      "arguments": {
+        "can_id": 420,
+        "start_bit": 16,
+        "include_fit": true,
+        "signed": true,
+        "endian": "little",
+        "width_bits": 16
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "start_bit": 16,
+          "width_bits": 16,
+          "endian": "little",
+          "signed": true,
+          "byte_offset": 2,
+          "correlation": 0.9999999391759833,
+          "aligned_samples": 6000,
+          "raw_min": 338,
+          "raw_max": 2771,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 6000,
+            "matched_sample_count": 6000,
+            "unmatched_sample_count": 0,
+            "match_ratio": 1.0,
+            "mean_absolute_timestamp_error": 0.0,
+            "max_absolute_timestamp_error": 0.0
+          },
+          "equivalence": {
+            "representative": {
+              "start_bit": 16,
+              "width_bits": 12,
+              "endian": "little",
+              "signed": false,
+              "can_id": 420
+            },
+            "equivalent_candidates": [
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              {
+                "start_bit": 16,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": true,
+                "can_id": 420
+              }
+            ],
+            "equivalence_count": 3,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.037001233020336394,
+            "offset": -12.502655117593335,
+            "rmse": 0.010267713764602353,
+            "mae": 0.008754911756274103,
+            "r_squared": 0.99999987835197
+          }
+        }
+      }
+    },
+    {
+      "id": "12",
+      "name": "analyze_candidate",
+      "arguments": {
+        "can_id": 420,
+        "include_fit": true,
+        "endian": "little",
+        "signed": false,
+        "width_bits": 16,
+        "start_bit": 15
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "start_bit": 15,
+          "width_bits": 16,
+          "endian": "little",
+          "signed": false,
+          "correlation": 0.999999889468759,
+          "aligned_samples": 6000,
+          "raw_min": 676,
+          "raw_max": 5543,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 6000,
+            "matched_sample_count": 6000,
+            "unmatched_sample_count": 0,
+            "match_ratio": 1.0,
+            "mean_absolute_timestamp_error": 0.0,
+            "max_absolute_timestamp_error": 0.0
+          },
+          "equivalence": {
+            "representative": {
+              "start_bit": 15,
+              "width_bits": 16,
+              "endian": "little",
+              "signed": false,
+              "can_id": 420
+            },
+            "equivalent_candidates": [
+              {
+                "start_bit": 15,
+                "width_bits": 16,
+                "endian": "little",
+                "signed": true,
+                "can_id": 420
+              }
+            ],
+            "equivalence_count": 2,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.01850044864500155,
+            "offset": -12.511493234708404,
+            "rmse": 0.013841358657459883,
+            "mae": 0.011359555027955777,
+            "r_squared": 0.9999997789375301
+          }
+        }
+      }
+    },
+    {
+      "id": "13",
+      "name": "analyze_candidate",
+      "arguments": {
+        "include_fit": true,
+        "can_id": 420,
+        "start_bit": 20,
+        "width_bits": 8,
+        "signed": false,
+        "endian": "little"
+      },
+      "output": {
+        "ok": true,
+        "result": {
+          "can_id": 420,
+          "start_bit": 20,
+          "width_bits": 8,
+          "endian": "little",
+          "signed": false,
+          "correlation": 0.9999831075765735,
+          "aligned_samples": 6000,
+          "raw_min": 21,
+          "raw_max": 173,
+          "alignment_diagnostics": {
+            "candidate_sample_count": 6000,
+            "matched_sample_count": 6000,
+            "unmatched_sample_count": 0,
+            "match_ratio": 1.0,
+            "mean_absolute_timestamp_error": 0.0,
+            "max_absolute_timestamp_error": 0.0
+          },
+          "equivalence": {
+            "representative": {
+              "start_bit": 20,
+              "width_bits": 8,
+              "endian": "little",
+              "signed": false,
+              "can_id": 420
+            },
+            "equivalent_candidates": [
+              {
+                "start_bit": 20,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": false,
+                "can_id": 420
+              },
+              {
+                "start_bit": 20,
+                "width_bits": 12,
+                "endian": "little",
+                "signed": true,
+                "can_id": 420
+              }
+            ],
+            "equivalence_count": 3,
+            "evidence": "identical decoded time series on this aligned capture"
+          },
+          "fit": {
+            "scale": 0.5926386270265731,
+            "offset": -12.308018844868073,
+            "rmse": 0.17111195625459671,
+            "mae": 0.14896515466760643,
+            "r_squared": 0.9999662154385006
+          }
+        }
+      }
+    }
+  ],
+  "turns": 6,
+  "error": null,
+  "retry_count": 0,
+  "provider_attempts": 6
+}
