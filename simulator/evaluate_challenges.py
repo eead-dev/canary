@@ -8,7 +8,7 @@ from time import perf_counter
 
 from canary.discovery import discover_signal
 from canary.fitting import fit_ranked
-from canary.observation import candidate_fields, read_csv, unique_ids
+from canary.observation import CandidateSpec, candidate_fields, read_csv, unique_ids
 from canary.reference import read_reference
 from canary.analysis import AnalysisRun
 
@@ -30,14 +30,18 @@ def evaluate_scenario(directory: Path) -> dict:
     run = AnalysisRun(frames, reference, alignment=mode, tolerance=tolerance)
     ranked = discover_signal(frames, reference, alignment=mode, tolerance=tolerance, run=run)
     fitted = fit_ranked(frames, reference, ranked[:5], alignment=mode, tolerance=tolerance, run=run)
+    best = ranked[0] if ranked else None
+    ambiguity = (run.ambiguity(CandidateSpec(best.start_bit, best.width_bits, best.endian, best.signed, best.can_id))
+                 if best else None)
     # Ground truth is read only after engine execution and never passed into it.
     metadata = json.loads((directory / "ground_truth.json").read_text(encoding="utf-8"))
     field = metadata["target"]
     top = ranked[0] if ranked else None
     recovered = top is not None and matches_field(top, field)
     members = ([top.equivalence.representative, *top.equivalence.equivalent_candidates] if top else [])
-    signal_value_recovered = any(matches_field(c, field) for c in members)
-    layout_ambiguous = len(members) > 1
+    affine_members = [CandidateSpec(**e['candidate']) for e in ambiguity['affine_equivalents']] if ambiguity else []
+    signal_value_recovered = any(matches_field(c, field) for c in [*members, *affine_members])
+    layout_ambiguous = bool(ambiguity and ambiguity['layout_ambiguous'])
     exact_layout_recovered = recovered and not layout_ambiguous
     true_rank = next((i for i, candidate in enumerate(ranked, 1) if matches_field(candidate, field)), None)
     if signal_value_recovered and layout_ambiguous:
@@ -89,6 +93,7 @@ def evaluate_scenario(directory: Path) -> dict:
         "signal_value_recovered": signal_value_recovered,
         "exact_layout_recovered": exact_layout_recovered, "layout_ambiguous": layout_ambiguous,
         "performance": performance,
+        "ambiguity": ambiguity,
     }
 
 

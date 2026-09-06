@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import re
 
-from canary.fitting import fit_linear
+from canary.relationships import compare_raw_series
 from canary.observation import CandidateSpec, extract_candidate, frames_for_id, read_csv
 
 COMMIT = '3e92d112129507debe45364891954db70238997a'
@@ -67,12 +67,12 @@ def validate_saved(blind_path, can_path, dbc_path, signal='WHEEL_SPEED_RR'):
     relationship = None
     if truth['can_id'] == best['can_id']:
         actual = [truth_raw(f.data, truth) for f in frames]
-        fit = fit_linear(actual, raw)
-        if fit is not None:
-            maximum = max(abs(y-(fit.scale*x+fit.offset)) for x, y in zip(actual, raw))
+        evidence = compare_raw_series(actual, raw)
+        if evidence.scale_between_raw is not None:
             relationship = {'equation': 'discovered_raw = multiplier * defined_raw + intercept',
-                            'multiplier': fit.scale, 'intercept': fit.offset,
-                            'max_absolute_residual_raw': maximum, 'frames_checked': len(frames)}
+                            'multiplier': evidence.scale_between_raw, 'intercept': evidence.offset_between_raw,
+                            'max_absolute_residual_raw': evidence.max_abs_residual, 'frames_checked': len(frames),
+                            'relationship_type': evidence.relationship_type, 'rmse_between_raw': evidence.rmse_between_raw}
     proxy = relationship is not None and relationship['multiplier'] != 0 and relationship['max_absolute_residual_raw'] < 1e-8
     notes = [
         'Vehicle identity: dataset dongle mapping plus paper IV-A identify a 2017 Toyota RAV4 Platinum.',
@@ -96,6 +96,8 @@ def validate_saved(blind_path, can_path, dbc_path, signal='WHEEL_SPEED_RR'):
             'status': 'public_definition_proxy_confirmed' if proxy else 'not_confirmed',
             'discovered': discovered, 'ground_truth': truth, 'comparison': comparison,
             'raw_relationship': relationship,
+            'blind_affine_hypotheses': [{k: h[k] for k in ('rank', 'layout_ambiguous', 'ambiguity_reason', 'affine_equivalents')}
+                                       for h in blind.get('distinct_hypotheses', []) if h.get('affine_equivalents')],
             'vehicle_evidence': ['https://arxiv.org/html/1812.05752v1#S4.SS1',
                 f'https://github.com/commaai/opendbc/blob/{COMMIT}/opendbc/car/toyota/values.py',
                 f'https://github.com/commaai/opendbc/blob/{COMMIT}/opendbc/dbc/generator/toyota/toyota_new_mc_pt.dbc']}

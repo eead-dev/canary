@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "completed_utc": "2026-09-06T01:21:45.600197+00:00",
+  "completed_utc": "2026-09-06T00:46:02.757105+00:00",
   "inputs": {
     "datasets\\real\\comma2k19\\real_can_log.csv": "94563d00c7dfaa59f93f5ed2ec339dada5ed7da5d587c6ffb0f6b36bb808081e",
     "datasets\\real\\comma2k19\\real_speed_reference.csv": "338cad55fef6e1f0e9928711d6ea1fdefb09e075bc34966184f379a47bad0e65"
@@ -110,9 +110,9 @@
     "equivalence_classes": 14895,
     "equivalent_candidates_grouped": 40905,
     "constant_candidates_skipped": 35236,
-    "decoding_seconds": 7.445860099658603,
-    "correlation_seconds": 1.9820119000942213,
-    "total_seconds": 12.588264900012291
+    "decoding_seconds": 8.008948502363637,
+    "correlation_seconds": 1.992878200195264,
+    "total_seconds": 11.770923400006723
   },
   "top_fitted": [
     {
@@ -533,110 +533,7 @@
         "equivalent_candidates": [],
         "equivalence_count": 1,
         "evidence": "identical decoded time series on this aligned capture"
-      },
-      "exact_raw_equivalents": [],
-      "affine_equivalents": [
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 16384.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 16384.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 32768.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 32768.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 1.0,
-          "offset_between_raw": 65536.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 35,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": 65537.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        }
-      ],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts"
+      }
     },
     {
       "rank": 2,
@@ -672,110 +569,7 @@
         "equivalent_candidates": [],
         "equivalence_count": 1,
         "evidence": "identical decoded time series on this aligned capture"
-      },
-      "exact_raw_equivalents": [],
-      "affine_equivalents": [
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.125,
-          "offset_between_raw": 8191.875000000001,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.125,
-          "offset_between_raw": 8191.875000000001,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 16383.750000000002,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 16383.750000000002,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 32767.500000000004,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": -32768.5,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        }
-      ],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts"
+      }
     },
     {
       "rank": 3,
@@ -819,102 +613,7 @@
         ],
         "equivalence_count": 2,
         "evidence": "identical decoded time series on this aligned capture"
-      },
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 32,
-          "width_bits": 16,
-          "endian": "big",
-          "signed": true,
-          "can_id": 170
-        }
-      ],
-      "affine_equivalents": [
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 4.0,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 4.0,
-          "offset_between_raw": -65536.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 35,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 8.0,
-          "offset_between_raw": -65535.00000000001,
-          "rmse_between_raw": 7.275957614183426e-12,
-          "max_abs_residual": 7.275957614183426e-12,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        }
-      ],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts"
+      }
     },
     {
       "rank": 5,
@@ -958,102 +657,7 @@
         ],
         "equivalence_count": 2,
         "evidence": "identical decoded time series on this aligned capture"
-      },
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 33,
-          "width_bits": 16,
-          "endian": "big",
-          "signed": true,
-          "can_id": 170
-        }
-      ],
-      "affine_equivalents": [
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": -65536.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 35,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 4.0,
-          "offset_between_raw": -65535.00000000001,
-          "rmse_between_raw": 7.275957614183426e-12,
-          "max_abs_residual": 7.275957614183426e-12,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        }
-      ],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts"
+      }
     },
     {
       "rank": 7,
@@ -1089,110 +693,7 @@
         "equivalent_candidates": [],
         "equivalence_count": 1,
         "evidence": "identical decoded time series on this aligned capture"
-      },
-      "exact_raw_equivalents": [],
-      "affine_equivalents": [
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 32,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.25,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 33,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 0.5,
-          "offset_between_raw": 0.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 34,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": true,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 1.0,
-          "offset_between_raw": -65536.0,
-          "rmse_between_raw": 0.0,
-          "max_abs_residual": 0.0,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        },
-        {
-          "candidate": {
-            "start_bit": 35,
-            "width_bits": 16,
-            "endian": "big",
-            "signed": false,
-            "can_id": 170
-          },
-          "relationship_type": "affine",
-          "scale_between_raw": 2.0,
-          "offset_between_raw": -65535.00000000001,
-          "rmse_between_raw": 7.275957614183426e-12,
-          "max_abs_residual": 7.275957614183426e-12,
-          "sample_count": 579,
-          "reason": "every residual within 1e-8 raw units"
-        }
-      ],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts"
+      }
     }
   ]
 }

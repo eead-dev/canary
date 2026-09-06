@@ -46,6 +46,8 @@ CONCLUSION_SCHEMA = obj({
     "layout_confidence": CONFIDENCE,
     "layout_ambiguous": {"type": "boolean"},
     "equivalent_layouts": {"type": "array", "items": LAYOUT},
+    "affine_equivalent_layouts": {"type": "array", "items": LAYOUT},
+    "ambiguity_reason": {"type": "string", "enum": ["none", "exact_raw_equivalent_layouts", "affine_equivalent_layouts"]},
     "alternative_candidates": {"type": "array", "items": ALTERNATIVE, "maxItems": 5},
     "rationale": {"type": "string", "minLength": 1, "maxLength": 2000},
 })
@@ -71,6 +73,12 @@ Use equivalence data to set layout_ambiguous and list ALL other equivalent_layou
 excluding selected_candidate. When identical alternatives exist, layout_confidence
 must be low or medium, and rationale must say this capture cannot distinguish
 the exact layouts. Never claim unique width/endian/signedness in that case.
+Also list all affine_equivalent_layouts from analyzed affine_equivalents evidence.
+Different raw values related by an affine transformation cannot be distinguished
+by reference reconstruction after scale/offset fitting. Set ambiguity_reason to
+affine_equivalent_layouts when these exist, otherwise exact_raw_equivalent_layouts
+for identical alternatives, or none. Either kind requires layout_ambiguous=true
+and low or medium layout confidence, regardless of which encoding ranks first.
 List important analyzed non-equivalent alternative_candidates with their measured
 correlation and fit metrics. Equal correlation alone is not decoded-series identity.
 Do not describe a scale as standard or canonical or invent a CAN standard.
@@ -128,6 +136,8 @@ class AgentConclusion:
     layout_ambiguous: bool
     equivalent_layouts: list[dict]
     alternative_candidates: list[dict]
+    affine_equivalent_layouts: list[dict]
+    ambiguity_reason: str
 
 
 @dataclass(frozen=True)
@@ -216,6 +226,14 @@ def checked_conclusion(data: dict, name: str, trace: list[dict]) -> AgentConclus
     equivalents = [layout_identity(c) for c in data["equivalent_layouts"]]
     if len(equivalents) != len(set(equivalents)) or set(equivalents) != members - {selected}:
         raise ValueError("equivalent_layouts must list every other layout in collected equivalence evidence exactly once")
+    affine = {layout_identity(e['candidate']) for e in evidence.get('affine_equivalents', [])}
+    reported_affine = [layout_identity(c) for c in data['affine_equivalent_layouts']]
+    if len(reported_affine) != len(set(reported_affine)) or set(reported_affine) != affine:
+        raise ValueError('affine_equivalent_layouts must match collected raw-to-raw evidence')
+    reason = 'affine_equivalent_layouts' if affine else 'exact_raw_equivalent_layouts' if len(members) > 1 else 'none'
+    if data['ambiguity_reason'] != reason:
+        raise ValueError('ambiguity_reason must match collected equivalence evidence')
+    members.update(affine)
     if data["layout_ambiguous"] != (len(members) > 1):
         raise ValueError("layout_ambiguous must match collected equivalence evidence")
     if data["layout_ambiguous"] and data["layout_confidence"] == "high":

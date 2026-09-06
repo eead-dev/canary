@@ -1,61 +1,156 @@
 {
   "schema_version": 1,
-  "validated_utc": "2026-09-06T01:22:38.688531+00:00",
-  "blind_results_sha256": "2f59eb3d956483cc819e0afb7ea2103691fa030b45bba0b4f2781964690921e9",
-  "status": "public_definition_proxy_confirmed",
-  "discovered": {
-    "can_id": 170,
-    "start_bit": 34,
-    "width_bits": 16,
-    "endian": "big",
-    "signed": true,
-    "scale": 0.002550022654370228,
-    "offset": 97.4535935402154
+  "completed_utc": "2026-09-06T01:21:45.600197+00:00",
+  "inputs": {
+    "datasets\\real\\comma2k19\\real_can_log.csv": "94563d00c7dfaa59f93f5ed2ec339dada5ed7da5d587c6ffb0f6b36bb808081e",
+    "datasets\\real\\comma2k19\\real_speed_reference.csv": "338cad55fef6e1f0e9928711d6ea1fdefb09e075bc34966184f379a47bad0e65"
   },
-  "ground_truth": {
-    "source": "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/_toyota_2017.dbc",
-    "can_id": 170,
-    "start_bit": 33,
-    "dbc_start_bit": 38,
-    "width_bits": 15,
-    "endian": "big",
-    "signed": false,
-    "scale": 0.01,
-    "offset": -67.67,
-    "signal_name": "WHEEL_SPEED_RR",
-    "dbc_sha256": "818872b1c1034983f61a51460a9b175b4bfe01f3d34f537c3d21f420991a8a48"
+  "alignment": "nearest",
+  "tolerance_seconds": 0.02,
+  "min_samples": 300,
+  "frame_count": 53800,
+  "unique_can_ids": [
+    36,
+    37,
+    170,
+    180,
+    186,
+    426,
+    452,
+    464,
+    466,
+    467,
+    547,
+    548,
+    552,
+    562,
+    608,
+    610,
+    705,
+    725,
+    800,
+    849,
+    896,
+    897,
+    900,
+    902,
+    905,
+    911,
+    916,
+    918,
+    921,
+    933,
+    944,
+    945,
+    951,
+    955,
+    956,
+    979,
+    998,
+    999,
+    1000,
+    1001,
+    1008,
+    1014,
+    1017,
+    1043,
+    1056,
+    1059,
+    1114,
+    1176,
+    1177,
+    1178,
+    1179,
+    1180,
+    1181,
+    1190,
+    1191,
+    1192,
+    1196,
+    1228,
+    1237,
+    1263,
+    1279,
+    1408,
+    1409,
+    1410,
+    1552,
+    1553,
+    1554,
+    1555,
+    1556,
+    1557,
+    1561,
+    1562,
+    1568,
+    1569,
+    1570,
+    1571,
+    1572,
+    1584,
+    1589,
+    1592,
+    1593,
+    1595,
+    1596,
+    1597,
+    1600,
+    1656,
+    1664,
+    1728,
+    1745,
+    1779
+  ],
+  "capture_duration_seconds": 59.992699425667524,
+  "reference_samples": 579,
+  "candidates_ranked": 7856,
+  "performance": {
+    "candidates_enumerated": 55800,
+    "unique_decoded_series": 14895,
+    "equivalence_classes": 14895,
+    "equivalent_candidates_grouped": 40905,
+    "constant_candidates_skipped": 35236,
+    "decoding_seconds": 7.445860099658603,
+    "correlation_seconds": 1.9820119000942213,
+    "total_seconds": 12.588264900012291
   },
-  "comparison": {
-    "signal_match": true,
-    "signal_match_basis": "exact nonconstant affine proxy of the public wheel-speed field on the complete selected-ID capture",
-    "layout_match": false,
-    "scale_error": -0.007449977345629772,
-    "offset_error": 165.12359354021538,
-    "notes": [
-      "Vehicle identity: dataset dongle mapping plus paper IV-A identify a 2017 Toyota RAV4 Platinum.",
-      "Pinned opendbc Toyota RAV4 2017-18 platform uses toyota_new_mc_pt_generated, which imports this definition.",
-      "This is a rear-right wheel-speed signal, not an independently established fused vehicle-speed signal.",
-      "The selected window is not the declared signal layout. Affine identity is evidence only on this capture.",
-      "Raw coefficient differences below compare different encodings; mapped coefficients put them on the defined raw basis.",
-      "No OEM/VIN-specific certification is claimed; public definitions establish the comparison."
-    ],
-    "mapped_scale_error": 0.00020009061748091188,
-    "mapped_offset_error": -1.994691136591868
-  },
-  "raw_relationship": {
-    "equation": "discovered_raw = multiplier * defined_raw + intercept",
-    "multiplier": 4.0,
-    "intercept": -65536.0,
-    "max_absolute_residual_raw": 0.0,
-    "frames_checked": 4974,
-    "relationship_type": "affine",
-    "rmse_between_raw": 0.0
-  },
-  "blind_affine_hypotheses": [
+  "distinct_hypotheses": [
     {
       "rank": 1,
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts",
+      "can_id": 170,
+      "byte_offset": null,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true,
+      "correlation": 0.9986674420646726,
+      "scale": 0.002550022654370228,
+      "offset": 97.4535935402154,
+      "rmse": 0.4479629504317512,
+      "mae": 0.3288052695648548,
+      "r_squared": 0.9973366598399963,
+      "aligned_samples": 579,
+      "alignment_diagnostics": {
+        "candidate_sample_count": 4974,
+        "matched_sample_count": 579,
+        "unmatched_sample_count": 4395,
+        "match_ratio": 0.11640530759951749,
+        "mean_absolute_timestamp_error": 0.014437113473191255,
+        "max_absolute_timestamp_error": 0.019960625002568122
+      },
+      "start_bit": 34,
+      "equivalence": {
+        "representative": {
+          "start_bit": 34,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": true,
+          "can_id": 170
+        },
+        "equivalent_candidates": [],
+        "equivalence_count": 1,
+        "evidence": "identical decoded time series on this aligned capture"
+      },
+      "exact_raw_equivalents": [],
       "affine_equivalents": [
         {
           "candidate": {
@@ -153,12 +248,48 @@
           "sample_count": 579,
           "reason": "every residual within 1e-8 raw units"
         }
-      ]
+      ],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "affine_equivalent_layouts"
     },
     {
       "rank": 2,
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts",
+      "can_id": 170,
+      "byte_offset": null,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false,
+      "correlation": 0.9986674420646726,
+      "scale": 0.001275011327185114,
+      "offset": 13.893176190484567,
+      "rmse": 0.44796295043175116,
+      "mae": 0.3288052695648547,
+      "r_squared": 0.9973366598399963,
+      "aligned_samples": 579,
+      "alignment_diagnostics": {
+        "candidate_sample_count": 4974,
+        "matched_sample_count": 579,
+        "unmatched_sample_count": 4395,
+        "match_ratio": 0.11640530759951749,
+        "mean_absolute_timestamp_error": 0.014437113473191255,
+        "max_absolute_timestamp_error": 0.019960625002568122
+      },
+      "start_bit": 35,
+      "equivalence": {
+        "representative": {
+          "start_bit": 35,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": false,
+          "can_id": 170
+        },
+        "equivalent_candidates": [],
+        "equivalence_count": 1,
+        "evidence": "identical decoded time series on this aligned capture"
+      },
+      "exact_raw_equivalents": [],
       "affine_equivalents": [
         {
           "candidate": {
@@ -256,12 +387,64 @@
           "sample_count": 579,
           "reason": "every residual within 1e-8 raw units"
         }
-      ]
+      ],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "affine_equivalent_layouts"
     },
     {
       "rank": 3,
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts",
+      "can_id": 170,
+      "byte_offset": 4,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false,
+      "correlation": 0.9986674420646725,
+      "scale": 0.010200090617480912,
+      "offset": -69.66469113659188,
+      "rmse": 0.44796295043175166,
+      "mae": 0.32880526956485495,
+      "r_squared": 0.9973366598399963,
+      "aligned_samples": 579,
+      "alignment_diagnostics": {
+        "candidate_sample_count": 4974,
+        "matched_sample_count": 579,
+        "unmatched_sample_count": 4395,
+        "match_ratio": 0.11640530759951749,
+        "mean_absolute_timestamp_error": 0.014437113473191255,
+        "max_absolute_timestamp_error": 0.019960625002568122
+      },
+      "start_bit": 32,
+      "equivalence": {
+        "representative": {
+          "start_bit": 32,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": false,
+          "can_id": 170
+        },
+        "equivalent_candidates": [
+          {
+            "start_bit": 32,
+            "width_bits": 16,
+            "endian": "big",
+            "signed": true,
+            "can_id": 170
+          }
+        ],
+        "equivalence_count": 2,
+        "evidence": "identical decoded time series on this aligned capture"
+      },
+      "exact_raw_equivalents": [
+        {
+          "start_bit": 32,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": true,
+          "can_id": 170
+        }
+      ],
       "affine_equivalents": [
         {
           "candidate": {
@@ -343,12 +526,64 @@
           "sample_count": 579,
           "reason": "every residual within 1e-8 raw units"
         }
-      ]
+      ],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "affine_equivalent_layouts"
     },
     {
       "rank": 5,
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts",
+      "can_id": 170,
+      "byte_offset": null,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false,
+      "correlation": 0.9986674420646725,
+      "scale": 0.005100045308740456,
+      "offset": -69.66469113659188,
+      "rmse": 0.44796295043175166,
+      "mae": 0.32880526956485495,
+      "r_squared": 0.9973366598399963,
+      "aligned_samples": 579,
+      "alignment_diagnostics": {
+        "candidate_sample_count": 4974,
+        "matched_sample_count": 579,
+        "unmatched_sample_count": 4395,
+        "match_ratio": 0.11640530759951749,
+        "mean_absolute_timestamp_error": 0.014437113473191255,
+        "max_absolute_timestamp_error": 0.019960625002568122
+      },
+      "start_bit": 33,
+      "equivalence": {
+        "representative": {
+          "start_bit": 33,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": false,
+          "can_id": 170
+        },
+        "equivalent_candidates": [
+          {
+            "start_bit": 33,
+            "width_bits": 16,
+            "endian": "big",
+            "signed": true,
+            "can_id": 170
+          }
+        ],
+        "equivalence_count": 2,
+        "evidence": "identical decoded time series on this aligned capture"
+      },
+      "exact_raw_equivalents": [
+        {
+          "start_bit": 33,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": true,
+          "can_id": 170
+        }
+      ],
       "affine_equivalents": [
         {
           "candidate": {
@@ -430,12 +665,48 @@
           "sample_count": 579,
           "reason": "every residual within 1e-8 raw units"
         }
-      ]
+      ],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "affine_equivalent_layouts"
     },
     {
       "rank": 7,
-      "layout_ambiguous": true,
-      "ambiguity_reason": "affine_equivalent_layouts",
+      "can_id": 170,
+      "byte_offset": null,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false,
+      "correlation": 0.9986674420646725,
+      "scale": 0.002550022654370228,
+      "offset": -69.66469113659188,
+      "rmse": 0.44796295043175166,
+      "mae": 0.32880526956485495,
+      "r_squared": 0.9973366598399963,
+      "aligned_samples": 579,
+      "alignment_diagnostics": {
+        "candidate_sample_count": 4974,
+        "matched_sample_count": 579,
+        "unmatched_sample_count": 4395,
+        "match_ratio": 0.11640530759951749,
+        "mean_absolute_timestamp_error": 0.014437113473191255,
+        "max_absolute_timestamp_error": 0.019960625002568122
+      },
+      "start_bit": 34,
+      "equivalence": {
+        "representative": {
+          "start_bit": 34,
+          "width_bits": 16,
+          "endian": "big",
+          "signed": false,
+          "can_id": 170
+        },
+        "equivalent_candidates": [],
+        "equivalence_count": 1,
+        "evidence": "identical decoded time series on this aligned capture"
+      },
+      "exact_raw_equivalents": [],
       "affine_equivalents": [
         {
           "candidate": {
@@ -533,12 +804,11 @@
           "sample_count": 579,
           "reason": "every residual within 1e-8 raw units"
         }
-      ]
+      ],
+      "distinct_alternatives": [],
+      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
+      "layout_ambiguous": true,
+      "ambiguity_reason": "affine_equivalent_layouts"
     }
-  ],
-  "vehicle_evidence": [
-    "https://arxiv.org/html/1812.05752v1#S4.SS1",
-    "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/car/toyota/values.py",
-    "https://github.com/commaai/opendbc/blob/3e92d112129507debe45364891954db70238997a/opendbc/dbc/generator/toyota/toyota_new_mc_pt.dbc"
   ]
 }

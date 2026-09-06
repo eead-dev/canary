@@ -8,6 +8,7 @@ from .fitting import FittedResult, reconstruct
 from .observation import CandidateSpec, Frame, candidate_fields, extract_candidate, timestamp_bounds, unique_ids
 from .reference import Series
 from .analysis import analysis_run
+from .relationships import AFFINE_EXPLANATION
 
 
 def number(value: float | None) -> str:
@@ -34,8 +35,32 @@ def equivalence_html(results):
         sections.append(f'<h3>Representative: {escape(layout_text(group.representative))}</h3>'
                         f'<p>Equivalence count: {group.equivalence_count}. {escape(group.evidence)}.</p>'
                         + (f'<ul>{items}</ul><p>Layout is ambiguous on this capture.</p>' if items
-                           else '<p>No equivalent alternative found in the supported candidate space.</p>'))
+                           else '<p>No exact raw equivalent alternative found in the supported candidate space.</p>'))
     return ''.join(sections)
+
+
+def affine_html(results, run):
+    sections = []
+    seen = set()
+    for result in results:
+        candidate = CandidateSpec(result.start_bit, result.width_bits, result.endian, result.signed, result.can_id)
+        if candidate in seen:
+            continue
+        evidence = run.ambiguity(candidate)
+        seen.update([candidate, *(CandidateSpec(**c) for c in evidence['exact_raw_equivalents']),
+                     *(CandidateSpec(**e['candidate']) for e in evidence['affine_equivalents'])])
+        if not evidence['affine_equivalents']:
+            continue
+        items = []
+        for item in evidence['affine_equivalents']:
+            other = CandidateSpec(**item['candidate'])
+            items.append(f'<li>{escape(layout_text(other))}: other_raw = '
+                         f'{number(item["scale_between_raw"])} * selected_raw + ({number(item["offset_between_raw"])})'
+                         f'; RMSE {number(item["rmse_between_raw"])}; max residual {number(item["max_abs_residual"])}'
+                         f'; samples {item["sample_count"]}</li>')
+        sections.append(f'<h3>Compared from: {escape(layout_text(candidate))}</h3><ul>{"".join(items)}</ul>')
+    return (f'<p>{escape(AFFINE_EXPLANATION)}</p>' + ''.join(sections) if sections else
+            '<p>No affine-equivalent alternatives for the displayed candidates on identical aligned axes.</p>')
 
 
 def candidate_details(result: FittedResult) -> list[tuple[str, str]]:
@@ -142,6 +167,9 @@ Metrics describe the same samples used for fitting; correlation does not establi
 <section><h2>Top candidates</h2><div class="table-wrap"><table><thead><tr>
 {''.join(f'<th scope="col">{h}</th>' for h in headers)}</tr></thead><tbody>{''.join(table)}</tbody></table></div></section>
 <section><h2>Equivalent layouts</h2>{equivalence_html(results)}</section>
+<section><h2>Affine-equivalent reconstructions</h2>{affine_html(results, run)}
+<p>Criterion: at least three nonconstant samples; every raw-to-raw residual at most 1e-8 raw units.
+Comparisons require identical aligned timestamp axes. Evidence applies only to this capture.</p></section>
 <section><h2>Search performance</h2><ul>{performance}</ul></section>
 </main></body></html>'''
     path = Path(path)

@@ -10,7 +10,7 @@ from pathlib import Path
 from canary.analysis import AnalysisRun
 from canary.discovery import discover_signal
 from canary.fitting import fit_ranked, write_reconstruction
-from canary.observation import read_csv, timestamp_bounds, unique_ids
+from canary.observation import CandidateSpec, read_csv, timestamp_bounds, unique_ids
 from canary.reference import read_reference
 from canary.reporting import write_report
 
@@ -39,6 +39,9 @@ def experiment(can_path, reference_path, output, tolerance=0.02, min_samples=300
     fits = fit_ranked(frames, reference, [r for _, r in distinct], run=run, alignment='nearest',
                       tolerance=tolerance, min_samples=min_samples)
     first, last = timestamp_bounds(frames)
+    compared = [CandidateSpec(r.start_bit, r.width_bits, r.endian, r.signed, r.can_id) for r in fits]
+    hypotheses = [{'rank': rank, **asdict(fit), **run.ambiguity(candidate, compared)}
+                  for (rank, _), fit, candidate in zip(distinct, fits, compared)]
     result = {'schema_version': 1, 'completed_utc': datetime.now(timezone.utc).isoformat(),
               'inputs': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in (can_path, reference_path)},
               'alignment': 'nearest', 'tolerance_seconds': tolerance, 'min_samples': min_samples,
@@ -46,7 +49,7 @@ def experiment(can_path, reference_path, output, tolerance=0.02, min_samples=300
               'capture_duration_seconds': last-first, 'reference_samples': len(reference),
               'candidates_ranked': len(ranked), 'performance': run.statistics(),
               'top_fitted': [asdict(r) for r in top],
-              'distinct_hypotheses': [{'rank': rank, **asdict(fit)} for (rank, _), fit in zip(distinct, fits)]}
+              'distinct_hypotheses': hypotheses}
     output.mkdir(parents=True, exist_ok=True)
     (output/'blind_results.json').write_text(json.dumps(result, indent=2, allow_nan=False)+'\n', encoding='utf-8')
     write_reconstruction(output/'reconstructed.csv', frames, reference, top[0], run=run,

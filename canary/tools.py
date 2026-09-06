@@ -110,6 +110,7 @@ def analyze_candidate(frames: list[Frame], can_id: int, byte_offset: int | None 
     if include_fit:
         fit = run.fit(candidate, min_samples)
         result["fit"] = asdict(fit) if fit is not None else None
+    result.update(run.ambiguity(candidate))
     return result
 
 
@@ -138,6 +139,9 @@ def search_candidates(frames: list[Frame], reference: Series, *, top_n: int = 10
                            "evidence": group.evidence})
         if len(hypotheses) == top_n:
             break
+    compared = [CandidateSpec(**h['representative']) for h in hypotheses]
+    for hypothesis, candidate in zip(hypotheses, compared):
+        hypothesis.update(run.ambiguity(candidate, compared))
     return {"candidates_searched": len(unique_ids(frames)) * len(candidate_fields()),
             "candidates_ranked": len(ranked), "performance": run.statistics(),
             "results": [{"rank": rank, **{k: v for k, v in asdict(r).items() if k != "byte_offset" or v is not None}}
@@ -151,4 +155,5 @@ def fit_candidate(frames: list[Frame], can_id: int, byte_offset: int | None = No
     candidate, xs, ys, diagnostics, run = _aligned(frames, can_id, byte_offset, width_bits, reference, tolerance, alignment, endian, signed, start_bit, run)
     fit = run.fit(candidate, min_samples)
     return {**_encoding(can_id, candidate), "aligned_samples": len(xs),
-            "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics, "equivalence": asdict(run.equivalence(candidate))}
+            "fit": asdict(fit) if fit is not None else None, "alignment_diagnostics": diagnostics,
+            "equivalence": asdict(run.equivalence(candidate)), **run.ambiguity(candidate)}

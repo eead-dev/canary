@@ -1,7 +1,8 @@
 """Explicit, run-scoped decoding and evidence cache. No process-wide state."""
 
 from array import array
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
+from math import gcd
 from time import perf_counter
 
 from .alignment import align_series, configuration
@@ -61,6 +62,8 @@ class AnalysisRun:
         self._intern, self._groups, self._classes = {}, {}, {}
         self._scores, self._fits, self._ranked, self._prepared = {}, {}, {}, {}
         self._enumerated = set()
+        self._affine_index = None
+        self._affine_keys, self._relationships = {}, {}
         self.decoding_seconds = self.correlation_seconds = 0.0
 
     def check(self, frames, reference, tolerance, alignment):
@@ -142,6 +145,76 @@ class AnalysisRun:
     def equivalence(self, candidate):
         self.enumerate()
         return self._classes[candidate]
+
+    def _index_affine(self):
+        # Integer difference vectors divided by their signed GCD are identical
+        # iff nonconstant integer sequences are exactly affine-related. This is
+        # a separate index: raw bytes, fits, scores and ranking are never merged.
+        if self._affine_index is not None:
+            return
+        self.enumerate()
+        self._affine_index = {}
+        for key, members in self._groups.items():
+            values = self.aligned(members[0]).values
+            if len(values) < 3 or self.aligned(members[0]).constant:
+                continue
+            origin = values[0]
+            divisor, direction = 0, 0
+            for value in values:
+                delta = value - origin
+                divisor = gcd(divisor, delta)
+                if not direction and delta:
+                    direction = 1 if delta > 0 else -1
+            divisor *= direction
+            signature = (key[0], array('i', ((v-origin)//divisor for v in values)).tobytes())
+            self._affine_keys[key] = signature
+            self._affine_index.setdefault(signature, []).extend(members)
+        for members in self._affine_index.values():
+            members.sort(key=layout_key)
+
+    def raw_relationship(self, candidate, other):
+        """Compare other_raw = a*candidate_raw+b on identical aligned axes."""
+        from .relationships import compare_raw_series
+        first, second = self.series_key(candidate), self.series_key(other)
+        if first[0] != second[0]:
+            raise ValueError('raw comparison requires identical aligned timestamp axes')
+        key = (first, second)
+        if key not in self._relationships:
+            self._relationships[key] = compare_raw_series(self.aligned(candidate).values,
+                                                          self.aligned(other).values)
+        return self._relationships[key]
+
+    def ambiguity(self, candidate, alternatives=()):
+        """All equivalent layouts; distinct alternatives limited to supplied scope.
+
+        Different axes are not compared or resampled. The affine index covers
+        every supported layout, regardless of the displayed top-N cutoff.
+        """
+        self._index_affine()
+        key = self.series_key(candidate)
+        exact = [c for c in self._groups[key] if c != candidate]
+        affine = []
+        for other in self._affine_index.get(self._affine_keys.get(key), []):
+            if self.series_key(other) != key:
+                evidence = self.raw_relationship(candidate, other)
+                if evidence.relationship_type == 'affine':
+                    affine.append({'candidate': asdict(other), **asdict(evidence)})
+        related = {candidate, *exact, *(CandidateSpec(**e['candidate']) for e in affine)}
+        distinct = []
+        for other in dict.fromkeys(alternatives):
+            if other in related:
+                continue
+            if self.series_key(other)[0] != key[0]:
+                distinct.append({'candidate': asdict(other), 'relationship_type': 'uncompared',
+                                 'reason': 'different aligned timestamp axes'})
+            else:
+                distinct.append({'candidate': asdict(other), **asdict(self.raw_relationship(candidate, other))})
+        return {'exact_raw_equivalents': [asdict(c) for c in exact],
+                'affine_equivalents': affine, 'distinct_alternatives': distinct,
+                'distinct_alternatives_scope': 'supplied comparison candidates only; different axes remain uncompared',
+                'layout_ambiguous': bool(exact or affine),
+                'ambiguity_reason': 'affine_equivalent_layouts' if affine else
+                                    'exact_raw_equivalent_layouts' if exact else 'none'}
 
     def correlation(self, candidate, min_samples=3):
         from .discovery import _prepare, _correlate

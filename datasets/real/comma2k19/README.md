@@ -107,6 +107,34 @@ is not proof of a uniquely identifiable physical layout.
 
 See `results/comma2k19/blind_results.json`, `report.html`, and `reconstructed.csv`.
 
+### Affine ambiguity (Ticket #15)
+
+Blind production analysis now establishes that these five exact-raw hypotheses
+form **one affine-equivalence group with seven layouts**, without consulting any
+public definition. Let `A` be the winning start-34 signed 16-bit big-endian raw
+series. All alternatives below are on ID 0x0AA and are 16-bit big-endian:
+
+| Start | Signedness | Raw relationship to A |
+| ---: | --- | --- |
+| 32 | unsigned or signed (exactly equal) | `0.25*A + 16384` |
+| 33 | unsigned or signed (exactly equal) | `0.5*A + 32768` |
+| 34 | unsigned | `A + 65536` |
+| 35 | unsigned | `2*A + 65537` |
+
+All six other-layout comparisons have RMSE **0** and maximum absolute residual
+**0** across all **579 aligned samples**. In particular, if B is the supported
+start-32 unsigned field, `A = 4*B - 65536`. This comparison needs no 15-bit decoder.
+The supported layouts remain distinct raw-series cache entries. Their original
+correlations, ranks, reference-fit coefficients, and metrics are unchanged.
+
+These layouts produce different raw values but are related by an exact affine
+transformation on this capture. The external reference therefore cannot
+distinguish their physical reconstruction after scale/offset fitting. Structured
+hypotheses mark `layout_ambiguous=true` and
+`ambiguity_reason="affine_equivalent_layouts"`; the HTML report includes these
+relationships explicitly. Production evidence here covers the aligned samples;
+the separate public-definition validation below checks all 4,974 selected-ID frames.
+
 ## Post-discovery public-definition validation
 
 The pinned opendbc definition identifies `WHEEL_SPEED_RR` at ID 170, DBC sawtooth
@@ -144,4 +172,5 @@ Use your existing credentials and add `--model YOUR_ENABLED_MODEL_ID` if needed.
 The existing agent CLI has no global alignment/min-sample options. For comparison
 with this experiment, its tool calls must use `tolerance=0.02, min_samples=300`;
 inspect the trace to verify that. Default exact matching will not align these
-independent timestamps. No agent prompts, reasoning, or providers were changed.
+independent timestamps. Ticket #15 adds affine ambiguity evidence and conclusion
+checks; provider behavior and the underlying discovery algorithms are unchanged.

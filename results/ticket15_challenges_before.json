@@ -247,25 +247,9 @@
       "equivalence_classes": 1849,
       "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 2.6282939998054644,
-      "correlation_seconds": 6.80133629986085,
-      "total_seconds": 14.447655800002394
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.366544000324211,
+      "correlation_seconds": 5.790989299610374,
+      "total_seconds": 8.499645199990482
     }
   },
   {
@@ -516,25 +500,9 @@
       "equivalence_classes": 1849,
       "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.4343928001908353,
-      "correlation_seconds": 7.235957800323376,
-      "total_seconds": 17.179455699995742
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.854674399830401,
+      "correlation_seconds": 5.763400200055912,
+      "total_seconds": 8.98256279999623
     }
   },
   {
@@ -785,25 +753,9 @@
       "equivalence_classes": 1849,
       "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 6.999642099486664,
-      "correlation_seconds": 7.260327100069844,
-      "total_seconds": 19.891251000008197
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 4.775384600783582,
+      "correlation_seconds": 5.950641199786332,
+      "total_seconds": 11.119143399992026
     }
   },
   {
@@ -1054,25 +1006,9 @@
       "equivalence_classes": 1839,
       "equivalent_candidates_grouped": 21,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.509303499944508,
-      "correlation_seconds": 8.681234200121253,
-      "total_seconds": 17.484595799993258
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.923153199822991,
+      "correlation_seconds": 6.110087399880285,
+      "total_seconds": 9.40780350001296
     }
   },
   {
@@ -1352,32 +1288,9 @@
       "equivalence_classes": 1833,
       "equivalent_candidates_grouped": 27,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.2234985008544754,
-      "correlation_seconds": 7.336962800065521,
-      "total_seconds": 15.764374100006535
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.620039500077837,
+      "correlation_seconds": 5.412030400140793,
+      "total_seconds": 8.578194100002293
     }
   },
   {
@@ -1657,32 +1570,9 @@
       "equivalence_classes": 1833,
       "equivalent_candidates_grouped": 27,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.3442747000808595,
-      "correlation_seconds": 7.071450000046752,
-      "total_seconds": 15.736885899998015
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": false,
-          "can_id": 420
-        },
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "little",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.436280699534109,
+      "correlation_seconds": 4.843430799912312,
+      "total_seconds": 7.573324199998751
     }
   },
   {
@@ -2022,25 +1912,9 @@
       "equivalence_classes": 1849,
       "equivalent_candidates_grouped": 11,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.471110100945225,
-      "correlation_seconds": 6.8910235998773715,
-      "total_seconds": 15.586599300004309
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [
-        {
-          "start_bit": 16,
-          "width_bits": 16,
-          "endian": "big",
-          "signed": true,
-          "can_id": 420
-        }
-      ],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": true,
-      "ambiguity_reason": "exact_raw_equivalent_layouts"
+      "decoding_seconds": 2.406638800079236,
+      "correlation_seconds": 4.892294700621278,
+      "total_seconds": 7.630775099998573
     }
   },
   {
@@ -2259,17 +2133,9 @@
       "equivalence_classes": 1860,
       "equivalent_candidates_grouped": 0,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.450738299303339,
-      "correlation_seconds": 7.18606420008291,
-      "total_seconds": 15.950454599995282
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": false,
-      "ambiguity_reason": "none"
+      "decoding_seconds": 2.435766900263843,
+      "correlation_seconds": 4.939304600295145,
+      "total_seconds": 7.710122999997111
     }
   },
   {
@@ -2488,17 +2354,9 @@
       "equivalence_classes": 1860,
       "equivalent_candidates_grouped": 0,
       "constant_candidates_skipped": 0,
-      "decoding_seconds": 3.4354965003876714,
-      "correlation_seconds": 7.028596299831406,
-      "total_seconds": 15.781526399994618
-    },
-    "ambiguity": {
-      "exact_raw_equivalents": [],
-      "affine_equivalents": [],
-      "distinct_alternatives": [],
-      "distinct_alternatives_scope": "supplied comparison candidates only; different axes remain uncompared",
-      "layout_ambiguous": false,
-      "ambiguity_reason": "none"
+      "decoding_seconds": 2.5095820001297398,
+      "correlation_seconds": 5.0128636999143055,
+      "total_seconds": 7.8607010999985505
     }
   }
 ]

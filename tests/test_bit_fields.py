@@ -126,6 +126,10 @@ class BitFieldTests(unittest.TestCase):
         conclusion.update(signal_confidence="high", layout_confidence="low" if equivalents else "high",
                           layout_ambiguous=bool(equivalents), equivalent_layouts=equivalents,
                           alternative_candidates=[])
+        conclusion.update(affine_equivalent_layouts=[e['candidate'] for e in analysis['affine_equivalents']],
+                          ambiguity_reason=analysis['ambiguity_reason'],
+                          layout_ambiguous=analysis['layout_ambiguous'],
+                          layout_confidence='low' if analysis['layout_ambiguous'] else 'high')
         trace = [{"name": "search_candidates", "output": {"ok": True, "result": {"results": [asdict(selected)]}}},
                  {"name": "analyze_candidate", "output": {"ok": True, "result": analysis}}]
         self.assertEqual(checked_conclusion(conclusion, "measurement", trace).selected_candidate["start_bit"], 5)

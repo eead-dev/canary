@@ -6,7 +6,8 @@ from pathlib import Path
 from .discovery import discover_signal
 from .analysis import AnalysisRun
 from .fitting import fit_ranked, write_reconstruction
-from .observation import candidate_fields, read_csv, unique_ids
+from .observation import CandidateSpec, candidate_fields, read_csv, unique_ids
+from .relationships import AFFINE_EXPLANATION
 from .reference import read_reference
 from .reporting import candidate_details, equation, write_report, layout_text
 
@@ -79,6 +80,14 @@ def main() -> None:
         for label, value in candidate_details(displayed[0]):
             print(f"{label + ':':<22}{value}")
         print(equation(displayed[0]))
+        best = displayed[0]
+        ambiguity = run.ambiguity(CandidateSpec(best.start_bit, best.width_bits, best.endian, best.signed, best.can_id))
+        if ambiguity['affine_equivalents']:
+            print(AFFINE_EXPLANATION)
+            for item in ambiguity['affine_equivalents']:
+                print('  ' + layout_text(CandidateSpec(**item['candidate'])) +
+                      f": other_raw = {item['scale_between_raw']:.12g} * best_raw + ({item['offset_between_raw']:.12g}); "
+                      f"max residual {item['max_abs_residual']:.6g}; samples {item['sample_count']}")
         print("\n=== RANKED TOP CANDIDATES ===")
     for rank, result in enumerate(displayed, 1):
         print(f"\n#{rank}\nCAN ID:       0x{result.can_id:03X}")

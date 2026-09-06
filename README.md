@@ -604,3 +604,52 @@ Preparation, blind discovery, and public-definition validation are separate stag
 The result recovers a rear-right wheel-speed proxy but not the exact 15-bit public
 DBC layout. Source licenses, pinned hashes, limitations, results, and the manual
 Gemini command are documented with the experiment.
+
+## Affine-equivalent raw encodings
+
+`canary.relationships.compare_raw_series(x, y)` measures `y = a*x+b` using the
+existing ordinary least-squares API. It returns `relationship_type` (`exact`,
+`affine`, or `distinct`), `scale_between_raw`, `offset_between_raw`,
+`rmse_between_raw`, `max_abs_residual`, `sample_count`, and a reason.
+At least three samples and variation in **both** series are required. Constants
+and insufficient observations return `distinct` with undefined coefficients;
+non-finite values and unequal lengths raise errors. Exact means equal raw values.
+Affine requires a nonzero slope and **every** absolute residual <= `1e-8` raw units.
+This fixed absolute tolerance admits arithmetic roundoff in the supported integer
+domain, not quantization noise or exceptional samples. High Pearson correlation
+alone does not establish affine equivalence. Evidence is capture-specific, not
+proof that the layouts remain equivalent on a different drive.
+
+`AnalysisRun` maintains a separate lazy affine index. For each unique nonconstant
+integer series, subtract its first value and divide all differences by their GCD,
+with the first nonzero difference positive. Equal normalized integer vectors on
+identical aligned timestamp/reference axes identify exact affine relationships,
+including sign reversals and fractional ratios. OLS verifies and measures each
+reported relation. This conservative index does not group approximately similar
+integer vectors. It takes linear work per unique series, avoiding an all-pairs
+search. Raw-series cache keys, exact classes, correlation, ranking, reference
+fitting, alignment, and the 620 supported layouts per CAN ID remain unchanged.
+
+Tools expose `exact_raw_equivalents`, `affine_equivalents` (each other layout plus
+raw-to-raw evidence, with `other_raw = a*selected_raw+b`), and
+`distinct_alternatives`. Equivalent lists cover the full supported space, not just
+top-N. Distinct alternatives are limited to supplied comparison hypotheses; an
+empty list in explicit analysis means no distinct comparisons were requested.
+Candidates with different aligned axes are marked `uncompared`, never resampled.
+Search hypotheses remain representatives of **exact** classes, and their order
+does not change. `AnalysisRun.raw_relationship(first, second)` exposes direct
+comparison using cached decoding; it rejects different aligned axes.
+
+Conclusions keep `equivalent_layouts` for exact raw equality and additionally
+require `affine_equivalent_layouts` and `ambiguity_reason`. Affine alternatives
+set `layout_ambiguous=true` and `ambiguity_reason="affine_equivalent_layouts"`;
+high layout confidence is rejected. Exact-only ambiguity uses
+`exact_raw_equivalent_layouts`; unambiguous evidence uses `none`. Reconstruction
+metrics cannot uniquely identify layouts related by an affine transformation.
+CLI and HTML output state this explicitly. The fake provider also compares a
+visible non-affine hypothesis when its first two hypotheses are affine-related.
+
+Challenge value recovery now includes exact or affine alternatives; exact layout
+recovery requires neither ambiguity. The real blind report contains the same
+production evidence; public definitions are consulted only in the later isolated
+validation stage.
