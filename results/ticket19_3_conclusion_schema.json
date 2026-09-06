@@ -1,0 +1,317 @@
+{
+  "type": "object",
+  "properties": {
+    "reference_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "selected_candidate": {
+      "type": "object",
+      "properties": {
+        "can_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2047
+        },
+        "byte_offset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        },
+        "start_bit": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 56
+        },
+        "width_bits": {
+          "type": "integer",
+          "enum": [
+            8,
+            12,
+            15,
+            16
+          ]
+        },
+        "endian": {
+          "type": "string",
+          "enum": [
+            "little",
+            "big"
+          ]
+        },
+        "signed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "can_id",
+        "start_bit",
+        "width_bits",
+        "endian",
+        "signed"
+      ],
+      "additionalProperties": false
+    },
+    "correlation": {
+      "type": "number"
+    },
+    "scale": {
+      "type": "number"
+    },
+    "offset": {
+      "type": "number"
+    },
+    "rmse": {
+      "type": "number"
+    },
+    "mae": {
+      "type": "number"
+    },
+    "r_squared": {
+      "type": "number"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "signal_confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "layout_confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "layout_ambiguous": {
+      "type": "boolean"
+    },
+    "equivalent_layouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "can_id": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2047
+          },
+          "byte_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "start_bit": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 56
+          },
+          "width_bits": {
+            "type": "integer",
+            "enum": [
+              8,
+              12,
+              15,
+              16
+            ]
+          },
+          "endian": {
+            "type": "string",
+            "enum": [
+              "little",
+              "big"
+            ]
+          },
+          "signed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "can_id",
+          "start_bit",
+          "width_bits",
+          "endian",
+          "signed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "affine_equivalent_layouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "can_id": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2047
+          },
+          "byte_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "start_bit": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 56
+          },
+          "width_bits": {
+            "type": "integer",
+            "enum": [
+              8,
+              12,
+              15,
+              16
+            ]
+          },
+          "endian": {
+            "type": "string",
+            "enum": [
+              "little",
+              "big"
+            ]
+          },
+          "signed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "can_id",
+          "start_bit",
+          "width_bits",
+          "endian",
+          "signed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "ambiguity_reason": {
+      "type": "string",
+      "enum": [
+        "none",
+        "exact_raw_equivalent_layouts",
+        "affine_equivalent_layouts"
+      ]
+    },
+    "alternative_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "candidate": {
+            "type": "object",
+            "properties": {
+              "can_id": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2047
+              },
+              "byte_offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 7
+              },
+              "start_bit": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 56
+              },
+              "width_bits": {
+                "type": "integer",
+                "enum": [
+                  8,
+                  12,
+                  15,
+                  16
+                ]
+              },
+              "endian": {
+                "type": "string",
+                "enum": [
+                  "little",
+                  "big"
+                ]
+              },
+              "signed": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "can_id",
+              "start_bit",
+              "width_bits",
+              "endian",
+              "signed"
+            ],
+            "additionalProperties": false
+          },
+          "correlation": {
+            "type": "number"
+          },
+          "rmse": {
+            "type": "number"
+          },
+          "mae": {
+            "type": "number"
+          },
+          "r_squared": {
+            "type": "number"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "candidate",
+          "correlation",
+          "rmse",
+          "mae",
+          "r_squared",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 5
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "required": [
+    "reference_name",
+    "selected_candidate",
+    "correlation",
+    "scale",
+    "offset",
+    "rmse",
+    "mae",
+    "r_squared",
+    "confidence",
+    "signal_confidence",
+    "layout_confidence",
+    "layout_ambiguous",
+    "equivalent_layouts",
+    "affine_equivalent_layouts",
+    "ambiguity_reason",
+    "alternative_candidates",
+    "rationale"
+  ],
+  "additionalProperties": false
+}

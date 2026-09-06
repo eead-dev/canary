@@ -126,7 +126,7 @@ class DiscoveryTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, 2)
 
     def test_production_dependencies(self):
-        allowed = {"argparse", "array", "bisect", "collections", "csv", "dataclasses", "html", "json", "math", "pathlib", "re", "time"}
+        allowed = {"argparse", "array", "bisect", "collections", "copy", "csv", "dataclasses", "html", "json", "math", "pathlib", "re", "time"}
         local = {p.stem for p in (ROOT / "canary").glob("*.py")} | {"llm"}
         for path in (ROOT / "canary").glob("*.py"):
             source = path.read_text(encoding="utf-8")

@@ -734,3 +734,147 @@ python -m canary.agent_cli ^
 These commands retain the existing model default. Add --model with an enabled
 model ID if needed. No live model calls were made for this ticket. For offline
 execution, use --provider fake or --dry-run.
+
+
+## OpenRouter provider (Ticket #18)
+
+The agent also accepts --provider openrouter. An explicit --model is required;
+CANary does not choose an OpenRouter model or fall back to another provider.
+Choose a model that supports function/tool calling. Gemini retains its existing
+model default, and fake/--dry-run remains entirely offline.
+
+The adapter uses Python standard-library HTTPSConnection and JSON. The optional
+extra `openrouter = []` adds no dependency or SDK:
+
+```bat
+python -m pip install -e ".[openrouter]"
+```
+
+Windows CMD setup and real-data command, from the repository root. Replace both
+placeholder values before running; do not put credentials in tracked files:
+
+```bat
+set "OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY"
+set "OPENROUTER_MODEL=YOUR_TOOL_CAPABLE_MODEL_ID"
+python -m canary.agent_cli ^
+  datasets\real\comma2k19\real_can_log.csv ^
+  datasets\real\comma2k19\real_speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider openrouter ^
+  --model "%OPENROUTER_MODEL%" ^
+  --alignment nearest ^
+  --timestamp-tolerance 0.02 ^
+  --min-samples 300
+```
+
+Only OPENROUTER_API_KEY supplies the adapter credential. Credentials are sent
+only in the authorization header to the fixed HTTPS endpoint
+https://openrouter.ai/api/v1/chat/completions. There is no redirect handling,
+streaming, SDK retry, automatic model selection, or CANary provider fallback.
+Each HTTP request has a 60-second timeout and closes its connection.
+
+System/user/assistant/tool messages and function definitions use OpenRouter's
+chat-completions format. Calls preserve IDs and JSON object arguments; results
+return with matching tool_call_id. Tool execution and validation stay in the
+existing dispatcher. A submit_conclusion function carries the unchanged shared
+AgentConclusion schema, following the same approach as the Gemini adapter.
+No separate provider-specific conclusion format is introduced. Plain assistant
+text is forwarded as text; a final conclusion must use submit_conclusion.
+
+The adapter retains assistant messages (including opaque reasoning_details when
+supplied) and only commits conversation state after successful response parsing.
+Rejected conclusions receive tool-result feedback through the existing correction
+loop. Existing RetryingProvider handles transient HTTP statuses without resetting
+the turn. Permanent errors are not retried. Error JSON and malformed responses
+become the existing sanitized provider_error result; raw headers/error bodies are
+never returned as diagnostics. Existing numeric evidence and conclusion validation
+remain unchanged. All adapter tests use mocked HTTP, never live requests.
+
+API wire-format reference:
+https://openrouter.ai/docs/guides/features/tool-calling
+
+
+## Ollama provider (Ticket #19)
+
+Use --provider ollama with an explicit --model. No Python dependency, SDK, or
+API key is required. The standard-library adapter calls /v1/chat/completions
+on http://localhost:11434 by default. Set OLLAMA_BASE_URL to override the daemon
+address (HTTP or HTTPS; an optional /v1 suffix is accepted). URL credentials,
+queries and fragments are rejected. CANary sends no authorization header.
+
+Local and cloud names are passed unchanged. For cloud models, use a signed-in
+Ollama installation; the local daemon owns authentication and cloud offloading.
+This adapter does not implement direct ollama.com API-key authentication.
+There is no provider/model fallback and no automatic model download or sign-in.
+
+The extracted chat_completions helper reuses the existing OpenRouter message,
+tool-call, and conclusion mapping. The agent, numeric evidence validation,
+analysis configuration, retry criteria and deterministic algorithms are unchanged.
+HTTP transient statuses reuse RetryingProvider; connection failures become
+sanitized provider_error results. Each connection closes after the response.
+The transport timeout is 300 seconds to allow model loading and generation.
+
+Output is not capped by CANary by default: max_tokens is omitted. Set
+--ollama-max-tokens 16384 (or another positive limit suitable for your model),
+or construct OllamaProvider(model, max_tokens=...), to send an explicit limit.
+The flag applies only to --provider ollama. Context size is managed in Ollama;
+this API does not set num_ctx and CANary does not truncate conversation history.
+If a model needs more context for a large capture, configure it in Ollama first.
+
+Windows CMD setup: install Ollama and ensure it is running. If the Ollama desktop
+app is not already serving, keep this running in a separate CMD window:
+
+```bat
+ollama serve
+```
+
+A. Local model test, in another CMD window:
+
+```bat
+ollama pull gpt-oss:20b
+ollama run gpt-oss:20b "Reply with OK."
+```
+
+From the CANary repository root, test the local agent on synthetic data:
+
+```bat
+set "OLLAMA_BASE_URL=http://localhost:11434"
+python -m canary.agent_cli ^
+  datasets\synthetic\can_log.csv ^
+  datasets\synthetic\speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider ollama ^
+  --model gpt-oss:20b
+```
+
+B. Cloud model test, with the same daemon running:
+
+```bat
+ollama signin
+ollama pull qwen3-coder:480b-cloud
+ollama run qwen3-coder:480b-cloud "Reply with OK."
+```
+
+To use that cloud model on the synthetic CANary test above, replace the --model
+value with qwen3-coder:480b-cloud. No credential is placed in CANary.
+
+C. Real comma2k19 CANary run, from the repository root:
+
+```bat
+set "OLLAMA_BASE_URL=http://localhost:11434"
+python -m canary.agent_cli ^
+  datasets\real\comma2k19\real_can_log.csv ^
+  datasets\real\comma2k19\real_speed_reference.csv ^
+  --value-column speed_kph ^
+  --provider ollama ^
+  --model qwen3-coder:480b-cloud ^
+  --alignment nearest ^
+  --timestamp-tolerance 0.02 ^
+  --min-samples 300
+```
+
+Other installed tool-capable models can be supplied with --model; no name is
+mandatory. All automated verification uses HTTP mocks, not local or cloud calls.
+Official workflow and compatibility references:
+https://docs.ollama.com/cloud
+https://docs.ollama.com/api/openai-compatibility

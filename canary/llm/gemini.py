@@ -61,7 +61,14 @@ class GeminiProvider:
                 if self.call_ids.get(event["id"]):
                     fields["id"] = self.call_ids[event["id"]]
                 parts.append(types.Part(function_response=types.FunctionResponse(**fields)))
-        response = self.chat.send_message(parts)
+        if not tools and 'Return only a valid AgentDecision using the evidence already gathered.' in system:
+            # Override the original chat configuration without losing history.
+            response = self.chat.send_message(parts, config=types.GenerateContentConfig(
+                system_instruction=system, tools=[], response_mime_type='application/json',
+                response_json_schema=conclusion_schema,
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))
+        else:
+            response = self.chat.send_message(parts)
         self.cursor = len(messages)
         if answered_conclusion:
             self.pending_conclusion = False

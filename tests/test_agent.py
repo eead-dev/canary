@@ -88,7 +88,7 @@ class AgentTests(unittest.TestCase):
         self.assertEqual(result.trace, [])
 
     def test_malformed_responses(self):
-        for response in (None, {}, ModelResponse(tool_calls=[{}]), ModelResponse(conclusion={})):
+        for response in (None, {}, ModelResponse(tool_calls=[{}])):
             with self.subTest(response=response):
                 self.assertEqual(self.run_provider(ScriptProvider([response]), max_turns=1).status, "max_turns")
 

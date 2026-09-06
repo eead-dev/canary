@@ -1,0 +1,427 @@
+{
+  "reference_name": "value",
+  "selected_candidate": {
+    "can_id": 291,
+    "start_bit": 0,
+    "width_bits": 8,
+    "endian": "little",
+    "signed": false,
+    "byte_offset": 0
+  },
+  "correlation": 1.0,
+  "scale": 2.0,
+  "offset": 5.0,
+  "rmse": 0.0,
+  "mae": 0.0,
+  "r_squared": 1.0,
+  "confidence": "high",
+  "rationale": "Reference tracking: correlation 1, R-squared 1, RMSE 0. 8 layouts decode identically; this capture cannot distinguish the exact layout. Different raw encodings are affine-equivalent on this capture; the reference cannot distinguish their reconstructions after scale/offset fitting. Compared 0 non-equivalent alternatives. Confidence is qualitative, not proof of signal identity.",
+  "signal_confidence": "high",
+  "layout_confidence": "low",
+  "layout_ambiguous": true,
+  "equivalent_layouts": [
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 8,
+      "endian": "little",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 12,
+      "endian": "little",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 12,
+      "endian": "little",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 15,
+      "endian": "little",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 15,
+      "endian": "little",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 16,
+      "endian": "little",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 16,
+      "endian": "little",
+      "signed": true
+    }
+  ],
+  "alternative_candidates": [],
+  "affine_equivalent_layouts": [
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 0,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 1,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 2,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 3,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 4,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 5,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": true
+    },
+    {
+      "can_id": 291,
+      "start_bit": 6,
+      "width_bits": 8,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 6,
+      "width_bits": 12,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 6,
+      "width_bits": 15,
+      "endian": "big",
+      "signed": false
+    },
+    {
+      "can_id": 291,
+      "start_bit": 6,
+      "width_bits": 16,
+      "endian": "big",
+      "signed": false
+    }
+  ],
+  "ambiguity_reason": "affine_equivalent_layouts"
+}

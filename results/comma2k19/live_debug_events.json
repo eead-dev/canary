@@ -1,0 +1,164 @@
+[
+  {
+    "attempt": 1,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "summarize_capture",
+        "arguments": {}
+      }
+    ]
+  },
+  {
+    "attempt": 2,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "list_can_ids",
+        "arguments": {}
+      }
+    ]
+  },
+  {
+    "attempt": 3,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "search_candidates",
+        "arguments": {
+          "top_n": 15
+        }
+      }
+    ]
+  },
+  {
+    "attempt": 4,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "analyze_candidate",
+        "arguments": {
+          "byte_offset": 4,
+          "can_id": 170,
+          "endian": "big",
+          "signed": true,
+          "start_bit": 34,
+          "width_bits": 15,
+          "include_fit": true
+        }
+      }
+    ]
+  },
+  {
+    "attempt": 5,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "analyze_candidate",
+        "arguments": {
+          "can_id": 170,
+          "start_bit": 34,
+          "width_bits": 15,
+          "endian": "big",
+          "signed": true,
+          "include_fit": true
+        }
+      }
+    ]
+  },
+  {
+    "attempt": 6,
+    "tool_count_available": 7,
+    "tool_calls": [
+      {
+        "name": "analyze_candidate",
+        "arguments": {
+          "can_id": 170,
+          "endian": "big",
+          "include_fit": true,
+          "signed": false,
+          "start_bit": 35,
+          "width_bits": 12
+        }
+      }
+    ]
+  },
+  {
+    "attempt": 7,
+    "tool_count_available": 0,
+    "selectable_candidate_refs": [
+      "cand_0001",
+      "cand_0013"
+    ],
+    "allowed_evidence": [
+      {
+        "candidate_ref": "cand_0001",
+        "evidence_state": "analyzed_fitted",
+        "selectable": true,
+        "candidate": {
+          "can_id": 170,
+          "start_bit": 34,
+          "width_bits": 15,
+          "endian": "big",
+          "signed": true
+        },
+        "correlation": 0.9986674420646726,
+        "fit": {
+          "scale": 0.005100045308740456,
+          "offset": 97.4535935402154,
+          "rmse": 0.4479629504317512,
+          "mae": 0.3288052695648548,
+          "r_squared": 0.9973366598399963
+        },
+        "aligned_samples": 579,
+        "layout_ambiguous": true,
+        "ambiguity_reason": "affine_equivalent_layouts",
+        "exact_equivalent_count": 0,
+        "affine_equivalent_count": 11,
+        "distinct_alternative_refs": [
+          "cand_0013"
+        ]
+      },
+      {
+        "candidate_ref": "cand_0013",
+        "evidence_state": "analyzed_fitted",
+        "selectable": true,
+        "candidate": {
+          "can_id": 170,
+          "start_bit": 35,
+          "width_bits": 12,
+          "endian": "big",
+          "signed": false
+        },
+        "correlation": 0.9986664856582872,
+        "fit": {
+          "scale": 0.020398768467760217,
+          "offset": 13.902751665417142,
+          "rmse": 0.4481235708514601,
+          "mae": 0.3290832732409711,
+          "r_squared": 0.997334749577074
+        },
+        "aligned_samples": 579,
+        "layout_ambiguous": true,
+        "ambiguity_reason": "affine_equivalent_layouts",
+        "exact_equivalent_count": 0,
+        "affine_equivalent_count": 2,
+        "distinct_alternative_refs": [
+          "cand_0001"
+        ]
+      }
+    ],
+    "instruction": "Return only a valid AgentDecision using the evidence already gathered. Exploration is over. No tools are available. Correct only the conclusion structure/content in response to validation feedback. Return a JSON object. Use ONLY collected deterministic evidence. Do not invent missing metrics. Do not add extra properties. When evidence is already sufficient, correct structure only; preserve the supported measurements.",
+    "tool_calls": [],
+    "decision": {
+      "candidate_ref": "cand_0001",
+      "signal_confidence": "high",
+      "layout_confidence": "low",
+      "layout_ambiguous": true,
+      "alternative_refs": [
+        "cand_0013"
+      ],
+      "rationale": "Candidate cand_000[REDACTED] decodes the reference with correlation 0[REDACTED]998[REDACTED][REDACTED]7, fit RMSE 0[REDACTED]448, MAE 0[REDACTED]329 and R\u00b2 0[REDACTED]997, providing strong sig[REDACTED]l evidence[REDACTED] However it has [REDACTED][REDACTED] affine\u2011equivalent layouts, making the exact start bit, width, endian or signedness indistinguishable; therefore layout confidence is low and layout_ambiguous is true[REDACTED] The only distinct alter[REDACTED]tive is cand_00[REDACTED]3, which also matches the reference but uses a different field definition, so it is listed as an alter[REDACTED]tive[REDACTED]"
+    }
+  }
+]

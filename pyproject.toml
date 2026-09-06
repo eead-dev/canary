@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = []
 
 [project.optional-dependencies]
+openrouter = [] # Standard-library HTTP/JSON adapter; no additional dependencies.
 comma2k19 = ["numpy>=2,<3"]
 gemini = ["google-genai>=1.56,<2"]
 

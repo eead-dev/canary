@@ -1,0 +1,17 @@
+{
+  "status": "provider_error",
+  "conclusion": null,
+  "trace": [],
+  "turns": 1,
+  "error": {
+    "type": "OpenRouterError",
+    "message": "OpenRouter HTTP 402: This request requires more credits, or fewer max_tokens. You requested up to [REDACTED]3[REDACTED]072 tokens, but can only afford 33333. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account"
+  },
+  "retry_count": 0,
+  "provider_attempts": 1,
+  "analysis_config": {
+    "alignment": "nearest",
+    "timestamp_tolerance": 0.02,
+    "min_samples": 300
+  }
+}
